@@ -11,7 +11,32 @@ import SwiftUI
 struct MTG_CollectorApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabView {
+                HomeTabView()
+                    .tabItem({
+                        Label("Home", systemImage: "house")
+                    })
+                
+                SearchTabView()
+                    .tabItem({
+                        Image(systemName: "magnifyingglass")
+                        Text("Search")
+                    })
+                
+                MyCollectionTabView()
+                    .tabItem({
+                        Image("MtgBinderIcon")
+                            .renderingMode(.template)
+                            .scaledToFit()
+                        Text("My Collection")
+                    })
+                
+                SettingsTabView()
+                    .tabItem({
+                        Image(systemName: "gearshape")
+                        Text("Settings")
+                    })
+            }
         }
     }
 }
