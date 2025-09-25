@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct MTG_CollectorApp: App {
@@ -37,6 +38,6 @@ struct MTG_CollectorApp: App {
                         Text("Settings")
                     })
             }
-        }
+        }.modelContainer(for: MyCollection.self)
     }
 }

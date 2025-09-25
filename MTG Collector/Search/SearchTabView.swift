@@ -8,8 +8,42 @@
 import SwiftUI
 
 struct SearchTabView: View {
+    @State private var scryfallResults: [CardJSON] = []
+    @State private var showFilters = false
+    @State private var filters = CardFilters()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            ScrollView {
+                
+                // MARK: Grid View
+                LazyVGrid(columns: [GridItem(.flexible(minimum: 200, maximum: 300)), GridItem(.flexible(minimum: 200, maximum: 300))]) {
+                        ForEach(scryfallResults) { card in
+                            Text(card.name)
+                        }
+                    }
+            }
+            .navigationTitle("Search")
+            
+            // MARK: Search Bar
+            .searchable(text: $filters.text, prompt: "Search Cards")
+            .keyboardType(.default)
+            .onSubmit(of: .search, {
+                Task {
+                        let results = await SFAPI.fetchCardData(filters: filters)
+                        scryfallResults = results
+                    }
+                
+            })
+            // MARK: Filter btn and Sheet
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Filters", systemImage: "slider.horizontal.3"){
+                        showFilters.toggle()
+                    }
+                }
+            })
+        }
     }
 }
 

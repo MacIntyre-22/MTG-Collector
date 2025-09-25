@@ -9,7 +9,7 @@ import SwiftData
 
 // MARK: Scryfall Set Info
 @Model
-class Set {
+class SetInfo {
     @Attribute(.unique) var code: String?
     var name: String?
     var releaseDate: String?
