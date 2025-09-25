@@ -1,0 +1,196 @@
+//
+//  Card.swift
+//  MTG Collector
+//
+//  Created by Ben MacIntyre (School) on 2025-09-25.
+//
+import Foundation
+import SwiftUI
+import SwiftData
+
+// MARK: Scryfall Card Info
+@Model
+class Card {
+    var id: String?
+    var oracleID: String?
+    var name: String
+    var releasedAt: Date?
+    var imageStatus: String?
+    var imageURIs: ImageURIs?
+    
+    // MANA
+    // mana cost in sysmbols: {W}, {B}
+    var manaCost: String?
+    // mana value
+    var cmc: Double
+    // colours
+    var colors: [String] = []
+    var colorIdentity: [String] = []
+    var colorIndicator: [String] = []
+    
+    // text
+    var typeLine: String
+    var oracleText: String?
+    
+    // stats
+    var toughness: String?
+    var power: String?
+    var loyalty: String?
+    var defense: String?
+    
+    // text
+    var keywords: [String] = []
+    
+    // Muli face cards
+    var layout: String?
+    var cardFaces: [CardFace]?
+    
+    // other
+    var rarity: String?
+    var flavorText: String?
+    var finishes: [String] = []
+    var setId: String
+    
+    var prices: Prices?
+    var purchaseURIs: PurchaseURIs?
+    var allParts: [RelatedCardObject]?
+    var reserved: Bool
+    var legalities: [String: String]
+ 
+    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: Date? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double, colors: [String], colorIdentity: [String], colorIndicator: [String], typeLine: String, oracleText: String? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, keywords: [String], layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String], setId: String, prices: Prices? = nil, purchaseURIs: PurchaseURIs? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: [String : String]) {
+        self.id = id
+        self.oracleID = oracleID
+        self.name = name
+        self.releasedAt = releasedAt
+        self.imageStatus = imageStatus
+        self.imageURIs = imageURIs
+        self.manaCost = manaCost
+        self.cmc = cmc
+        self.colors = colors
+        self.colorIdentity = colorIdentity
+        self.colorIndicator = colorIndicator
+        self.typeLine = typeLine
+        self.oracleText = oracleText
+        self.toughness = toughness
+        self.power = power
+        self.loyalty = loyalty
+        self.defense = defense
+        self.keywords = keywords
+        self.layout = layout
+        self.cardFaces = cardFaces
+        self.rarity = rarity
+        self.flavorText = flavorText
+        self.finishes = finishes
+        self.setId = setId
+        self.prices = prices
+        self.purchaseURIs = purchaseURIs
+        self.allParts = allParts
+        self.reserved = reserved
+        self.legalities = legalities
+    }
+}
+
+@Model
+class RelatedCardObject {
+    var id: String?
+    var name: String?
+    
+    init(id: String? = nil, name: String? = nil) {
+        self.id = id
+        self.name = name
+    }
+}
+
+// images model
+@Model
+class ImageURIs {
+    var small: URL?
+    var normal: URL?
+    var large: URL?
+    var png: URL?
+    var artCrop: URL?
+    var borderCrop: URL?
+
+    init(small: URL? = nil, normal: URL? = nil, large: URL? = nil, png: URL? = nil, artCrop: URL? = nil, borderCrop: URL? = nil) {
+        self.small = small
+        self.normal = normal
+        self.large = large
+        self.png = png
+        self.artCrop = artCrop
+        self.borderCrop = borderCrop
+    }
+}
+
+// card face model
+@Model
+class CardFace {
+    var id: String?
+    var oracleID: String?
+    var name: String
+    var layout: String?
+    var imageURIs: ImageURIs?
+    
+    // stats
+    var toughness: String?
+    var power: String?
+    var loyalty: String?
+    var defense: String?
+    
+    // MANA
+    // mana cost in sysmbols: {W}, {B}
+    var manaCost: String?
+    // mana value
+    var cmc: String?
+    // colours
+    var colors: [String]?
+    var colorIndicator: [String]?
+    
+    init(id: String? = nil, oracleID: String? = nil, name: String, layout: String? = nil, imageURIs: ImageURIs? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, manaCost: String? = nil, cmc: String? = nil, colors: [String]? = nil, colorIndicator: [String]? = nil) {
+        self.id = id
+        self.oracleID = oracleID
+        self.name = name
+        self.layout = layout
+        self.imageURIs = imageURIs
+        self.toughness = toughness
+        self.power = power
+        self.loyalty = loyalty
+        self.defense = defense
+        self.manaCost = manaCost
+        self.cmc = cmc
+        self.colors = colors
+        self.colorIndicator = colorIndicator
+    }
+}
+
+// prices model
+@Model
+class Prices {
+    var usd: String?
+    var usdFoil: String?
+    var usdEtched: String?
+    
+    init(usd: String? = nil, usdFoil: String? = nil, usdEtched: String? = nil) {
+        self.usd = usd
+        self.usdFoil = usdFoil
+        self.usdEtched = usdEtched
+    }
+}
+
+
+// purchase uri model
+@Model
+class PurchaseURIs {
+    var tcgplayer: URL?
+    var cardmarket: URL?
+    var cardhoarder: URL?
+    var mtgo: URL?
+    var magiceden: URL?
+    
+    init(tcgplayer: URL? = nil, cardmarket: URL? = nil, cardhoarder: URL? = nil, mtgo: URL? = nil, magiceden: URL? = nil) {
+        self.tcgplayer = tcgplayer
+        self.cardmarket = cardmarket
+        self.cardhoarder = cardhoarder
+        self.mtgo = mtgo
+        self.magiceden = magiceden
+    }
+}
