@@ -9,7 +9,7 @@ import Foundation
 
 struct SFAPI {
     
-    // local scope build url
+    // build url
     static func buildSearchURL(filters: CardFilters) -> URL? {
         let query = buildQuery(from: filters)
         let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -33,9 +33,10 @@ struct SFAPI {
     
     // MARK: Set Data
     // fetch set data
-    static func fetchSetData(filters: CardFilters) async -> [SetJSON] {
+    static func fetchSetData() async -> [SetJSON] {
         do {
             let url = URL(string: "https://api.scryfall.com/sets")!
+            
             let (data, _) = try await URLSession.shared.data(from: url)
             let decoder = JSONDecoder()
             let fetchResults = try decoder.decode(ScryfallSetData.self, from: data)
@@ -45,5 +46,7 @@ struct SFAPI {
             return []
         }
     }
+    
+    // MARK:
     
 }

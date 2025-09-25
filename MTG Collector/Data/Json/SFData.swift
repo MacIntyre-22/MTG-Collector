@@ -15,6 +15,7 @@ struct SetJSON: Codable {
     var type: String?
     var cardCount: Int?
     var iconURI: String?
+    var searchURI: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -23,6 +24,7 @@ struct SetJSON: Codable {
         case type
         case cardCount = "card_count"
         case iconURI = "icon_svg_uri"
+        case searchURI = "search_uri"
     }
 }
 

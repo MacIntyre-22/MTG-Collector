@@ -13,37 +13,49 @@ import Foundation
 struct CardFilters {
     var text: String = ""
     var colors: [String] = []
-    var type: String? = nil
-    var set: String? = nil
-    var rarity: String? = nil
+    var types: [String] = []
+    var sets: [String] = []
+    var rarities: [String] = []
     var cmcRange: ClosedRange<Int>? = nil
 }
 
 // MARK: Query builder
-// connects all the filters
+// cannect all the queries
+// for types sets and rarities, join using or so users can select multiple
 func buildQuery(from filters: CardFilters) -> String {
     var parts: [String] = []
     
     if !filters.text.isEmpty {
         parts.append(filters.text)
     }
-    if let type = filters.type {
-        parts.append("type:\(type)")
+    
+    if !filters.types.isEmpty {
+        let joined = filters.types.map { "type:\($0)" }.joined(separator: " OR ")
+        parts.append("(\(joined))")
     }
+    
     if !filters.colors.isEmpty {
         let joined = filters.colors.joined()
         parts.append("c:\(joined)")
     }
-    if let set = filters.set {
-        parts.append("set:\(set)")
+    
+    if !filters.sets.isEmpty {
+        let joined = filters.sets.map { "set:\($0)" }.joined(separator: " OR ")
+        parts.append("(\(joined))")
     }
-    if let rarity = filters.rarity {
-        parts.append("rarity:\(rarity)")
+    
+    if !filters.rarities.isEmpty {
+        let joined = filters.rarities.map { "rarity:\($0)" }.joined(separator: " OR ")
+        parts.append("(\(joined))")
     }
+    
+    // set lowest and highest based on user input
     if let cmcRange = filters.cmcRange {
         parts.append("cmc>=\(cmcRange.lowerBound)")
         parts.append("cmc<=\(cmcRange.upperBound)")
     }
     
+    // return the query
     return parts.joined(separator: " ")
 }
+

@@ -49,7 +49,7 @@ class Card {
     var rarity: String?
     var flavorText: String?
     var finishes: [String]?
-    var setId: String?
+    var set: String?
     
     var prices: Prices?
     var purchaseURIs: PurchaseURIs?
@@ -57,7 +57,7 @@ class Card {
     var reserved: Bool
     var legalities: Legalities?
  
-    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: Date? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double? = nil, colors: [String]? = nil, colorIdentity: [String]? = nil, colorIndicator: [String]? = nil, typeLine: String? = nil, oracleText: String? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, keywords: [String]? = nil, layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String]? = nil, setId: String? = nil, prices: Prices? = nil, purchaseURIs: PurchaseURIs? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: Legalities? = nil) {
+    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: Date? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double? = nil, colors: [String]? = nil, colorIdentity: [String]? = nil, colorIndicator: [String]? = nil, typeLine: String? = nil, oracleText: String? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, keywords: [String]? = nil, layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String]? = nil, set: String? = nil, prices: Prices? = nil, purchaseURIs: PurchaseURIs? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: Legalities? = nil) {
         self.id = id
         self.oracleID = oracleID
         self.name = name
@@ -81,7 +81,7 @@ class Card {
         self.rarity = rarity
         self.flavorText = flavorText
         self.finishes = finishes
-        self.setId = setId
+        self.set = set
         self.prices = prices
         self.purchaseURIs = purchaseURIs
         self.allParts = allParts
