@@ -22,14 +22,14 @@ class Card {
     // mana cost in sysmbols: {W}, {B}
     var manaCost: String?
     // mana value
-    var cmc: Double
+    var cmc: Double?
     // colours
-    var colors: [String] = []
-    var colorIdentity: [String] = []
-    var colorIndicator: [String] = []
+    var colors: [String]?
+    var colorIdentity: [String]?
+    var colorIndicator: [String]?
     
     // text
-    var typeLine: String
+    var typeLine: String?
     var oracleText: String?
     
     // stats
@@ -39,7 +39,7 @@ class Card {
     var defense: String?
     
     // text
-    var keywords: [String] = []
+    var keywords: [String]?
     
     // Muli face cards
     var layout: String?
@@ -48,16 +48,16 @@ class Card {
     // other
     var rarity: String?
     var flavorText: String?
-    var finishes: [String] = []
-    var setId: String
+    var finishes: [String]?
+    var setId: String?
     
     var prices: Prices?
     var purchaseURIs: PurchaseURIs?
     var allParts: [RelatedCardObject]?
     var reserved: Bool
-    var legalities: [String: String]
+    var legalities: Legalities?
  
-    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: Date? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double, colors: [String], colorIdentity: [String], colorIndicator: [String], typeLine: String, oracleText: String? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, keywords: [String], layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String], setId: String, prices: Prices? = nil, purchaseURIs: PurchaseURIs? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: [String : String]) {
+    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: Date? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double? = nil, colors: [String]? = nil, colorIdentity: [String]? = nil, colorIndicator: [String]? = nil, typeLine: String? = nil, oracleText: String? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, keywords: [String]? = nil, layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String]? = nil, setId: String? = nil, prices: Prices? = nil, purchaseURIs: PurchaseURIs? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: Legalities? = nil) {
         self.id = id
         self.oracleID = oracleID
         self.name = name
@@ -192,5 +192,55 @@ class PurchaseURIs {
         self.cardhoarder = cardhoarder
         self.mtgo = mtgo
         self.magiceden = magiceden
+    }
+}
+
+// legalities
+@Model
+class Legalities {
+    var standard: String?
+    var future: String?
+    var historic: String?
+    var timeless: String?
+    var gladiator: String?
+    var pioneer: String?
+    var modern: String?
+    var legacy: String?
+    var pauper: String?
+    var vintage: String?
+    var penny: String?
+    var commander: String?
+    var oathbreaker: String?
+    var standardBrawl: String?
+    var brawl: String?
+    var alchemy: String?
+    var pauperCommander: String?
+    var duel: String?
+    var oldschool: String?
+    var premodern: String?
+    var predh: String?
+    
+    init(standard: String? = nil, future: String? = nil, historic: String? = nil, timeless: String? = nil, gladiator: String? = nil, pioneer: String? = nil, modern: String? = nil, legacy: String? = nil, pauper: String? = nil, vintage: String? = nil, penny: String? = nil, commander: String? = nil, oathbreaker: String? = nil, standardBrawl: String? = nil, brawl: String? = nil, alchemy: String? = nil, pauperCommander: String? = nil, duel: String? = nil, oldschool: String? = nil, premodern: String? = nil, predh: String? = nil) {
+        self.standard = standard
+        self.future = future
+        self.historic = historic
+        self.timeless = timeless
+        self.gladiator = gladiator
+        self.pioneer = pioneer
+        self.modern = modern
+        self.legacy = legacy
+        self.pauper = pauper
+        self.vintage = vintage
+        self.penny = penny
+        self.commander = commander
+        self.oathbreaker = oathbreaker
+        self.standardBrawl = standardBrawl
+        self.brawl = brawl
+        self.alchemy = alchemy
+        self.pauperCommander = pauperCommander
+        self.duel = duel
+        self.oldschool = oldschool
+        self.premodern = premodern
+        self.predh = predh
     }
 }

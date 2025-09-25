@@ -10,13 +10,14 @@ import SwiftData
 // MARK: Scryfall Set Info
 @Model
 class Set {
-    var name: String
-    var releaseDate: Date
-    var type: String
-    var cardCount: Int
-    var iconURI: URL?
+    var id: String?
+    var name: String?
+    var releaseDate: String?
+    var type: String?
+    var cardCount: Int?
+    var iconURI: String?
     
-    init(code: String, name: String, releaseDate: Date, type: String, cardCount: Int, iconURI: URL? = nil) {
+    init(id: String? = nil, name: String? = nil, releaseDate: String? = nil, type: String? = nil, cardCount: Int? = nil, iconURI: String? = nil) {
         self.name = name
         self.releaseDate = releaseDate
         self.type = type

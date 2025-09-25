@@ -11,11 +11,9 @@ import SwiftData
 class MyCollection {
     @Relationship(deleteRule: .cascade) var binders: [Binder] = []
     @Relationship(deleteRule: .cascade) var decks: [Deck] = []
-    @Relationship(deleteRule: .cascade) var previewCards: [CardEntry] = []
     
-    init(binders: [Binder], decks: [Deck], previewCards: [CardEntry]) {
+    init(binders: [Binder], decks: [Deck]) {
         self.binders = binders
         self.decks = decks
-        self.previewCards = previewCards
     }
 }

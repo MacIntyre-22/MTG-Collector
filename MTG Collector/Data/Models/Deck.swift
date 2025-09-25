@@ -27,12 +27,20 @@ class Deck {
         mainboard.reduce(0) { $0 + $1.quantity }
     }
     
+    // count lands
     var landCount: Int {
-        // filter by lands
-        mainboard.filter { $0.card.typeLine.contains("Land") }
-        // start at 0 and add each card in the mainboard ONLY
-            .reduce(0) { $0 + $1.quantity }
+        // sort by land
+        mainboard.filter { entry in
+            // unwrap
+            if let typeLine = entry.card.typeLine {
+                return typeLine.contains("Land")
+            }
+            return false
+        }
+        // add quantity
+        .reduce(0) { $0 + $1.quantity }
     }
+
     
     var avgManaCost: Double {
         // filter out nils if any and unwrap
@@ -45,12 +53,51 @@ class Deck {
     
     // is deck as a whole legal
     var isLegal: Bool {
-        mainboard.allSatisfy { entry in
-            // check if the deck type has a vlaue of legal in the cards data
-            // makes sure every card is legal in the format
-            // currently only commander and standard are supported deck types
-            entry.card.legalities[ruleType ?? ""] == "legal"
+        // get ruletype
+        guard let rule = ruleType?.lowercased() else { return false }
+
+        // loop through each card
+        for entry in mainboard {
+            guard let legalities = entry.card.legalities else { return false }
+
+            // will stay true until one card is not legal
+            var cardIsLegal = false
+
+            // switch for rule set
+            switch rule {
+            case "standard": cardIsLegal = legalities.standard == "legal"
+            case "future": cardIsLegal = legalities.future == "legal"
+            case "historic": cardIsLegal = legalities.historic == "legal"
+            case "timeless": cardIsLegal = legalities.timeless == "legal"
+            case "gladiator": cardIsLegal = legalities.gladiator == "legal"
+            case "pioneer": cardIsLegal = legalities.pioneer == "legal"
+            case "modern": cardIsLegal = legalities.modern == "legal"
+            case "legacy": cardIsLegal = legalities.legacy == "legal"
+            case "pauper": cardIsLegal = legalities.pauper == "legal"
+            case "vintage": cardIsLegal = legalities.vintage == "legal"
+            case "penny": cardIsLegal = legalities.penny == "legal"
+            case "commander": cardIsLegal = legalities.commander == "legal"
+            case "oathbreaker": cardIsLegal = legalities.oathbreaker == "legal"
+            case "standardbrawl": cardIsLegal = legalities.standardBrawl == "legal"
+            case "brawl": cardIsLegal = legalities.brawl == "legal"
+            case "alchemy": cardIsLegal = legalities.alchemy == "legal"
+            case "paupercommander": cardIsLegal = legalities.pauperCommander == "legal"
+            case "duel": cardIsLegal = legalities.duel == "legal"
+            case "oldschool": cardIsLegal = legalities.oldschool == "legal"
+            case "premodern": cardIsLegal = legalities.premodern == "legal"
+            case "predh": cardIsLegal = legalities.predh == "legal"
+                // casual or no format
+            case "casual": cardIsLegal = true
+            default: cardIsLegal = false
+            }
+
+            // return false if all cards set value to legal
+            if !cardIsLegal {
+                return false
+            }
         }
+
+        return true
     }
     
     // get an array of all contained mana tyoes
@@ -64,27 +111,36 @@ class Deck {
     // totals of card types as a dict
     var cardTypeCount: [String: Int] {
         var counts: [String: Int] = [:]
+        
         for entry in mainboard {
-            let typeLine = entry.card.typeLine
-            // get the maintype not the sub type
-            let mainType = typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
-            counts[mainType, default: 0] += entry.quantity
+            // unwrap
+            if let typeLine = entry.card.typeLine {
+                // get the main type, not the subtype
+                let mainType = typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
+                counts[mainType, default: 0] += entry.quantity
+            }
         }
+        
         return counts
     }
+
     
     // total cards of each mana count
     var manaTypeCount: [String: Int] {
-        // empty dict
         var counts: [String: Int] = [:]
+        
         for entry in mainboard {
-            // for each acrd in mainboard add the colour id to dict or add 1
-            for mana in entry.card.colorIdentity {
-                counts[mana, default: 0] += 1
+            // unwrap
+            if let colors = entry.card.colorIdentity {
+                // count or default to 0
+                for mana in colors {
+                    counts[mana, default: 0] += 1
+                }
             }
         }
         return counts
     }
+
 
     
     init(id: UUID, name: String, notes: String? = nil, ruleType: String? = nil, commander: Card? = nil, createdAt: Date) {

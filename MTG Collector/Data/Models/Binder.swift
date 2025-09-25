@@ -60,26 +60,34 @@ class Binder {
     }
 
     // manatypes dict
-    var manaTypesCount: [String: Int] {
+    var manaTypeCount: [String: Int] {
         var counts: [String: Int] = [:]
+        
         for entry in cards {
-            for mana in entry.card.colorIdentity {
-                // add or +1
-                counts[mana, default: 0] += entry.quantity
+            // unwrap
+            if let colors = entry.card.colorIdentity {
+                // count or default to 0
+                for mana in colors {
+                    counts[mana, default: 0] += 1
+                }
             }
         }
         return counts
     }
 
-    // type count
+    // totals of card types as a dict
     var cardTypeCount: [String: Int] {
         var counts: [String: Int] = [:]
+        
         for entry in cards {
-            let typeLine = entry.card.typeLine
-            // get the maintype not the sub typoe
-            let mainType = typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
-            counts[mainType, default: 0] += entry.quantity
+            // unwrap
+            if let typeLine = entry.card.typeLine {
+                // get the main type, not the subtype
+                let mainType = typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
+                counts[mainType, default: 0] += entry.quantity
+            }
         }
+        
         return counts
     }
     
