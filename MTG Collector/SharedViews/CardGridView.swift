@@ -8,11 +8,17 @@
 import SwiftUI
 
 struct CardGridView: View {
+    var card: CardJSON
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            CardImageView(images: card.imageURIs ?? ImageURIsJSON())
+            Text(card.name)
+                .font(.headline)
+                .lineLimit(1)
+                .truncationMode(.tail)
+        }
+        .padding(10)
     }
 }
 
-#Preview {
-    CardGridView()
-}

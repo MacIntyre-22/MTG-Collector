@@ -104,14 +104,14 @@ class RelatedCardObject {
 // images model
 @Model
 class ImageURIs {
-    var small: URL?
-    var normal: URL?
-    var large: URL?
-    var png: URL?
-    var artCrop: URL?
-    var borderCrop: URL?
+    var small: String?
+    var normal: String?
+    var large: String?
+    var png: String?
+    var artCrop: String?
+    var borderCrop: String?
 
-    init(small: URL? = nil, normal: URL? = nil, large: URL? = nil, png: URL? = nil, artCrop: URL? = nil, borderCrop: URL? = nil) {
+    init(small: String? = nil, normal: String? = nil, large: String? = nil, png: String? = nil, artCrop: String? = nil, borderCrop: String? = nil) {
         self.small = small
         self.normal = normal
         self.large = large

@@ -19,7 +19,7 @@ struct SearchTabView: View {
                 // MARK: Grid View
                 LazyVGrid(columns: [GridItem(.flexible(minimum: 200, maximum: 300)), GridItem(.flexible(minimum: 200, maximum: 300))]) {
                         ForEach(scryfallResults) { card in
-                            Text(card.name)
+                            CardGridView(card: card)
                         }
                     }
             }
