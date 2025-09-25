@@ -19,9 +19,11 @@ struct SearchTabView: View {
                 // MARK: Grid View
                 LazyVGrid(columns: [GridItem(.flexible(minimum: 200, maximum: 300)), GridItem(.flexible(minimum: 200, maximum: 300))]) {
                         ForEach(scryfallResults) { card in
-                            CardGridView(card: card)
+                            NavigationLink(destination: CardInfoView(card: card)){
+                                CardGridView(card: card)
+                            }
                         }
-                    }
+                }
             }
             .navigationTitle("Search")
             

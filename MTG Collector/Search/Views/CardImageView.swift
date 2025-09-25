@@ -8,16 +8,14 @@
 import SwiftUI
 
 struct CardImageView: View {
-    var images: ImageURIsJSON
+    var imageUrl: String
     
     var body: some View {
-        if let imageUrlString = images.normal,
-           let url = URL(string: imageUrlString) {
+        if let url = URL(string: imageUrl) {
             AsyncImage(url: url) { phase in
                 switch phase {
                 case .empty:
-                    ProgressView() // loading indicator
-                
+                    ProgressView()
                         .frame(minWidth: 180, maxWidth: 250)
                 case .success(let image):
                     image
