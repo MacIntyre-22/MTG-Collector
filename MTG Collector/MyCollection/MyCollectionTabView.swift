@@ -6,10 +6,38 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MyCollectionTabView: View {
+    @Query var binders: [Binder]
+    
+    @State var newBinder: Bool = false
+    
+    // stats
+    var binderCount: Int {
+        binders.count
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            ScrollView {
+                Text(binderCount.description)
+                ForEach(binders) { binder in
+                    Text(binder.name)
+                }
+            }
+            .navigationTitle("My Collection")
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("New", systemImage: "plus"){
+                        newBinder.toggle()
+                    }
+                }
+            })
+            .sheet(isPresented: $newBinder) {
+                
+            }
+        }
     }
 }
 
