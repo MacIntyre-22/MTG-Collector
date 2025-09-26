@@ -10,7 +10,6 @@ import SwiftData
 
 struct MyCollectionTabView: View {
     @Query var binders: [Binder]
-    
     @State var newBinder: Bool = false
     
     // stats
@@ -35,7 +34,7 @@ struct MyCollectionTabView: View {
                 }
             })
             .sheet(isPresented: $newBinder) {
-                
+                NewBinderSheet()
             }
         }
     }
