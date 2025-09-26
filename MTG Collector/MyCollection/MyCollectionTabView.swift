@@ -19,12 +19,22 @@ struct MyCollectionTabView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                Text(binderCount.description)
-                ForEach(binders) { binder in
-                    Text(binder.name)
+            List {
+                Section("Go to Decks") {
+                    NavigationLink(destination: AllDecksView()) {
+                        AllDecksLinkWidget()
+                    }
+                }
+                
+                Section("Binders") {
+                    ForEach(binders) { binder in
+                        NavigationLink(destination: BinderView(binder: binder)) {
+                            BinderLinkWidget(binder: binder)
+                        }
+                    }
                 }
             }
+            .listRowSpacing(10)
             .navigationTitle("My Collection")
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
