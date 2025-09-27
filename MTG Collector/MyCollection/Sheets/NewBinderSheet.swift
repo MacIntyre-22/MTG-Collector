@@ -20,6 +20,7 @@ struct NewBinderSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                // new binder form
                 Section("Binder Info") {
                     TextField("Name", text: $name)
                     TextField("Notes", text: $notes)
@@ -33,6 +34,7 @@ struct NewBinderSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") {
+                        // save binder
                         saveBinder()
                     }
                     .disabled(name.isEmpty)
@@ -41,13 +43,11 @@ struct NewBinderSheet: View {
         }
     }
 
+    // MARK: saveBinder
     private func saveBinder() {
-        let binder = Binder(
-            id: UUID(),
-            name: name,
-            notes: notes,
-            createdAt: Date()
-        )
+        // make binder model instance
+        let binder = Binder(id: UUID(), name: name, notes: notes, createdAt: Date())
+        // save and dismiss
         modelContext.insert(binder)
         dismiss()
     }

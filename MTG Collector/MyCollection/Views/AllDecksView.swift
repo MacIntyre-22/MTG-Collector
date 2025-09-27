@@ -9,10 +9,44 @@ import SwiftUI
 import SwiftData
 
 struct AllDecksView: View {
+    // data
     @Query var decks: [Deck]
     
+    var deckCount: Int {
+        decks.count
+    }
+    
+    // state variables
+    @State var newDeck: Bool = false
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            List {
+                Section("Info") {
+                    
+                }
+                
+                Section("My Decks") {
+                    ForEach(decks) { deck in
+                        NavigationLink(destination: DeckView(deck: deck)) {
+                            DeckGridWidget(deck: deck)
+                        }
+                    }
+                }
+            }
+            .listRowSpacing(10)
+            .navigationTitle("Decks")
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("New", systemImage: "plus"){
+                        newDeck.toggle()
+                    }
+                }
+            })
+            .sheet(isPresented: $newDeck) {
+                NewDeckSheet()
+            }
+        }
     }
 }
 
