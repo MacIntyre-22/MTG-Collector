@@ -14,16 +14,14 @@ class Card {
     var id: String?
     var oracleID: String?
     var name: String
-    var releasedAt: Date?
+    var releasedAt: String?
     var imageStatus: String?
     var imageURIs: ImageURIs?
     
     // MANA
     // mana cost in sysmbols: {W}, {B}
     var manaCost: String?
-    // mana value
     var cmc: Double?
-    // colours
     var colors: [String]?
     var colorIdentity: [String]?
     var colorIndicator: [String]?
@@ -31,15 +29,13 @@ class Card {
     // text
     var typeLine: String?
     var oracleText: String?
+    var keywords: [String]?
     
     // stats
     var toughness: String?
     var power: String?
     var loyalty: String?
     var defense: String?
-    
-    // text
-    var keywords: [String]?
     
     // Muli face cards
     var layout: String?
@@ -57,7 +53,7 @@ class Card {
     var reserved: Bool
     var legalities: Legalities?
  
-    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: Date? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double? = nil, colors: [String]? = nil, colorIdentity: [String]? = nil, colorIndicator: [String]? = nil, typeLine: String? = nil, oracleText: String? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, keywords: [String]? = nil, layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String]? = nil, set: String? = nil, prices: Prices? = nil, purchaseURIs: PurchaseURIs? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: Legalities? = nil) {
+    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: String? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double? = nil, colors: [String]? = nil, colorIdentity: [String]? = nil, colorIndicator: [String]? = nil, typeLine: String? = nil, oracleText: String? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, keywords: [String]? = nil, layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String]? = nil, set: String? = nil, prices: Prices? = nil, purchaseURIs: PurchaseURIs? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: Legalities? = nil) {
         self.id = id
         self.oracleID = oracleID
         self.name = name
@@ -180,19 +176,20 @@ class Prices {
 // purchase uri model
 @Model
 class PurchaseURIs {
-    var tcgplayer: URL?
-    var cardmarket: URL?
-    var cardhoarder: URL?
-    var mtgo: URL?
-    var magiceden: URL?
+    var tcgplayer: String?
+    var cardmarket: String?
+    var cardhoarder: String?
+    var mtgo: String?
+    var magiceden: String?
     
-    init(tcgplayer: URL? = nil, cardmarket: URL? = nil, cardhoarder: URL? = nil, mtgo: URL? = nil, magiceden: URL? = nil) {
+    init(tcgplayer: String? = nil, cardmarket: String? = nil, cardhoarder: String? = nil, mtgo: String? = nil, magiceden: String? = nil) {
         self.tcgplayer = tcgplayer
         self.cardmarket = cardmarket
         self.cardhoarder = cardhoarder
         self.mtgo = mtgo
         self.magiceden = magiceden
     }
+    
 }
 
 // legalities

@@ -8,14 +8,18 @@
 import SwiftUI
 
 struct CardInfoView: View {
+    // data
     var card: CardJSON
     
     var body: some View {
-        ScrollView {
+        List {
             CardImageView(imageUrl: card.imageURIs?.normal ?? "https://c1.scryfall.com/file/scryfall-cards/back/neo/442.jpg")
+            CollectionControllWidget(card: card)
+            
             Text(card.name)
             Text(card.flavorText ?? "")
         }
+        .listRowSpacing(10)
     }
 }
 

@@ -17,7 +17,7 @@ class Binder {
     var coverImage: String?
     var createdAt: Date = Date()
     
-    @Relationship(deleteRule: .cascade, inverse: \CardEntry.binder) var cards: [CardEntry] = []
+    @Relationship var cards: [CardEntry] = []
 
 
     var cardCount: Int {

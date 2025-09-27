@@ -17,7 +17,7 @@ class Deck {
     var commander: Card?
     var createdAt: Date
     
-    @Relationship(deleteRule: .cascade, inverse: \CardEntry.deck) var mainboard: [CardEntry] = []
+    @Relationship var mainboard: [CardEntry] = []
 
     
     // computed properties

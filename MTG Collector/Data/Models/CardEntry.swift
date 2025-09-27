@@ -13,15 +13,13 @@ class CardEntry {
     @Attribute(.unique) var id: UUID = UUID()
     var quantity: Int
     var finish: String?
-    var isCommander: Bool = false
-    var isDisplay: Bool = true
+    var isCommander: Bool
+    var isDisplay: Bool
     
     // relationships
     @Relationship var card: Card
-    @Relationship var deck: Deck?
-    @Relationship var binder: Binder?
 
-    init(card: Card, quantity: Int = 1, finish: String? = nil, isCommander: Bool = false, isDisplay: Bool = true) {
+    init(card: Card, quantity: Int = 1, finish: String? = nil, isCommander: Bool = false, isDisplay: Bool = false) {
         self.card = card
         self.quantity = quantity
         self.finish = finish

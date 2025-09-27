@@ -66,7 +66,7 @@ struct CardJSON: Codable, Identifiable {
     var rarity: String?
     var flavorText: String?
     var finishes: [String]?
-    var setId: String?
+    var set: String?
 
     var prices: PricesJSON?
     var purchaseURIs: PurchaseURIsJSON?
@@ -103,7 +103,7 @@ struct CardJSON: Codable, Identifiable {
         case rarity
         case flavorText = "flavor_text"
         case finishes
-        case setId = "set_id"
+        case set
 
         case prices
         case purchaseURIs = "purchase_uris"
@@ -147,24 +147,44 @@ struct PurchaseURIsJSON: Codable {
 }
 
 struct CardFaceJSON: Codable {
-    var name: String?
-    var manaCost: String?
-    var typeLine: String?
-    var oracleText: String?
-    var colors: [String]?
-    var power: String?
+    var id: String?
+    var oracleID: String?
+    var name: String
+    var layout: String?
+    var imageURIs: ImageURIsJSON?
+    
+    // stats
     var toughness: String?
+    var power: String?
     var loyalty: String?
+    var defense: String?
+    
+    // MANA
+    // mana cost in sysmbols: {W}, {B}
+    var manaCost: String?
+    // mana value
+    var cmc: String?
+    // colours
+    var colors: [String]?
+    var colorIndicator: [String]?
 
     enum CodingKeys: String, CodingKey {
+        case id
+        case oracleID = "oracle_id"
         case name
-        case manaCost = "mana_cost"
-        case typeLine = "type_line"
-        case oracleText = "oracle_text"
-        case colors
-        case power
+        case layout
+        case imageURIs = "image_uris"
+        
         case toughness
+        case power
         case loyalty
+        case defense
+        
+        case manaCost = "mana_cost"
+        case cmc
+        case colors
+        case colorIndicator = "color_indicator"
+        
     }
 }
 
