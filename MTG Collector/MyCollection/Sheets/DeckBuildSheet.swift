@@ -22,7 +22,7 @@ struct DeckBuildSheet: View {
                 LazyVGrid(columns: [GridItem(.flexible(minimum: 200, maximum: 250)), GridItem(.flexible(minimum: 200, maximum: 250))]) {
                     ForEach(scryfallResults) { card in
                         VStack {
-                            CardImageView(imageUrl: card.imageURIs?.normal ?? "https://c1.scryfall.com/file/scryfall-cards/back/neo/442.jpg")
+                            CardImageView(maxWidth: 250, imageUrl: card.imageURIs?.normal ?? "")
                                 
                             Text(card.name)
                                 .lineLimit(1)

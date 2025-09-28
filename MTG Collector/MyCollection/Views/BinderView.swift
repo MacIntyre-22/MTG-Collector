@@ -17,7 +17,7 @@ struct BinderView: View {
                     HStack {
                         ForEach(binder.cards) { entry in
                             VStack {
-                                CardImageView(imageUrl: entry.card.imageURIs?.normal ?? "https://c1.scryfall.com/file/scryfall-cards/back/neo/442.jpg")
+                                CardImageView(maxWidth: 250, imageUrl: entry.card.imageURIs?.normal ?? "")
                                 Text(entry.card.name)
                                 Divider()
                                 

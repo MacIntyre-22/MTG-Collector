@@ -23,16 +23,7 @@ struct DeckView: View {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(deck.mainboard) { entry in
-                            VStack {
-                                CardImageView(imageUrl: entry.card.imageURIs?.normal ?? "https://c1.scryfall.com/file/scryfall-cards/back/neo/442.jpg")
-                                    .frame(width: 100)
-                                Text(entry.card.name)
-                                Divider()
-                                
-                                Text(entry.card.colors?.first ?? "No Color")
-
-                            
-                            }
+                            CardBoardView(entry: entry)
                         }
                     }
                 }
@@ -43,16 +34,7 @@ struct DeckView: View {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(deck.sideboard) { entry in
-                            VStack {
-                                CardImageView(imageUrl: entry.card.imageURIs?.normal ?? "https://c1.scryfall.com/file/scryfall-cards/back/neo/442.jpg")
-                                    .frame(width: 100)
-                                Text(entry.card.name)
-                                Divider()
-                                
-                                Text(entry.card.colors?.first ?? "No Color")
-
-                            
-                            }
+                            CardBoardView(entry: entry)
                         }
                     }
                 }
@@ -63,16 +45,7 @@ struct DeckView: View {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(deck.maybeboard) { entry in
-                            VStack {
-                                CardImageView(imageUrl: entry.card.imageURIs?.normal ?? "https://c1.scryfall.com/file/scryfall-cards/back/neo/442.jpg")
-                                    .frame(width: 100)
-                                Text(entry.card.name)
-                                Divider()
-                                
-                                Text(entry.card.colors?.first ?? "No Color")
-
-                            
-                            }
+                            CardBoardView(entry: entry)
                         }
                     }
                 }

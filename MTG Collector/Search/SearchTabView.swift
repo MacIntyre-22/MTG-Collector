@@ -12,12 +12,15 @@ struct SearchTabView: View {
     @State private var showFilters = false
     @State private var filters = CardFilters()
     
+    // responsive grid
+    let columns = [GridItem(.adaptive(minimum: 180, maximum: 180), spacing: 10)]
+    
     var body: some View {
         NavigationStack {
             ScrollView {
                 
                 // MARK: Grid View
-                LazyVGrid(columns: [GridItem(.flexible(minimum: 200, maximum: 300)), GridItem(.flexible(minimum: 200, maximum: 300))]) {
+                LazyVGrid(columns: columns) {
                         ForEach(scryfallResults) { card in
                             NavigationLink(destination: CardInfoView(card: card)){
                                 CardGridView(card: card)

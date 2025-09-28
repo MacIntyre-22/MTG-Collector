@@ -13,7 +13,7 @@ struct CardInfoView: View {
     
     var body: some View {
         List {
-            CardImageView(imageUrl: card.imageURIs?.normal ?? "https://c1.scryfall.com/file/scryfall-cards/back/neo/442.jpg")
+            CardImageView(maxWidth: 250, imageUrl: card.imageURIs?.normal ?? "")
             CollectionControllWidget(card: card)
             
             Text(card.name)

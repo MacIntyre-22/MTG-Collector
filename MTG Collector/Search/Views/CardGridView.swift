@@ -12,7 +12,7 @@ struct CardGridView: View {
     
     var body: some View {
         VStack{
-            CardImageView(imageUrl: card.imageURIs?.normal ?? "https://c1.scryfall.com/file/scryfall-cards/back/neo/442.jpg")
+            CardImageView(maxWidth: 250, imageUrl: card.imageURIs?.normal ?? "")
             Text(card.name)
                 .font(.headline)
                 .lineLimit(1)
