@@ -11,7 +11,27 @@ struct BinderView: View {
     var binder: Binder
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            Section("Mainboard") {
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(binder.cards) { entry in
+                            VStack {
+                                CardImageView(imageUrl: entry.card.imageURIs?.normal ?? "https://c1.scryfall.com/file/scryfall-cards/back/neo/442.jpg")
+                                Text(entry.card.name)
+                                Divider()
+                                
+                                Text(entry.card.colors?.first ?? "No Color")
+
+                            
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        }
+        Spacer()
     }
 }
 
