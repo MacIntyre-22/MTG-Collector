@@ -18,6 +18,8 @@ class Deck {
     var createdAt: Date
     
     @Relationship var mainboard: [CardEntry] = []
+    @Relationship var sideboard: [CardEntry] = []
+    @Relationship var maybeboard: [CardEntry] = []
 
     
     // computed properties
