@@ -38,6 +38,7 @@ struct MTG_CollectorApp: App {
                         Text("Settings")
                     })
             }
-        }.modelContainer(for: [MyCollection.self, Binder.self, Deck.self, SetInfo.self, Card.self, CardEntry.self])
+        }
+        .modelContainer(for: [MyCollection.self, Binder.self, Deck.self, SetInfo.self, Card.self, CardEntry.self])
     }
 }

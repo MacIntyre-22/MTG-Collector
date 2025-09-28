@@ -12,7 +12,7 @@ struct BinderView: View {
     
     var body: some View {
         ScrollView {
-            Section("Mainboard") {
+            Section("Cards") {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(binder.cards) { entry in
