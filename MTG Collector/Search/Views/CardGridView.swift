@@ -10,14 +10,47 @@ import SwiftUI
 struct CardGridView: View {
     var card: CardJSON
     
+    // check flip state
+    @State private var isFlipped: Bool = false
+        
+    var multiFaced: [CardFaceJSON]? {
+        card.cardFaces
+    }
+    
+    // set current face
+    var currentFace: CardFaceJSON? {
+        guard let faces = multiFaced else { return nil }
+        return isFlipped ? faces.last : faces.first
+    }
+    
     var body: some View {
         VStack{
-            CardImageView(maxWidth: 220, imageUrl: card.imageURIs?.normal ?? "")
-            Text(card.name)
+            // if multifaced
+            if let face = currentFace {
+                ZStack(alignment: .topTrailing) {
+                    CardImageView(maxWidth: 220, imageUrl: face.imageURIs?.normal ?? "")
+                    
+                    Button {
+                        isFlipped.toggle()
+                    } label: {
+                        Image(systemName: "arrow.left.arrow.right.circle.fill")
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .shadow(radius: 7)
+                    }
+                }
+            } else {
+                // regular card
+                CardImageView(maxWidth: 220, imageUrl: card.imageURIs?.normal ?? "")
+            }
+            
+            
+            Text(currentFace?.name ?? card.name)
                 .font(.headline)
                 .foregroundColor(.primary)
                 .lineLimit(1)
                 .truncationMode(.tail)
+            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     
@@ -36,5 +69,6 @@ struct CardGridView: View {
         .background(content: {Color.gray.opacity(0.18)})
         .cornerRadius(10)
     }
+    
 }
 

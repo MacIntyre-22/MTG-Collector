@@ -153,6 +153,11 @@ struct CardFaceJSON: Codable, Identifiable {
     var layout: String?
     var imageURIs: ImageURIsJSON?
     
+    // text
+    var typeLine: String?
+    var oracleText: String?
+    var keywords: [String]?
+    
     // stats
     var toughness: String?
     var power: String?
@@ -174,6 +179,9 @@ struct CardFaceJSON: Codable, Identifiable {
         case name
         case layout
         case imageURIs = "image_uris"
+        case typeLine = "type_line"
+        case oracleText = "oracle_text"
+        case keywords
         
         case toughness
         case power

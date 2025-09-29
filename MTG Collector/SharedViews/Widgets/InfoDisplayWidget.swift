@@ -8,31 +8,42 @@
 import SwiftUI
 
 struct InfoDisplayWidget: View {
-    var card: CardJSON
+    var name: String?
+    var typeLine: String?
+    var colorIdentity: [String]?
+    var oracleText: String?
     
     var body: some View {
         VStack(alignment: .leading) {
-            // Typeline
-            if let typeLine = card.typeLine {
-                Text(typeLine)
+            // name
+            if let name = name {
+                Text(name)
                     .bold()
             }
             
+            // Typeline
+            if let typeLine = typeLine {
+                Text(typeLine)
+                    .italic()
+            }
+            
             // Colours
-            HStack {
-                if let colors = card.colorIdentity {
+            if let colors = colorIdentity {
+                HStack {
+                
                     // Multi-face card
                     ForEach(colors, id: \.self) { color in
                         Image(color)
                             .resizable()
                             .frame(width: 24, height: 24)
                     }
+                    Spacer()
                 }
-                Spacer()
+                .padding(.vertical, 5)
             }
-            .padding(.vertical, 10)
             
-            if let text = card.oracleText {
+            
+            if let text = oracleText {
                 Text("\" \(text) \"")
                     .font(.custom("ManaMTG", size: 18))
                     .italic()

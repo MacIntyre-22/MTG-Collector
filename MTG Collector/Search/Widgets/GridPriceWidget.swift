@@ -15,7 +15,7 @@ struct GridPriceWidget: View {
             .bold()
             .padding(5)
             .foregroundColor(.green)
-            .background(content: {Color(red: 225/255, green: 1, blue: 225/255)})
+            .background(content: {Color.green.opacity(0.2)})
             .clipShape(RoundedRectangle(cornerRadius: 5))
     }
 }

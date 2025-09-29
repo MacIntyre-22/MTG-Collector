@@ -126,6 +126,11 @@ class CardFace {
     var layout: String?
     var imageURIs: ImageURIs?
     
+    // text
+    var typeLine: String?
+    var oracleText: String?
+    var keywords: [String]?
+    
     // stats
     var toughness: String?
     var power: String?
@@ -141,12 +146,15 @@ class CardFace {
     var colors: [String]?
     var colorIndicator: [String]?
     
-    init(id: String? = nil, oracleID: String? = nil, name: String, layout: String? = nil, imageURIs: ImageURIs? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, manaCost: String? = nil, cmc: String? = nil, colors: [String]? = nil, colorIndicator: [String]? = nil) {
+    init(id: String? = nil, oracleID: String? = nil, name: String, layout: String? = nil, imageURIs: ImageURIs? = nil, typeLine: String? = nil, oracleText: String? = nil, keywords: [String]? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, manaCost: String? = nil, cmc: String? = nil, colors: [String]? = nil, colorIndicator: [String]? = nil) {
         self.id = id
         self.oracleID = oracleID
         self.name = name
         self.layout = layout
         self.imageURIs = imageURIs
+        self.typeLine = typeLine
+        self.oracleText = oracleText
+        self.keywords = keywords
         self.toughness = toughness
         self.power = power
         self.loyalty = loyalty

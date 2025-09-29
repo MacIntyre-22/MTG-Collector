@@ -91,6 +91,9 @@ struct SFAPI {
                         artCrop: face.imageURIs?.artCrop,
                         borderCrop: face.imageURIs?.borderCrop
                     ),
+                    typeLine: face.typeLine,
+                    oracleText: face.oracleText,
+                    keywords: face.keywords,
                     toughness: face.toughness,
                     power: face.power,
                     loyalty: face.loyalty,
