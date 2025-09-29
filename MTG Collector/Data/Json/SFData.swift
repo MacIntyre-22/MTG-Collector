@@ -72,7 +72,7 @@ struct CardJSON: Codable, Identifiable {
     var purchaseURIs: PurchaseURIsJSON?
     var allParts: [RelatedCardObjectJSON]?
     var reserved: Bool
-    var legalities: LegalitiesJSON?
+    var legalities: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -201,35 +201,35 @@ struct RelatedCardObjectJSON: Codable {
     var name: String?
 }
 
-struct LegalitiesJSON: Codable {
-    var standard: String?
-    var future: String?
-    var historic: String?
-    var timeless: String?
-    var gladiator: String?
-    var pioneer: String?
-    var modern: String?
-    var legacy: String?
-    var pauper: String?
-    var vintage: String?
-    var penny: String?
-    var commander: String?
-    var oathbreaker: String?
-    var standardBrawl: String?
-    var brawl: String?
-    var alchemy: String?
-    var pauperCommander: String?
-    var duel: String?
-    var oldschool: String?
-    var premodern: String?
-    var predh: String?
-
-    enum CodingKeys: String, CodingKey {
-        case standard, future, historic, timeless, gladiator, pioneer, modern, legacy, pauper, vintage, penny, commander, oathbreaker
-        case standardBrawl = "standardbrawl"
-        case brawl, alchemy
-        case pauperCommander = "paupercommander"
-        case duel, oldschool, premodern, predh
-    }
-}
+//struct LegalitiesJSON: Codable {
+//    var standard: String?
+//    var future: String?
+//    var historic: String?
+//    var timeless: String?
+//    var gladiator: String?
+//    var pioneer: String?
+//    var modern: String?
+//    var legacy: String?
+//    var pauper: String?
+//    var vintage: String?
+//    var penny: String?
+//    var commander: String?
+//    var oathbreaker: String?
+//    var standardBrawl: String?
+//    var brawl: String?
+//    var alchemy: String?
+//    var pauperCommander: String?
+//    var duel: String?
+//    var oldschool: String?
+//    var premodern: String?
+//    var predh: String?
+//
+//    enum CodingKeys: String, CodingKey {
+//        case standard, future, historic, timeless, gladiator, pioneer, modern, legacy, pauper, vintage, penny, commander, oathbreaker
+//        case standardBrawl = "standardbrawl"
+//        case brawl, alchemy
+//        case pauperCommander = "paupercommander"
+//        case duel, oldschool, premodern, predh
+//    }
+//}
 

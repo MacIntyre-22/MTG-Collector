@@ -70,11 +70,11 @@ struct SFAPI {
             colorIndicator: card.colorIndicator,
             typeLine: card.typeLine,
             oracleText: card.oracleText,
+            keywords: card.keywords,
             toughness: card.toughness,
             power: card.power,
             loyalty: card.loyalty,
             defense: card.defense,
-            keywords: card.keywords,
             layout: card.layout,
             // map to return array
             cardFaces: card.cardFaces?.map { face in
@@ -125,29 +125,7 @@ struct SFAPI {
                     name: part.name
                 )},
             reserved: card.reserved,
-            legalities: Legalities(
-                standard: card.legalities!.standard,
-                future: card.legalities!.future,
-                historic: card.legalities!.historic,
-                timeless: card.legalities!.timeless,
-                gladiator: card.legalities!.gladiator,
-                pioneer: card.legalities!.pioneer,
-                modern: card.legalities!.modern,
-                legacy: card.legalities!.legacy,
-                pauper: card.legalities!.pauper,
-                vintage: card.legalities!.vintage,
-                penny: card.legalities!.penny,
-                commander: card.legalities!.commander,
-                oathbreaker: card.legalities!.oathbreaker,
-                standardBrawl: card.legalities!.standardBrawl,
-                brawl: card.legalities!.brawl,
-                alchemy: card.legalities!.alchemy,
-                pauperCommander: card.legalities!.pauperCommander,
-                duel: card.legalities!.duel,
-                oldschool: card.legalities!.oldschool,
-                premodern: card.legalities!.premodern,
-                predh: card.legalities!.predh
-            )
+            legalities: card.legalities
         )
         return newCard
     }

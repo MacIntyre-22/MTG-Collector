@@ -32,12 +32,20 @@ struct CardInfoView: View {
                         }
                     }
                 }
-                Section("Pricing") {
-                    // Pricing info here
-                    InfoPriceWidget(card: card)
+                
+                if let prices = card.prices {
+                    Section("Pricing") {
+                        // Pricing info here
+                        InfoPriceWidget(card: card)
+                    }
                 }
-                Section("Legalities") {
-                    // Legalities info here
+                
+                if let legalities = card.legalities {
+                    Section("Legalities") {
+                        // Legalities info here
+                        InfoLegalWidget(legalities: legalities)
+                    }
+                    
                 }
                 Section("Information") {
                     // Additional info here

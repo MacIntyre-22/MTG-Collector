@@ -31,7 +31,7 @@ struct CollectionControllWidget: View {
                         }
                     }
                 } else {
-                    Text("No decks available")
+                    Text("No Binders available")
                         .font(.caption)
                 }
                 

@@ -58,46 +58,7 @@ class Deck {
         // get ruletype
         guard let rule = ruleType?.lowercased() else { return false }
 
-        // loop through each card
-        for entry in mainboard {
-            guard let legalities = entry.card.legalities else { return false }
-
-            // will stay true until one card is not legal
-            var cardIsLegal = false
-
-            // switch for rule set
-            switch rule {
-            case "standard": cardIsLegal = legalities.standard == "legal"
-            case "future": cardIsLegal = legalities.future == "legal"
-            case "historic": cardIsLegal = legalities.historic == "legal"
-            case "timeless": cardIsLegal = legalities.timeless == "legal"
-            case "gladiator": cardIsLegal = legalities.gladiator == "legal"
-            case "pioneer": cardIsLegal = legalities.pioneer == "legal"
-            case "modern": cardIsLegal = legalities.modern == "legal"
-            case "legacy": cardIsLegal = legalities.legacy == "legal"
-            case "pauper": cardIsLegal = legalities.pauper == "legal"
-            case "vintage": cardIsLegal = legalities.vintage == "legal"
-            case "penny": cardIsLegal = legalities.penny == "legal"
-            case "commander": cardIsLegal = legalities.commander == "legal"
-            case "oathbreaker": cardIsLegal = legalities.oathbreaker == "legal"
-            case "standardbrawl": cardIsLegal = legalities.standardBrawl == "legal"
-            case "brawl": cardIsLegal = legalities.brawl == "legal"
-            case "alchemy": cardIsLegal = legalities.alchemy == "legal"
-            case "paupercommander": cardIsLegal = legalities.pauperCommander == "legal"
-            case "duel": cardIsLegal = legalities.duel == "legal"
-            case "oldschool": cardIsLegal = legalities.oldschool == "legal"
-            case "premodern": cardIsLegal = legalities.premodern == "legal"
-            case "predh": cardIsLegal = legalities.predh == "legal"
-                // casual or no format
-            case "casual": cardIsLegal = true
-            default: cardIsLegal = false
-            }
-
-            // return false if all cards set value to legal
-            if !cardIsLegal {
-                return false
-            }
-        }
+//        // loop through each card and check legalities
 
         return true
     }
