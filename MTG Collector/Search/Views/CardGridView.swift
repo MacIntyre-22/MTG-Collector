@@ -15,6 +15,7 @@ struct CardGridView: View {
             CardImageView(maxWidth: 220, imageUrl: card.imageURIs?.normal ?? "")
             Text(card.name)
                 .font(.headline)
+                .foregroundColor(.primary)
                 .lineLimit(1)
                 .truncationMode(.tail)
             ScrollView(.horizontal, showsIndicators: false) {

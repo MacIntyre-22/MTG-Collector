@@ -146,7 +146,7 @@ struct PurchaseURIsJSON: Codable {
     var cardhoarder: String?
 }
 
-struct CardFaceJSON: Codable {
+struct CardFaceJSON: Codable, Identifiable {
     var id: String?
     var oracleID: String?
     var name: String
