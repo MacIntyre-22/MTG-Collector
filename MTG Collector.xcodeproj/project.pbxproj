@@ -10,22 +10,9 @@
 		709A6AF52E7DA34E00095FFD /* MTG Collector.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MTG Collector.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		709A6D952E8A0B8000095FFD /* Exceptions for "MTG Collector" folder in "MTG Collector" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"MTG-Collector-Info.plist",
-			);
-			target = 709A6AF42E7DA34E00095FFD /* MTG Collector */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		709A6AF72E7DA34E00095FFD /* MTG Collector */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				709A6D952E8A0B8000095FFD /* Exceptions for "MTG Collector" folder in "MTG Collector" target */,
-			);
 			path = "MTG Collector";
 			sourceTree = "<group>";
 		};

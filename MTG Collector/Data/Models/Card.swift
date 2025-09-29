@@ -47,13 +47,13 @@ class Card {
     var finishes: [String]?
     var set: String?
     
-    var prices: Prices?
-    var purchaseURIs: PurchaseURIs?
+    var prices: [String: String?]?
+    var purchaseURIs: [String: String]?
     var allParts: [RelatedCardObject]?
     var reserved: Bool
     var legalities: [String: String]?
  
-    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: String? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double? = nil, colors: [String]? = nil, colorIdentity: [String]? = nil, colorIndicator: [String]? = nil, typeLine: String? = nil, oracleText: String? = nil, keywords: [String]? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String]? = nil, set: String? = nil, prices: Prices? = nil, purchaseURIs: PurchaseURIs? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: [String : String]? = nil) {
+    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: String? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double? = nil, colors: [String]? = nil, colorIdentity: [String]? = nil, colorIndicator: [String]? = nil, typeLine: String? = nil, oracleText: String? = nil, keywords: [String]? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String]? = nil, set: String? = nil, prices: [String : String?]? = nil, purchaseURIs: [String : String]? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: [String : String]? = nil) {
         self.id = id
         self.oracleID = oracleID
         self.name = name

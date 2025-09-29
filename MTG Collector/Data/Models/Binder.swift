@@ -30,24 +30,24 @@ class Binder {
         cards.count
     }
 
-    var totalPrice: Double {
-        // get each price
-        cards.reduce(0) { total, entry in
-            // convert to Double
-            let price = Double(entry.card.prices?.usd ?? "0") ?? 0
-            // add price of entry and duplicates
-            return total + price * Double(entry.quantity)
-        }
-    }
-
-    var highestPricedCard: CardEntry? {
-        cards.max(by: {
-            // compare last highest price to new card
-            let price0 = Double($0.card.prices?.usd ?? "0")
-            let price1 = Double($1.card.prices?.usd ?? "0")
-            return price0 ?? 0 < price1 ?? 0
-        })
-    }
+//    var totalPrice: Double {
+//        // get each price
+//        cards.reduce(0) { total, entry in
+//            // convert to Double
+//            let price = Double(entry.card.prices?.usd ?? "0") ?? 0
+//            // add price of entry and duplicates
+//            return total + price * Double(entry.quantity)
+//        }
+//    }
+//
+//    var highestPricedCard: CardEntry? {
+//        cards.max(by: {
+//            // compare last highest price to new card
+//            let price0 = Double($0.card.prices?.usd ?? "0")
+//            let price1 = Double($1.card.prices?.usd ?? "0")
+//            return price0 ?? 0 < price1 ?? 0
+//        })
+//    }
 
     // rarities dict
     var rarities: [String: Int] {

@@ -108,16 +108,7 @@ struct SFAPI {
             flavorText: card.flavorText,
             finishes: card.finishes,
             set: card.set,
-            prices: Prices(
-                usd: card.prices!.usd,
-                usdFoil: card.prices!.usdFoil,
-                usdEtched: card.prices!.usdEtched
-            ),
-            purchaseURIs: PurchaseURIs(
-                tcgplayer: card.purchaseURIs!.tcgplayer,
-                cardmarket: card.purchaseURIs!.cardmarket,
-                cardhoarder: card.purchaseURIs!.cardhoarder
-            ),
+            prices: card.prices,
             // msp to return array
             allParts: card.allParts?.map { part in
                 RelatedCardObject(

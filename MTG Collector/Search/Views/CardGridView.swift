@@ -59,8 +59,13 @@ struct CardGridView: View {
                         GridRarityWidget(rarity: rarity)
                     }
                     // show price
-                    if let price = card.prices?.usd {
-                        GridPriceWidget(price: price)
+                    if let prices = card.prices {
+                        ForEach(prices.keys.sorted(), id: \.self) { key in
+                            // only display if price has a value
+                            if let priceOptional = prices[key], let price = priceOptional, !price.isEmpty {
+                                GridPriceWidget(finish: key, price: price)
+                            }
+                        }
                     }
                 }
             }

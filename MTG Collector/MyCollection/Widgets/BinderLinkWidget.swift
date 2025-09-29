@@ -15,7 +15,6 @@ struct BinderLinkWidget: View {
         VStack {
             Text(binder.name)
             Divider()
-            Text("Total Price: \(binder.totalPrice)")
             Text("Card Count: \(binder.cardCount)")
         }
     }

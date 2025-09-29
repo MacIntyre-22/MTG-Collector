@@ -68,8 +68,8 @@ struct CardJSON: Codable, Identifiable {
     var finishes: [String]?
     var set: String?
 
-    var prices: PricesJSON?
-    var purchaseURIs: PurchaseURIsJSON?
+    var prices: [String: String?]?
+    var purchaseURIs: [String: String]?
     var allParts: [RelatedCardObjectJSON]?
     var reserved: Bool
     var legalities: [String: String]?

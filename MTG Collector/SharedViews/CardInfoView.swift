@@ -33,10 +33,11 @@ struct CardInfoView: View {
                     }
                 }
                 
+                
                 if let prices = card.prices {
                     Section("Pricing") {
                         // Pricing info here
-                        InfoPriceWidget(card: card)
+                        InfoPriceWidget(prices: prices)
                     }
                 }
                 
