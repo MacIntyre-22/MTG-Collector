@@ -51,8 +51,13 @@ struct CardInfoView: View {
             }
             .frame(height: 150)
             .padding()
-            
+            .shadow(radius: 4)
         }
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                CollectionControllWidget(card: card)
+            }
+        })
     }
     
 }

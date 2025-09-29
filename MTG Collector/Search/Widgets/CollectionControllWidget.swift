@@ -22,7 +22,7 @@ struct CollectionControllWidget: View {
     
     var body: some View {
         HStack() {
-            Menu("Add") {
+            Menu("Add", systemImage: "plus") {
                 Text("Binders")
                 if !binders.isEmpty {
                     ForEach(binders) { binder in
