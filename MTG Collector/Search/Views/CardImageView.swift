@@ -26,7 +26,6 @@ struct CardImageView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(maxWidth: maxWidth)
                         .cornerRadius(8)
-                        .shadow(color: Color.black.opacity(0.5), radius: 7, x: 0, y: 3)
                     // All fail cases are just filled with a gray view
                 case .failure:
                     Color.gray

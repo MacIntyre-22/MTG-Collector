@@ -13,7 +13,7 @@ struct SearchTabView: View {
     @State private var filters = CardFilters()
     
     // responsive grid
-    let columns = [GridItem(.adaptive(minimum: 180, maximum: 180), spacing: 10)]
+    let columns = [GridItem(.adaptive(minimum: 180, maximum: 180), spacing: 15)]
     
     var body: some View {
         NavigationStack {
