@@ -19,6 +19,7 @@ struct CardInfoView: View {
             List {
                 Section("Information") {
                     VStack(spacing: 8) {
+                        // handle muliple faces
                         if !card.cardFaces.isEmpty {
                             
                             ForEach(card.cardFaces) { face in
@@ -31,18 +32,28 @@ struct CardInfoView: View {
                     }
                 }
                 
-                Section("Pricing") {
-                    // pricing info
-                    InfoPriceWidget(prices: card.prices)
-                }
-                
                 Section("Legalities") {
                     // Legalities info here
                     InfoLegalWidget(legalities: card.legalities)
                 }
                 
+                Section("Related Cards") {
+                    // related card items
+                    InfoRelatedWidget(cardParts: card.allParts)
+                }
+                
+                Section("Pricing") {
+                    // pricing info
+                    InfoPriceWidget(prices: card.prices)
+                }
+                
+                Section("Purchasing Links") {
+                    InfoPurchaseWidget()
+                }
+                
                 Section("Other") {
                     // Additional info here
+                    InfoOtherWidget(releasedAt: card.releasedAt, finishes: card.finishes, set: card.set, reserved: card.reserved)
                 }
             }
             .navigationTitle(card.name)
@@ -75,6 +86,5 @@ struct CardInfoView: View {
             }
         })
     }
-    
 }
 

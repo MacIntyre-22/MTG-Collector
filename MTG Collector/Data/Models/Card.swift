@@ -122,10 +122,12 @@ class Card {
 class RelatedCardObject {
     var id: String
     var name: String
+    var uri: String
     
-    init(id: String = "", name: String = "") {
+    init(id: String = "", name: String = "", uri: String) {
         self.id = id
         self.name = name
+        self.uri = uri
     }
 }
 

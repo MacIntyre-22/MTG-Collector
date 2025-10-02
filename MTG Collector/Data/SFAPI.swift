@@ -9,7 +9,8 @@ import Foundation
 
 struct SFAPI {
     
-    // build url
+    // MARK: URL Builder
+    // build url from filters struct
     static func buildSearchURL(filters: CardFilters) -> URL? {
         let query = buildQuery(from: filters)
         let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -28,6 +29,43 @@ struct SFAPI {
         } catch {
             print("There was an error - \(error)")
             return [] 
+        }
+    }
+    
+    // MARK: Card Data by ID
+    // can return nil
+    static func fetchCardId(id: String) async -> CardJSON? {
+        do {
+            if let url = URL(string: "https://api.scryfall.com/cards/\(id)") {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                let decoder = JSONDecoder()
+                let fetchResults = try decoder.decode(CardJSON.self, from: data)
+                return fetchResults
+            }else {
+                return nil
+            }
+        } catch {
+            print("There was an error - \(error)")
+            return nil
+        }
+    }
+    
+    // MARK: Card Data by URI
+    // some objects return a uri right for the object
+    // can return nil
+    static func fetchCardURI(uri: String) async -> CardJSON? {
+        do {
+            if let url = URL(string: uri) {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                let decoder = JSONDecoder()
+                let fetchResults = try decoder.decode(CardJSON.self, from: data)
+                return fetchResults
+            }else {
+                return nil
+            }
+        } catch {
+            print("There was an error - \(error)")
+            return nil
         }
     }
     
@@ -104,7 +142,7 @@ struct SFAPI {
         )
         
         let tempParts: [RelatedCardObject] = (json.allParts ?? []).map {
-            RelatedCardObject(id: $0.id ?? "", name: $0.name ?? "")
+            RelatedCardObject(id: $0.id ?? "", name: $0.name ?? "", uri: $0.uri ?? "")
         }
         
         

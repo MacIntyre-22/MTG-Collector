@@ -13,22 +13,20 @@ struct ScryfallSetData: Decodable {
 
 // MARK: Set Object Json
 struct SetJSON: Codable {
-    var id: String?
+    var code: String?
     var name: String?
     var releaseDate: String?
     var type: String?
     var cardCount: Int?
     var iconURI: String?
-    var searchURI: String?
 
     enum CodingKeys: String, CodingKey {
-        case id
+        case code
         case name
         case releaseDate = "released_at"
         case type
         case cardCount = "card_count"
         case iconURI = "icon_svg_uri"
-        case searchURI = "search_uri"
     }
 }
 
@@ -210,4 +208,5 @@ struct CardFaceJSON: Codable, Identifiable {
 struct RelatedCardObjectJSON: Codable {
     var id: String?
     var name: String?
+    var uri: String?
 }

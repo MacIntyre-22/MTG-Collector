@@ -8,11 +8,21 @@
 import SwiftUI
 
 struct InfoOtherWidget: View {
+    var releasedAt: String
+    var finishes: [String]
+    var set: String
+    var reserved: Bool
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Released: \(releasedAt)")
+        HStack {
+            Text("Finishes: ")
+            ForEach(finishes, id: \.self) { finish in
+                Text(finish.capitalized)
+            }
+        }
+        Text("Set Code: \(set)")
+        Text(reserved ? "This card is being printed" : "This card is not being printed")
     }
 }
 
-#Preview {
-    InfoOtherWidget()
-}

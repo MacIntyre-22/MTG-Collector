@@ -1,0 +1,52 @@
+//
+//  InfoRelatedWidget.swift
+//  MTG Collector
+//
+//  Created by Ben MacIntyre (School) on 2025-10-02.
+//
+
+import SwiftUI
+
+struct InfoRelatedWidget: View {
+    // card part data
+    var cardParts: [RelatedCardObject]
+    
+    // card objects grab from api using related card ids
+    @State var relatedCards: [Card] = []
+    
+    var body: some View {
+        ScrollView(.horizontal) {
+            HStack {
+                ForEach(relatedCards) { card in
+                    CardGridView(card: card)
+                        .frame(maxWidth: 150)
+                }
+            }
+            .frame(maxHeight: 300)
+            
+        }
+        // only run once
+        .task {
+            await getCardParts()
+        }
+        
+    }
+    
+    
+    // MARK: Get Card Parts
+    // fetch card parts using their api
+    func getCardParts() async {
+        for card in cardParts {
+            
+            // fetch a card object by the id privided in card parts
+            if let jsonPart = await SFAPI.fetchCardURI(uri: card.uri) {
+                
+                // make a model and add it to related cards array
+                let modelPart = SFAPI.JSONtoModel(json: jsonPart)
+                relatedCards.append(modelPart)
+            }
+            
+        }
+    }
+}
+
