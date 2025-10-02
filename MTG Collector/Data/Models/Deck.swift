@@ -10,11 +10,10 @@ import SwiftData
 // MARK: Deck
 @Model
 class Deck {
-    @Attribute(.unique) var id: UUID = UUID()
+    @Attribute(.unique) var id: String = UUID().uuidString
     var name: String
-    var notes: String?
-    var ruleType: String?
-    var commander: Card?
+    var notes: String
+    var ruleType: String
     var createdAt: Date
     
     @Relationship var mainboard: [CardEntry] = []
@@ -33,19 +32,15 @@ class Deck {
     var landCount: Int {
         // sort by land
         mainboard.filter { entry in
-            // unwrap
-            if let typeLine = entry.card.typeLine {
-                return typeLine.contains("Land")
-            }
-            return false
+            return entry.card.typeLine.contains("Land")
         }
         // add quantity
         .reduce(0) { $0 + $1.quantity }
     }
 
-    
+    // average mana cost
     var avgManaCost: Double {
-        // filter out nils if any and unwrap
+        // filter out nils if any
         let costs = mainboard.compactMap { $0.card.cmc }
         // check if empty
         guard !costs.isEmpty else { return 0 }
@@ -55,15 +50,24 @@ class Deck {
     
     // is deck as a whole legal
     var isLegal: Bool {
+        // assumes everycard is legal until it finds one that isnt
+        var temp: Bool = true
+        
         // get ruletype
-        guard let rule = ruleType?.lowercased() else { return false }
-
-//        // loop through each card and check legalities
-
-        return true
+        for entry in mainboard {
+            // check card for ruletype and see if legal or not
+            // unless casual
+            for legality in entry.card.legalities {
+                // other values that are not "legal" still make the deck not legal (ex: banned, restricted, not_legal)
+                if legality.key == ruleType && legality.value != "legal" {
+                    temp = false
+                }
+            }
+        }
+        return temp
     }
     
-    // get an array of all contained mana tyoes
+    // get an array of all contained mana types
     var manaTypes: [String] {
         // based off mana count
         // grab any key where the value is greater than 1
@@ -76,14 +80,13 @@ class Deck {
         var counts: [String: Int] = [:]
         
         for entry in mainboard {
-            // unwrap
-            if let typeLine = entry.card.typeLine {
-                // get the main type, not the subtype
-                let mainType = typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
-                counts[mainType, default: 0] += entry.quantity
-            }
+            // get the main type, not the subtype
+            // separates (Legendary Creature - Human)
+            // i just want legendary creature, as subtypes are alot more diverse and are not relevant
+            let mainType = entry.card.typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
+            // create the dict where the parsed string is the key and count is value
+            counts[mainType, default: 0] += entry.quantity
         }
-        
         return counts
     }
 
@@ -93,26 +96,21 @@ class Deck {
         var counts: [String: Int] = [:]
         
         for entry in mainboard {
-            // unwrap
-            if let colors = entry.card.colorIdentity {
-                // count or default to 0
-                for mana in colors {
-                    counts[mana, default: 0] += 1
-                }
+            // count or default to 0
+            for mana in entry.card.colorIdentity {
+                counts[mana, default: 0] += 1
             }
         }
         return counts
     }
 
 
-    
-    init(id: UUID, name: String, notes: String? = nil, ruleType: String? = nil, commander: Card? = nil, createdAt: Date) {
-        self.id = id
+    // only require a name for the deck
+    init(name: String, notes: String = "", ruleType: String = "casual") {
         self.name = name
         self.notes = notes
         self.ruleType = ruleType
-        self.commander = commander
-        self.createdAt = createdAt
+        self.createdAt = Date()
     }
 
 }

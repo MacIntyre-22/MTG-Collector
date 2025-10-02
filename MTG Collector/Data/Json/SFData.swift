@@ -4,10 +4,14 @@
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
 //
+
+// MARK: Scryfall Set Data
+// for pulling sets only
 struct ScryfallSetData: Decodable {
     var data: [SetJSON]
 }
 
+// MARK: Set Object Json
 struct SetJSON: Codable {
     var id: String?
     var name: String?
@@ -28,10 +32,13 @@ struct SetJSON: Codable {
     }
 }
 
+// MARK: Scryfall Data
+// for search
 struct ScryfallCardData: Decodable {
     var data: [CardJSON]
 }
 
+// MARK: Card Object JSON
 struct CardJSON: Codable, Identifiable {
     var id: String?
     var oracleID: String?
@@ -68,8 +75,8 @@ struct CardJSON: Codable, Identifiable {
     var finishes: [String]?
     var set: String?
 
-    var prices: [String: String?]?
-    var purchaseURIs: [String: String]?
+    var prices: PricesJSON?
+    var purchaseURIs: PurchaseURIsJSON?
     var allParts: [RelatedCardObjectJSON]?
     var reserved: Bool
     var legalities: [String: String]?
@@ -113,6 +120,7 @@ struct CardJSON: Codable, Identifiable {
     }
 }
 
+// MARK: Image URIs Object JSON
 struct ImageURIsJSON: Codable {
     var small: String?
     var normal: String?
@@ -128,6 +136,7 @@ struct ImageURIsJSON: Codable {
     }
 }
 
+// MARK: Prices Object JSON
 struct PricesJSON: Codable {
     var usd: String?
     var usdFoil: String?
@@ -140,12 +149,14 @@ struct PricesJSON: Codable {
     }
 }
 
+// MARK: Purchase URIs Object JSON
 struct PurchaseURIsJSON: Codable {
     var tcgplayer: String?
     var cardmarket: String?
     var cardhoarder: String?
 }
 
+// MARK: Card Face Object JSON
 struct CardFaceJSON: Codable, Identifiable {
     var id: String?
     var oracleID: String?
@@ -165,7 +176,6 @@ struct CardFaceJSON: Codable, Identifiable {
     var defense: String?
     
     // MANA
-    // mana cost in sysmbols: {W}, {B}
     var manaCost: String?
     // mana value
     var cmc: String?
@@ -196,40 +206,8 @@ struct CardFaceJSON: Codable, Identifiable {
     }
 }
 
+// MARK: Related Card Object JSON
 struct RelatedCardObjectJSON: Codable {
     var id: String?
     var name: String?
 }
-
-//struct LegalitiesJSON: Codable {
-//    var standard: String?
-//    var future: String?
-//    var historic: String?
-//    var timeless: String?
-//    var gladiator: String?
-//    var pioneer: String?
-//    var modern: String?
-//    var legacy: String?
-//    var pauper: String?
-//    var vintage: String?
-//    var penny: String?
-//    var commander: String?
-//    var oathbreaker: String?
-//    var standardBrawl: String?
-//    var brawl: String?
-//    var alchemy: String?
-//    var pauperCommander: String?
-//    var duel: String?
-//    var oldschool: String?
-//    var premodern: String?
-//    var predh: String?
-//
-//    enum CodingKeys: String, CodingKey {
-//        case standard, future, historic, timeless, gladiator, pioneer, modern, legacy, pauper, vintage, penny, commander, oathbreaker
-//        case standardBrawl = "standardbrawl"
-//        case brawl, alchemy
-//        case pauperCommander = "paupercommander"
-//        case duel, oldschool, premodern, predh
-//    }
-//}
-

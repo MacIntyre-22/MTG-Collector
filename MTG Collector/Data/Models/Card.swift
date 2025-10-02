@@ -8,52 +8,83 @@ import Foundation
 import SwiftUI
 import SwiftData
 
-// MARK: Scryfall Card Info
+// All Models have a default value that is empty of their type, no nil values
+
+// MARK: Card Model
 @Model
 class Card {
-    var id: String?
-    var oracleID: String?
+    var id: String
+    var oracleID: String
     var name: String
-    var releasedAt: String?
-    var imageStatus: String?
-    var imageURIs: ImageURIs?
+    var releasedAt: String
+    var imageStatus: String
+    var imageURIs: ImageURIs
     
     // MANA
-    // mana cost in sysmbols: {W}, {B}
-    var manaCost: String?
-    var cmc: Double?
-    var colors: [String]?
-    var colorIdentity: [String]?
-    var colorIndicator: [String]?
+    var manaCost: String
+    var cmc: Double
+    var colors: [String]
+    var colorIdentity: [String]
+    var colorIndicator: [String]
     
     // text
-    var typeLine: String?
-    var oracleText: String?
-    var keywords: [String]?
+    var typeLine: String
+    var oracleText: String
+    var keywords: [String]
     
     // stats
-    var toughness: String?
-    var power: String?
-    var loyalty: String?
-    var defense: String?
+    var toughness: String
+    var power: String
+    var loyalty: String
+    var defense: String
     
     // Muli face cards
-    var layout: String?
-    var cardFaces: [CardFace]?
+    var layout: String
+    var cardFaces: [CardFace]
     
     // other
-    var rarity: String?
-    var flavorText: String?
-    var finishes: [String]?
-    var set: String?
+    var rarity: String
+    var flavorText: String
+    var finishes: [String]
+    var set: String
     
-    var prices: [String: String?]?
-    var purchaseURIs: [String: String]?
-    var allParts: [RelatedCardObject]?
+    var prices: Prices
+    var purchaseURIs: PurchaseURIs
+    var allParts: [RelatedCardObject]
     var reserved: Bool
-    var legalities: [String: String]?
+    var legalities: [String: String]
  
-    init(id: String? = nil, oracleID: String? = nil, name: String, releasedAt: String? = nil, imageStatus: String? = nil, imageURIs: ImageURIs? = nil, manaCost: String? = nil, cmc: Double? = nil, colors: [String]? = nil, colorIdentity: [String]? = nil, colorIndicator: [String]? = nil, typeLine: String? = nil, oracleText: String? = nil, keywords: [String]? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, layout: String? = nil, cardFaces: [CardFace]? = nil, rarity: String? = nil, flavorText: String? = nil, finishes: [String]? = nil, set: String? = nil, prices: [String : String?]? = nil, purchaseURIs: [String : String]? = nil, allParts: [RelatedCardObject]? = nil, reserved: Bool, legalities: [String : String]? = nil) {
+    init(
+        id: String = "",
+        oracleID: String = "",
+        name: String = "",
+        releasedAt: String = "",
+        imageStatus: String = "",
+        imageURIs: ImageURIs = ImageURIs(),
+        manaCost: String = "",
+        cmc: Double = 0.0,
+        colors: [String] = [],
+        colorIdentity: [String] = [],
+        colorIndicator: [String] = [],
+        typeLine: String = "",
+        oracleText: String = "",
+        keywords: [String] = [],
+        toughness: String = "",
+        power: String = "",
+        loyalty: String = "",
+        defense: String = "",
+        layout: String = "",
+        cardFaces: [CardFace] = [],
+        rarity: String = "",
+        flavorText: String = "",
+        finishes: [String] = [],
+        set: String = "",
+        prices: Prices = Prices(),
+        purchaseURIs: PurchaseURIs = PurchaseURIs(),
+        allParts: [RelatedCardObject] = [],
+        reserved: Bool = false,
+        legalities: [String : String] = [:]
+    ) {
         self.id = id
         self.oracleID = oracleID
         self.name = name
@@ -86,28 +117,29 @@ class Card {
     }
 }
 
+// MARK: Related Card Model
 @Model
 class RelatedCardObject {
-    var id: String?
-    var name: String?
+    var id: String
+    var name: String
     
-    init(id: String? = nil, name: String? = nil) {
+    init(id: String = "", name: String = "") {
         self.id = id
         self.name = name
     }
 }
 
-// images model
+// MARK: Image URIs Model
 @Model
 class ImageURIs {
-    var small: String?
-    var normal: String?
-    var large: String?
-    var png: String?
-    var artCrop: String?
-    var borderCrop: String?
+    var small: String
+    var normal: String
+    var large: String
+    var png: String
+    var artCrop: String
+    var borderCrop: String
 
-    init(small: String? = nil, normal: String? = nil, large: String? = nil, png: String? = nil, artCrop: String? = nil, borderCrop: String? = nil) {
+    init(small: String = "", normal: String = "", large: String = "", png: String = "", artCrop: String = "", borderCrop: String = "") {
         self.small = small
         self.normal = normal
         self.large = large
@@ -117,36 +149,51 @@ class ImageURIs {
     }
 }
 
-// card face model
+// MARK: Card Face Object
 @Model
 class CardFace {
-    var id: String?
-    var oracleID: String?
+    var id: String
+    var oracleID: String
     var name: String
-    var layout: String?
-    var imageURIs: ImageURIs?
+    var layout: String
+    var imageURIs: ImageURIs
     
     // text
-    var typeLine: String?
-    var oracleText: String?
-    var keywords: [String]?
+    var typeLine: String
+    var oracleText: String
+    var keywords: [String]
     
     // stats
-    var toughness: String?
-    var power: String?
-    var loyalty: String?
-    var defense: String?
+    var toughness: String
+    var power: String
+    var loyalty: String
+    var defense: String
     
     // MANA
-    // mana cost in sysmbols: {W}, {B}
-    var manaCost: String?
+    var manaCost: String
     // mana value
-    var cmc: String?
+    var cmc: Double
     // colours
-    var colors: [String]?
-    var colorIndicator: [String]?
+    var colors: [String]
+    var colorIndicator: [String]
     
-    init(id: String? = nil, oracleID: String? = nil, name: String, layout: String? = nil, imageURIs: ImageURIs? = nil, typeLine: String? = nil, oracleText: String? = nil, keywords: [String]? = nil, toughness: String? = nil, power: String? = nil, loyalty: String? = nil, defense: String? = nil, manaCost: String? = nil, cmc: String? = nil, colors: [String]? = nil, colorIndicator: [String]? = nil) {
+    init(id: String = "",
+         oracleID: String = "",
+         name: String = "",
+         layout: String = "",
+         imageURIs: ImageURIs = ImageURIs(),
+         typeLine: String = "",
+         oracleText: String = "",
+         keywords: [String] = [],
+         toughness: String = "",
+         power: String = "",
+         loyalty: String = "",
+         defense: String = "",
+         manaCost: String = "",
+         cmc: Double = 0.0,
+         colors: [String] = [],
+         colorIndicator: [String] = []
+     ) {
         self.id = id
         self.oracleID = oracleID
         self.name = name
@@ -166,86 +213,30 @@ class CardFace {
     }
 }
 
-// prices model
+// MARK: Prices Model
 @Model
 class Prices {
-    var usd: String?
-    var usdFoil: String?
-    var usdEtched: String?
+    var usd: String
+    var usdFoil: String
+    var usdEtched: String
     
-    init(usd: String? = nil, usdFoil: String? = nil, usdEtched: String? = nil) {
+    init(usd: String = "", usdFoil: String = "", usdEtched: String = "") {
         self.usd = usd
         self.usdFoil = usdFoil
         self.usdEtched = usdEtched
     }
 }
 
-
-// purchase uri model
+// MARK: Purchase URIs Model
 @Model
 class PurchaseURIs {
-    var tcgplayer: String?
-    var cardmarket: String?
-    var cardhoarder: String?
-    var mtgo: String?
-    var magiceden: String?
+    var tcgplayer: String
+    var cardmarket: String
+    var cardhoarder: String
     
-    init(tcgplayer: String? = nil, cardmarket: String? = nil, cardhoarder: String? = nil, mtgo: String? = nil, magiceden: String? = nil) {
+    init(tcgplayer: String = "", cardmarket: String = "", cardhoarder: String = "") {
         self.tcgplayer = tcgplayer
         self.cardmarket = cardmarket
         self.cardhoarder = cardhoarder
-        self.mtgo = mtgo
-        self.magiceden = magiceden
     }
-    
 }
-
-//// legalities
-//@Model
-//class Legalities {
-//    var standard: String?
-//    var future: String?
-//    var historic: String?
-//    var timeless: String?
-//    var gladiator: String?
-//    var pioneer: String?
-//    var modern: String?
-//    var legacy: String?
-//    var pauper: String?
-//    var vintage: String?
-//    var penny: String?
-//    var commander: String?
-//    var oathbreaker: String?
-//    var standardBrawl: String?
-//    var brawl: String?
-//    var alchemy: String?
-//    var pauperCommander: String?
-//    var duel: String?
-//    var oldschool: String?
-//    var premodern: String?
-//    var predh: String?
-//    
-//    init(standard: String? = nil, future: String? = nil, historic: String? = nil, timeless: String? = nil, gladiator: String? = nil, pioneer: String? = nil, modern: String? = nil, legacy: String? = nil, pauper: String? = nil, vintage: String? = nil, penny: String? = nil, commander: String? = nil, oathbreaker: String? = nil, standardBrawl: String? = nil, brawl: String? = nil, alchemy: String? = nil, pauperCommander: String? = nil, duel: String? = nil, oldschool: String? = nil, premodern: String? = nil, predh: String? = nil) {
-//        self.standard = standard
-//        self.future = future
-//        self.historic = historic
-//        self.timeless = timeless
-//        self.gladiator = gladiator
-//        self.pioneer = pioneer
-//        self.modern = modern
-//        self.legacy = legacy
-//        self.pauper = pauper
-//        self.vintage = vintage
-//        self.penny = penny
-//        self.commander = commander
-//        self.oathbreaker = oathbreaker
-//        self.standardBrawl = standardBrawl
-//        self.brawl = brawl
-//        self.alchemy = alchemy
-//        self.pauperCommander = pauperCommander
-//        self.duel = duel
-//        self.oldschool = oldschool
-//        self.premodern = premodern
-//        self.predh = predh
-//    }
-//}

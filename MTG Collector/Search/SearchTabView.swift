@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct SearchTabView: View {
+    // Search Card Data
     @State private var scryfallResults: [CardJSON] = []
+    
+    // Filters
     @State private var showFilters = false
     @State private var filters = CardFilters()
     
