@@ -32,7 +32,6 @@ struct InfoLegalWidget: View {
                 }
             }
        }
-       .padding()
     }
     
     

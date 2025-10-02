@@ -44,7 +44,7 @@ struct InfoDisplayWidget: View {
             
             
             if let text = oracleText {
-                Text("\" \(text) \"")
+                Text("\"\(text)\"")
                     .font(.custom("ManaMTG", size: 18))
                     .italic()
                     .lineSpacing(1.3)

@@ -14,7 +14,7 @@ struct DeckGridWidget: View {
         VStack {
             Text(deck.name)
             Divider()
-            Text(deck.ruleType ?? "")
+            Text(deck.ruleType)
             Text("\(deck.cardCount)")
         }
     }

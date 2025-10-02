@@ -12,12 +12,12 @@ struct CardBoardView: View {
     
     var body: some View {
         VStack {
-            CardImageView(maxWidth: 180, imageUrl: entry.card.imageURIs?.normal ?? "")
+            CardImageView(maxWidth: 180, imageUrl: entry.card.imageURIs.normal)
                 .frame(width: 100)
             Text(entry.card.name)
             Divider()
             
-            Text(entry.card.colors?.first ?? "No Color")
+            Text(entry.card.colors.first ?? "No Color")
 
         
         }

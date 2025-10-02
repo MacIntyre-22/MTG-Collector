@@ -25,8 +25,10 @@ struct SearchTabView: View {
                 // MARK: Grid View
                 LazyVGrid(columns: columns) {
                         ForEach(scryfallResults) { card in
-                            NavigationLink(destination: CardInfoView(card: card)){
-                                CardGridView(card: card)
+                            // pass a model version of the card to the views
+                            let tempModel = SFAPI.JSONtoModel(json: card)
+                            NavigationLink(destination: CardInfoView(card: tempModel)){
+                                CardGridView(card: tempModel)
                             }
                         }
                 }

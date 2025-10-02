@@ -17,11 +17,7 @@ struct BinderView: View {
                     HStack {
                         ForEach(binder.cards) { entry in
                             VStack {
-                                CardImageView(maxWidth: 250, imageUrl: entry.card.imageURIs?.normal ?? "")
-                                Text(entry.card.name)
-                                Divider()
-                                
-                                Text(entry.card.colors?.first ?? "No Color")
+                                CardGridView(card: entry.card)
 
                             
                             }

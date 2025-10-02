@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CardInfoView: View {
     // data
-    var card: CardJSON
+    var card: Card
     
     
     var body: some View {
@@ -17,13 +17,11 @@ struct CardInfoView: View {
             
             // The main scrollable list
             List {
-                Section("Display") {
+                Section("Information") {
                     VStack(spacing: 8) {
-                        if let faces = card.cardFaces, !faces.isEmpty {
-                            // create id by name or else error will be thrown
-                            // not all the card faces have an id or are the same
+                        if !card.cardFaces.isEmpty {
                             
-                            ForEach(faces, id: \.name) { face in
+                            ForEach(card.cardFaces) { face in
                                 InfoDisplayWidget(name: face.name, typeLine: face.typeLine, colorIdentity: card.colorIdentity, oracleText: face.oracleText)
                                     .padding(.bottom, 10)
                             }
@@ -33,22 +31,17 @@ struct CardInfoView: View {
                     }
                 }
                 
-                
-                if let prices = card.prices {
-                    Section("Pricing") {
-                        // Pricing info here
-                        InfoPriceWidget(prices: prices)
-                    }
+                Section("Pricing") {
+                    // pricing info
+                    InfoPriceWidget(prices: card.prices)
                 }
                 
-                if let legalities = card.legalities {
-                    Section("Legalities") {
-                        // Legalities info here
-                        InfoLegalWidget(legalities: legalities)
-                    }
-                    
+                Section("Legalities") {
+                    // Legalities info here
+                    InfoLegalWidget(legalities: card.legalities)
                 }
-                Section("Information") {
+                
+                Section("Other") {
                     // Additional info here
                 }
             }
@@ -59,14 +52,12 @@ struct CardInfoView: View {
             HStack(){
                 Spacer()
                 HStack(spacing: 8) {
-                    if let faces = card.cardFaces, !faces.isEmpty {
-                        // create id by name or else error will be thrown
-                        // not all the card faces have an id or are the same
-                        ForEach(faces, id: \.name) { face in
-                            CardImageView(maxWidth: 75, imageUrl: face.imageURIs?.normal ?? "")
+                    if !card.cardFaces.isEmpty {
+                        ForEach(card.cardFaces) { face in
+                            CardImageView(maxWidth: 75, imageUrl: face.imageURIs.normal)
                         }
                     } else {
-                        CardImageView(maxWidth: 100, imageUrl: card.imageURIs?.normal ?? "")
+                        CardImageView(maxWidth: 100, imageUrl: card.imageURIs.normal)
                     }
                 }
                 .padding(8)

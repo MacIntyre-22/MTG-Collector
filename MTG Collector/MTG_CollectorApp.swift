@@ -39,6 +39,6 @@ struct MTG_CollectorApp: App {
                     })
             }
         }
-        .modelContainer(for: [MyCollection.self, Binder.self, Deck.self, SetInfo.self, Card.self, CardEntry.self])
+        .modelContainer(for: [Binder.self, Deck.self, SetInfo.self, Card.self, CardEntry.self])
     }
 }

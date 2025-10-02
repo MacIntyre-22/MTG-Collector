@@ -82,7 +82,7 @@ struct NewDeckSheet: View {
     // MARK: saveDeck
     private func saveDeck() {
         // make a deck model instance
-        let deck = Deck(id: UUID(),name: name, notes: notes, ruleType: ruleType, createdAt: Date())
+        let deck = Deck(name: name, notes: notes, ruleType: ruleType)
         // save and dismiss
         modelContext.insert(deck)
         dismiss()

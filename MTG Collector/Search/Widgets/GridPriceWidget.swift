@@ -11,30 +11,42 @@ struct GridPriceWidget: View {
     var finish: String
     var price: String
     
-    var cur: String {
-        currency(finsih: finish)
-    }
-    
     var body: some View {
-        Text("\(cur)\(price)")
+        Text("$\(price)")
             .bold()
             .padding(5)
-            .foregroundColor(.green)
-            .background(content: {Color.green.opacity(0.2)})
+            .foregroundColor(.white)
+            .background(priceGradient(finish: finish).opacity(0.5))
             .clipShape(RoundedRectangle(cornerRadius: 5))
     }
     
-    func currency(finsih: String) -> String {
-        switch finsih {
-        case "usd", "usd_foil", "usd_etched":
-            return "$"
-        case "eur", "eur_foil", "eur_etched":
-            return "\u{20AC}"
-        case "tix":
-            return "TIX"
+    // return a gradient based on the finish type
+    func priceGradient(finish: String) -> LinearGradient {
+        switch finish {
+        case "Base":
+            return LinearGradient(
+                colors: [.gray.opacity(0.6), .gray.opacity(0.3), .gray.opacity(0.6)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case "Foil":
+            return LinearGradient(
+                colors: [.blue, .purple, .pink, .orange, .yellow],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        case "Etched":
+            return LinearGradient(
+                colors: [.black, .gray, .black],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         default:
-            return ""
-        
+            return LinearGradient(
+                colors: [.blue, .blue.opacity(0.6), .blue],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         }
     }
 }

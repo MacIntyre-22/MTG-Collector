@@ -46,7 +46,7 @@ struct NewBinderSheet: View {
     // MARK: saveBinder
     private func saveBinder() {
         // make binder model instance
-        let binder = Binder(id: UUID(), name: name, notes: notes, createdAt: Date())
+        let binder = Binder(name: name, notes: notes, coverImage: coverImage)
         // save and dismiss
         modelContext.insert(binder)
         dismiss()

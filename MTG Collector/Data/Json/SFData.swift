@@ -178,7 +178,7 @@ struct CardFaceJSON: Codable, Identifiable {
     // MANA
     var manaCost: String?
     // mana value
-    var cmc: String?
+    var cmc: Double?
     // colours
     var colors: [String]?
     var colorIndicator: [String]?

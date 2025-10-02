@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct CardGridView: View {
-    var card: CardJSON
+    var card: Card
     
     // check flip state
     @State private var isFlipped: Bool = false
         
-    var multiFaced: [CardFaceJSON]? {
+    var multiFaced: [CardFace]? {
         card.cardFaces
     }
     
     // set current face
-    var currentFace: CardFaceJSON? {
+    var currentFace: CardFace? {
         guard let faces = multiFaced else { return nil }
         return isFlipped ? faces.last : faces.first
     }
@@ -28,7 +28,7 @@ struct CardGridView: View {
             // if multifaced
             if let face = currentFace {
                 ZStack(alignment: .topTrailing) {
-                    CardImageView(maxWidth: 220, imageUrl: face.imageURIs?.normal ?? "")
+                    CardImageView(maxWidth: 220, imageUrl: face.imageURIs.normal)
                     
                     Button {
                         isFlipped.toggle()
@@ -41,7 +41,7 @@ struct CardGridView: View {
                 }
             } else {
                 // regular card
-                CardImageView(maxWidth: 220, imageUrl: card.imageURIs?.normal ?? "")
+                CardImageView(maxWidth: 220, imageUrl: card.imageURIs.normal)
             }
             
             
@@ -55,17 +55,21 @@ struct CardGridView: View {
                 HStack {
                     
                     // show rarity
-                    if let rarity = card.rarity {
-                        GridRarityWidget(rarity: rarity)
+                    if !card.rarity.isEmpty {
+                        GridRarityWidget(rarity: card.rarity)
                     }
                     // show price
-                    if let prices = card.prices {
-                        ForEach(prices.keys.sorted(), id: \.self) { key in
-                            // only display if price has a value
-                            if let priceOptional = prices[key], let price = priceOptional, !price.isEmpty {
-                                GridPriceWidget(finish: key, price: price)
-                            }
-                        }
+                    // display each price from prices obj
+                    if !card.prices.usd.isEmpty {
+                        GridPriceWidget(finish: "Base", price: card.prices.usd)
+                    }
+                    
+                    if !card.prices.usdFoil.isEmpty {
+                        GridPriceWidget(finish: "Foil", price: card.prices.usdFoil)
+                    }
+                    
+                    if !card.prices.usdEtched.isEmpty {
+                        GridPriceWidget(finish: "Etched", price: card.prices.usdEtched)
                     }
                 }
             }

@@ -13,12 +13,10 @@ struct CollectionControllWidget: View {
     @Environment(\.modelContext) var modelContext
     // grab all binders
     @Query var binders: [Binder]
-    var card: CardJSON
+    var card: Card
     
     // get selected binder
     @State private var selectedBinder: Binder?
-    
-    
     
     var body: some View {
         HStack() {
@@ -44,12 +42,9 @@ struct CollectionControllWidget: View {
     
     // MARK: Add Card
     private func addCard(binder: Binder) {
-        
-        // create card object
-        let newCard = SFAPI.JSONtoModel(card: card)
 
         // create cardEntry and add to binder
-        let entry = CardEntry(card: newCard)
+        let entry = CardEntry(card: card)
         binder.cards.append(entry)
 
     }

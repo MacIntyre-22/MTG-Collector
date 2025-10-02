@@ -10,9 +10,6 @@ import SwiftUI
 struct PriceWidget: View {
     var finish: String
     var price: String
-    var cur: String {
-        currency(finsih: finish)
-    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -21,12 +18,12 @@ struct PriceWidget: View {
                 .italic()
                 .foregroundColor(.white)
                 .padding(5)
-                .background(gradient(finish: finish))
+                .background(priceGradient(finish: finish))
                 .cornerRadius(5)
             
             Spacer()
             
-            Text("\(cur)\(price)")
+            Text("$\(price)")
                 .frame(width: 80, alignment: .trailing)
                 .bold()
                 .foregroundColor(.green)
@@ -37,35 +34,22 @@ struct PriceWidget: View {
         .cornerRadius(10)
     }
     
-    // display currency
-    func currency(finsih: String) -> String {
-        switch finsih {
-        case "usd", "usd_foil", "usd_etched":
-            return "$"
-        case "eur", "eur_foil", "eur_etched":
-            return "\u{20AC}"
-        default:
-            return ""
-        
-        }
-    }
-    
     // return a gradient based on the finish type
-    func gradient(finish: String) -> LinearGradient {
-        switch finish.lowercased() {
-        case "usd", "eur":
+    func priceGradient(finish: String) -> LinearGradient {
+        switch finish {
+        case "Base":
             return LinearGradient(
                 colors: [.gray.opacity(0.6), .gray.opacity(0.3), .gray.opacity(0.6)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-        case "usd_foil", "eur_foil":
+        case "Foil":
             return LinearGradient(
                 colors: [.blue, .purple, .pink, .orange, .yellow],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-        case "usd_etched", "eur_etched":
+        case "Etched":
             return LinearGradient(
                 colors: [.black, .gray, .black],
                 startPoint: .topLeading,

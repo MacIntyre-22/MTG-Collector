@@ -8,20 +8,24 @@
 import SwiftUI
 
 struct InfoPriceWidget: View {
-    var prices: [String: String?]
+    var prices: Prices
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                // display each price from prices dict
-                ForEach(prices.keys.sorted(), id: \.self) { key in
-                    // only display if price has a value
-                    if let priceOptional = prices[key], let price = priceOptional, !price.isEmpty {
-                        PriceWidget(finish: key, price: price)
-                    }
+                // display each price from prices obj
+                if !prices.usd.isEmpty {
+                    PriceWidget(finish: "Base", price: prices.usd)
+                }
+                
+                if !prices.usdFoil.isEmpty {
+                    PriceWidget(finish: "Foil", price: prices.usdFoil)
+                }
+                
+                if !prices.usdEtched.isEmpty {
+                    PriceWidget(finish: "Etched", price: prices.usdEtched)
                 }
             }
-            .padding()
         }
     }
 }

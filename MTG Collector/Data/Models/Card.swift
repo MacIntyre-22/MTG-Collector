@@ -152,7 +152,7 @@ class ImageURIs {
 // MARK: Card Face Object
 @Model
 class CardFace {
-    var id: String
+    var id: String = UUID().uuidString
     var oracleID: String
     var name: String
     var layout: String
@@ -177,8 +177,7 @@ class CardFace {
     var colors: [String]
     var colorIndicator: [String]
     
-    init(id: String = "",
-         oracleID: String = "",
+    init(oracleID: String = "",
          name: String = "",
          layout: String = "",
          imageURIs: ImageURIs = ImageURIs(),
@@ -194,7 +193,6 @@ class CardFace {
          colors: [String] = [],
          colorIndicator: [String] = []
      ) {
-        self.id = id
         self.oracleID = oracleID
         self.name = name
         self.layout = layout

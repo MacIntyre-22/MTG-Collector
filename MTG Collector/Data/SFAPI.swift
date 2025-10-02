@@ -49,20 +49,73 @@ struct SFAPI {
     
     // MARK: Convert JSON card to model
     static func JSONtoModel(json: CardJSON) -> Card {
+        // had to break it up or else it wouldnt run
+        
+        let tempImageURIs: ImageURIs = ImageURIs(
+            small: json.imageURIs?.small ?? "",
+            normal: json.imageURIs?.normal ?? "",
+            large: json.imageURIs?.large ?? "",
+            png: json.imageURIs?.png ?? "",
+            artCrop: json.imageURIs?.artCrop ?? "",
+            borderCrop: json.imageURIs?.borderCrop ?? ""
+        )
+        
+        let tempCardFaces: [CardFace] = (json.cardFaces ?? []).map { face in
+            // had to break it up even more
+            let tempFaceImages: ImageURIs = ImageURIs(
+                small: face.imageURIs?.small ?? "",
+                normal: face.imageURIs?.normal ?? "",
+                large: face.imageURIs?.large ?? "",
+                png: face.imageURIs?.png ?? "",
+                artCrop: face.imageURIs?.artCrop ?? "",
+                borderCrop: face.imageURIs?.borderCrop ?? ""
+            )
+            
+            
+            return CardFace(
+                oracleID: face.oracleID ?? "",
+                name: face.name,
+                layout: face.layout ?? "",
+                imageURIs: tempFaceImages,
+                typeLine: face.typeLine ?? "",
+                oracleText: face.oracleText ?? "",
+                keywords: face.keywords ?? [],
+                toughness: face.toughness ?? "",
+                power: face.power ?? "",
+                loyalty: face.loyalty ?? "",
+                defense: face.defense ?? "",
+                manaCost: face.manaCost ?? "",
+                cmc: face.cmc ?? 0.0,
+                colors: face.colors ?? [],
+                colorIndicator: face.colorIndicator ?? []
+            )
+        }
+        
+        let tempPrices: Prices = Prices(
+            usd: json.prices?.usd ?? "",
+            usdFoil: json.prices?.usdFoil ?? "",
+            usdEtched: json.prices?.usdEtched ?? ""
+        )
+        
+        let tempPurchaseURIs: PurchaseURIs = PurchaseURIs(
+            tcgplayer: json.purchaseURIs?.tcgplayer ?? "",
+            cardmarket: json.purchaseURIs?.cardmarket ?? "",
+            cardhoarder: json.purchaseURIs?.cardhoarder ?? ""
+        )
+        
+        let tempParts: [RelatedCardObject] = (json.allParts ?? []).map {
+            RelatedCardObject(id: $0.id ?? "", name: $0.name ?? "")
+        }
+        
+        
+        // build card
         return Card(
                 id: json.id ?? "",
                 oracleID: json.oracleID ?? "",
-                name: json.name ?? "",
+                name: json.name,
                 releasedAt: json.releasedAt ?? "",
                 imageStatus: json.imageStatus ?? "",
-                imageURIs: ImageURIs(
-                    small: json.imageURIs?.small ?? "",
-                    normal: json.imageURIs?.normal ?? "",
-                    large: json.imageURIs?.large ?? "",
-                    png: json.imageURIs?.png ?? "",
-                    artCrop: json.imageURIs?.artCrop ?? "",
-                    borderCrop: json.imageURIs?.borderCrop ?? ""
-                ),
+                imageURIs: tempImageURIs,
                 manaCost: json.manaCost ?? "",
                 cmc: json.cmc ?? 0.0,
                 colors: json.colors ?? [],
@@ -77,52 +130,16 @@ struct SFAPI {
                 defense: json.defense ?? "",
                 layout: json.layout ?? "",
                 // map card faces
-                cardFaces: [CardFace] = (json.cardFaces ?? []).map { face in
-                    CardFace(
-                        id: face.id ?? "",
-                        oracleID: face.oracleID ?? "",
-                        name: face.name ?? "",
-                        layout: face.layout ?? "",
-                        imageURIs: ImageURIs(
-                            small: face.imageURIs?.small ?? "",
-                            normal: face.imageURIs?.normal ?? "",
-                            large: face.imageURIs?.large ?? "",
-                            png: face.imageURIs?.png ?? "",
-                            artCrop: face.imageURIs?.artCrop ?? "",
-                            borderCrop: face.imageURIs?.borderCrop ?? ""
-                        ),
-                        typeLine: face.typeLine ?? "",
-                        oracleText: face.oracleText ?? "",
-                        keywords: face.keywords ?? [],
-                        toughness: face.toughness ?? "",
-                        power: face.power ?? "",
-                        loyalty: face.loyalty ?? "",
-                        defense: face.defense ?? "",
-                        manaCost: face.manaCost ?? "",
-                        cmc: face.cmc ?? 0.0,
-                        colors: face.colors ?? [],
-                        colorIndicator: face.colorIndicator ?? []
-                    )
-                },
+                cardFaces: tempCardFaces,
                 rarity: json.rarity ?? "",
                 flavorText: json.flavorText ?? "",
                 finishes: json.finishes ?? [],
                 set: json.set ?? "",
-                prices: Prices(
-                    usd: json.prices?.usd ?? "",
-                    usdFoil: json.prices?.usdFoil ?? "",
-                    usdEtched: json.prices?.usdEtched ?? ""
-                ),
-                purchaseURIs: PurchaseURIs(
-                    tcgplayer: json.purchaseURIs?.tcgplayer ?? "",
-                    cardmarket: json.purchaseURIs?.cardmarket ?? "",
-                    cardhoarder: json.purchaseURIs?.cardhoarder ?? ""
-                ),
+                prices: tempPrices,
+                purchaseURIs: tempPurchaseURIs,
                 // map card parts
-                allParts: [RelatedCardObject] = (json.allParts ?? []).map {
-                    RelatedCardObject(id: $0.id ?? "", name: $0.name ?? "")
-                },
-                reserved: json.reserved ?? false,
+                allParts: tempParts,
+                reserved: json.reserved,
                 legalities: json.legalities ?? [:]
             )
     }

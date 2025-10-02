@@ -22,20 +22,19 @@ struct DeckBuildSheet: View {
                 LazyVGrid(columns: [GridItem(.flexible(minimum: 200, maximum: 250)), GridItem(.flexible(minimum: 200, maximum: 250))]) {
                     ForEach(scryfallResults) { card in
                         VStack {
-                            CardImageView(maxWidth: 250, imageUrl: card.imageURIs?.normal ?? "")
-                                
-                            Text(card.name)
-                                .lineLimit(1)
+                            // pass a model version of the card to the views
+                            let tempModel = SFAPI.JSONtoModel(json: card)
+                            CardGridView(card: tempModel)
                             HStack {
-                                Menu("Add") {
+                                Menu("Add", systemImage: "plus") {
                                     Button("Mainboard") {
-                                        addCard(card: card, board: 1)
+                                        addCard(card: tempModel, board: 1)
                                     }
                                     Button("Sideboard") {
-                                        addCard(card: card, board: 2)
+                                        addCard(card: tempModel, board: 2)
                                     }
                                     Button("Maybeboard") {
-                                        addCard(card: card, board: 3)
+                                        addCard(card: tempModel, board: 3)
                                     }
                                 }
                                 
@@ -67,12 +66,10 @@ struct DeckBuildSheet: View {
         }
     }
     
-    func addCard(card: CardJSON, board: Int) {
-        // create card model
-        let newCard = SFAPI.JSONtoModel(card: card)
+    func addCard(card: Card, board: Int) {
         
         // create entry then add to deck
-        let entry = CardEntry(card: newCard)
+        let entry = CardEntry(card: card)
         switch(board) {
             case 1:
                 deck.mainboard.append(entry)
