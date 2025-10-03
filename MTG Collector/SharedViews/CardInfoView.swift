@@ -9,26 +9,27 @@ import SwiftUI
 import SwiftData
 
 struct CardInfoView: View {
+    // env
+    @Environment(\.modelContext) var modelContext
     
     // data
     var card: Card
     
     // query set it belongs to
-    @Query var set: [SetInfo]
+    @Query var setInfo: [SetInfo]
+    
+    var set: String {
+        if !setInfo.isEmpty {
+            
+            return (setInfo.first(where: { $0.code == card.set}))?.code ?? ""
+        }else {
+            return ""
+        }
+    }
     
     // dummy url for webkit
     @State var webURI: URL = URL(string: "about:blank")!
     @State var sheetIsShowing: Bool = false
-    
-    // initalizer to query the set needed properly
-    init(card: Card) {
-        self.card = card
-        // query the set
-        let tempCode = card.set
-        _set = Query(
-            filter: #Predicate<SetInfo> { $0.code == tempCode }
-        )
-    }
     
     
     var body: some View {
@@ -40,7 +41,7 @@ struct CardInfoView: View {
                 Section(header: Label("Information", systemImage: "info.circle")) {
                     VStack(spacing: 8) {
                         if !set.isEmpty {
-                            Image(set[0].iconURI)
+                            Image(set)
                                 .renderingMode(.template)
                                 .foregroundColor(.primary)
                                 .scaledToFit()
