@@ -10,6 +10,9 @@ import SwiftData
 
 @main
 struct MTG_CollectorApp: App {
+    // env
+    @Environment(\.modelContext) var modelContext
+    
     var body: some Scene {
         WindowGroup {
             TabView {
@@ -37,6 +40,15 @@ struct MTG_CollectorApp: App {
                         Image(systemName: "gearshape")
                         Text("Settings")
                     })
+            }
+            .task {
+                // grab set data
+                let tempSets: [SetJSON] = await SFAPI.fetchSetData()
+                for set in tempSets {
+                    // convert and insert
+                    let tempSet: SetInfo = SFAPI.setToModel(json: set)
+                    modelContext.insert(tempSet)
+                }
             }
         }
         .modelContainer(for: [Binder.self, Deck.self, SetInfo.self, Card.self, CardEntry.self])

@@ -6,23 +6,52 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CardInfoView: View {
+    
     // data
     var card: Card
+    
+    // query set it belongs to
+    @Query var set: [SetInfo]
     
     // dummy url for webkit
     @State var webURI: URL = URL(string: "about:blank")!
     @State var sheetIsShowing: Bool = false
+    
+    // initalizer to query the set needed properly
+    init(card: Card) {
+        self.card = card
+        // query the set
+        let tempCode = card.set
+        _set = Query(
+            filter: #Predicate<SetInfo> { $0.code == tempCode }
+        )
+    }
     
     
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             
             // The main scrollable list
-            List {
+            List() {
+                
                 Section(header: Label("Information", systemImage: "info.circle")) {
                     VStack(spacing: 8) {
+                        if !set.isEmpty {
+                            Image(set[0].iconURI)
+                                .renderingMode(.template)
+                                .foregroundColor(.primary)
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                        } else {
+                            Image("MtgBinder")
+                                .renderingMode(.template)
+                                .foregroundColor(.primary)
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                        }
                         // handle muliple faces
                         if !card.cardFaces.isEmpty {
                             
@@ -61,7 +90,8 @@ struct CardInfoView: View {
                     InfoOtherWidget(releasedAt: card.releasedAt, finishes: card.finishes, set: card.set, reserved: card.reserved)
                 }
             }
-            .navigationTitle(card.name)
+            .scrollIndicators(ScrollIndicatorVisibility.hidden)
+            .listStyle(.plain)
             .listRowSpacing(10)
             
             // Floating cards

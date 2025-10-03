@@ -20,7 +20,7 @@ struct InfoRelatedWidget: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(relatedCards) { card in
+                ForEach(relatedCards, id: \.self) { card in
                     CardGridView(card: card)
                         .frame(maxWidth: 150)
                 }

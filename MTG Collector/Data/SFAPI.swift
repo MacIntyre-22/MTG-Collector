@@ -85,6 +85,18 @@ struct SFAPI {
         }
     }
     
+    // MARKL Convert JSON set to model
+    static func setToModel(json: SetJSON) -> SetInfo {
+        return SetInfo(
+            code: json.code ?? "",
+            name: json.name ?? "",
+            releaseDate: json.releaseDate ?? "",
+            type: json.type ?? "",
+            cardCount: json.cardCount ?? 0,
+            iconURI: json.iconURI ?? ""
+        )
+    }
+    
     // MARK: Convert JSON card to model
     static func JSONtoModel(json: CardJSON) -> Card {
         // had to break it up or else it wouldnt run

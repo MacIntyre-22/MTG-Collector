@@ -24,13 +24,16 @@ struct SearchTabView: View {
                 
                 // MARK: Grid View
                 LazyVGrid(columns: columns) {
-                        ForEach(scryfallResults) { card in
-                            // pass a model version of the card to the views
-                            let tempModel = SFAPI.JSONtoModel(json: card)
-                            NavigationLink(destination: CardInfoView(card: tempModel)){
-                                CardGridView(card: tempModel)
-                            }
+                    ForEach(scryfallResults) { card in
+                        // pass a model version of the card to the views
+                        let tempModel = SFAPI.JSONtoModel(json: card)
+                        NavigationLink(destination: CardInfoView(card: tempModel)){
+                            CardGridView(card: tempModel)
+                            // adding styling here makes card grid view more modular
+                                .background(content: {Color.gray.opacity(0.18)})
+                                .cornerRadius(10)
                         }
+                    }
                 }
             }
             .navigationTitle("Search")
@@ -55,8 +58,4 @@ struct SearchTabView: View {
             })
         }
     }
-}
-
-#Preview {
-    SearchTabView()
 }

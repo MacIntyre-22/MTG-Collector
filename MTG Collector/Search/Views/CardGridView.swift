@@ -75,8 +75,6 @@ struct CardGridView: View {
             }
         }
         .padding(10)
-        .background(content: {Color.gray.opacity(0.18)})
-        .cornerRadius(10)
     }
     
 }
