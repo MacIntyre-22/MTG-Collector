@@ -14,8 +14,11 @@ struct InfoRelatedWidget: View {
     // card objects grab from api using related card ids
     @State var relatedCards: [Card] = []
     
+    // loads multiple times on appear so I set a check value
+    @State private var isLoaded = false
+    
     var body: some View {
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(relatedCards) { card in
                     CardGridView(card: card)
@@ -27,7 +30,10 @@ struct InfoRelatedWidget: View {
         }
         // only run once
         .task {
-            await getCardParts()
+            if !isLoaded {
+                await getCardParts()
+                isLoaded = true
+            }
         }
         
     }

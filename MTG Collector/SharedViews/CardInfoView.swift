@@ -11,6 +11,10 @@ struct CardInfoView: View {
     // data
     var card: Card
     
+    // dummy url for webkit
+    @State var webURI: URL = URL(string: "about:blank")!
+    @State var sheetIsShowing: Bool = false
+    
     
     var body: some View {
         ZStack(alignment: .bottomLeading) {
@@ -48,7 +52,8 @@ struct CardInfoView: View {
                 }
                 
                 Section("Purchasing Links") {
-                    InfoPurchaseWidget()
+                    // purchase links here
+                    InfoPurchaseWidget(purchaseURIs: card.purchaseURIs, sheetIsShowing: $sheetIsShowing, webURI: $webURI)
                 }
                 
                 Section("Other") {
@@ -85,6 +90,9 @@ struct CardInfoView: View {
                 CollectionControllWidget(card: card)
             }
         })
+        .sheet(isPresented: $sheetIsShowing) {
+            WebSheet(url: webURI)
+        }
     }
 }
 
