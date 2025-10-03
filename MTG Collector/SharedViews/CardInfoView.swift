@@ -21,7 +21,7 @@ struct CardInfoView: View {
             
             // The main scrollable list
             List {
-                Section("Information") {
+                Section(header: Label("Information", systemImage: "info.circle")) {
                     VStack(spacing: 8) {
                         // handle muliple faces
                         if !card.cardFaces.isEmpty {
@@ -36,27 +36,27 @@ struct CardInfoView: View {
                     }
                 }
                 
-                Section("Legalities") {
+                Section(header: Label("Legalities", systemImage: "book.circle")) {
                     // Legalities info here
                     InfoLegalWidget(legalities: card.legalities)
                 }
                 
-                Section("Related Cards") {
+                Section(header: Label("Related Cards", systemImage: "plus.circle")) {
                     // related card items
                     InfoRelatedWidget(cardParts: card.allParts)
                 }
                 
-                Section("Pricing") {
+                Section(header: Label("Pricing", systemImage: "tag.circle")) {
                     // pricing info
                     InfoPriceWidget(prices: card.prices)
                 }
                 
-                Section("Purchasing Links") {
+                Section(header: Label("Purchase Links", systemImage: "link.circle")) {
                     // purchase links here
                     InfoPurchaseWidget(purchaseURIs: card.purchaseURIs, sheetIsShowing: $sheetIsShowing, webURI: $webURI)
                 }
                 
-                Section("Other") {
+                Section(header: Label("Other", systemImage: "ellipsis.circle")) {
                     // Additional info here
                     InfoOtherWidget(releasedAt: card.releasedAt, finishes: card.finishes, set: card.set, reserved: card.reserved)
                 }
@@ -70,10 +70,10 @@ struct CardInfoView: View {
                 HStack(spacing: 8) {
                     if !card.cardFaces.isEmpty {
                         ForEach(card.cardFaces) { face in
-                            CardImageView(maxWidth: 75, imageUrl: face.imageURIs.normal)
+                            CardImageView(maxWidth: 75, imageURIs: face.imageURIs)
                         }
                     } else {
-                        CardImageView(maxWidth: 100, imageUrl: card.imageURIs.normal)
+                        CardImageView(maxWidth: 100, imageURIs: card.imageURIs)
                     }
                 }
                 .padding(8)

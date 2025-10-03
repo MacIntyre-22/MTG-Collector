@@ -12,7 +12,7 @@ struct CardBoardView: View {
     
     var body: some View {
         VStack {
-            CardImageView(maxWidth: 180, imageUrl: entry.card.imageURIs.normal)
+            CardImageView(maxWidth: 180, imageURIs: entry.card.imageURIs)
                 .frame(width: 100)
             Text(entry.card.name)
             Divider()

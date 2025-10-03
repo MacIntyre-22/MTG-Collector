@@ -28,7 +28,7 @@ struct CardGridView: View {
             // if multifaced
             if let face = currentFace {
                 ZStack(alignment: .topTrailing) {
-                    CardImageView(maxWidth: 220, imageUrl: face.imageURIs.normal)
+                    CardImageView(maxWidth: 220, imageURIs: face.imageURIs)
                     
                     Button {
                         isFlipped.toggle()
@@ -41,7 +41,7 @@ struct CardGridView: View {
                 }
             } else {
                 // regular card
-                CardImageView(maxWidth: 220, imageUrl: card.imageURIs.normal)
+                CardImageView(maxWidth: 220, imageURIs: card.imageURIs)
             }
             
             

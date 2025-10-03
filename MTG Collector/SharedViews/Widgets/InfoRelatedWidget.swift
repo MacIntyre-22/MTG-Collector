@@ -25,7 +25,7 @@ struct InfoRelatedWidget: View {
                         .frame(maxWidth: 150)
                 }
             }
-            .frame(maxHeight: 300)
+            .frame(maxHeight: 275)
             
         }
         // only run once
