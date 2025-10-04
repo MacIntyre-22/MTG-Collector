@@ -23,6 +23,8 @@ struct InfoRelatedWidget: View {
                 ForEach(relatedCards) { card in
                     CardGridView(card: card)
                         .frame(maxWidth: 150)
+                        .background(Color.gray.opacity(0.18))
+                        .cornerRadius(10)
                 }
             }
             .frame(maxHeight: 275)

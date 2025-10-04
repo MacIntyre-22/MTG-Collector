@@ -1,40 +1,44 @@
 //
-//  NewBinderSheet.swift
+//  EditBinderSheet.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre (School) on 2025-10-03.
 //
 
 import SwiftUI
 
-struct NewBinderSheet: View {
+struct EditBinderSheet: View {
     // environment variables
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) var modelContext
+    
+    var binder: Binder
 
     // user input for new binder
-    @State private var name: String = ""
-    @State private var notes: String = ""
-    @State private var coverImage: String = ""
+    @State private var name: String
+    @State private var coverImage: String
+    
+    init(binder: Binder) {
+        self.binder = binder
+        self.name = binder.name
+        self.coverImage = binder.coverImage
+    }
 
     var body: some View {
         NavigationStack {
             Form {
-                // new binder form
-                Section("Binder Info") {
+                // edit binder
+                Section("Binder info") {
                     TextField("Name", text: $name)
-                    TextEditor(text: $notes)
-                        .frame(height: 200)
                     TextField("Cover Image URL", text: $coverImage)
                 }
             }
-            .navigationTitle("New Binder")
+            .navigationTitle("Edit Binder")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Create") {
+                    Button("Save") {
                         // save binder
                         saveBinder()
                     }
@@ -46,10 +50,12 @@ struct NewBinderSheet: View {
 
     // MARK: saveBinder
     private func saveBinder() {
-        // make binder model instance
-        let binder = Binder(name: name, notes: notes, coverImage: coverImage)
-        // save and dismiss
-        modelContext.insert(binder)
+        // set new values
+        binder.name = name
+        binder.coverImage = coverImage
+        
+        // dismiss
         dismiss()
     }
 }
+

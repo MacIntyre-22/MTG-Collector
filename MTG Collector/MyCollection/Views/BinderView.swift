@@ -11,7 +11,8 @@ struct BinderView: View {
     var binder: Binder
     
     @State var showEditSheet: Bool = false
-    
+    @State var showNotesSheet: Bool = false
+
     // responsive grid
     let cardColumns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 15)]
     
@@ -51,9 +52,14 @@ struct BinderView: View {
                 }
             }
             .navigationTitle(binder.name)
-            .padding(15)
+            .padding(.horizontal, 15)
             // edit button
             .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Notes", systemImage: "note.text"){
+                        showNotesSheet.toggle()
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Edit", systemImage: "square.and.pencil"){
                         showEditSheet.toggle()
@@ -61,7 +67,13 @@ struct BinderView: View {
                 }
             })
             .sheet(isPresented: $showEditSheet) {
-                
+                EditBinderSheet(binder: binder)
+                    .presentationDragIndicator(.visible)
+            }
+            .sheet(isPresented: $showNotesSheet) {
+                NotesSheet(binder: binder)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
             }
         }
     }

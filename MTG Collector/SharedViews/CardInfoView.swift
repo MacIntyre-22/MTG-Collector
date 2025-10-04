@@ -14,46 +14,6 @@ struct CardInfoView: View {
     
     // data
     var card: Card
-    
-    var color: LinearGradient {
-        switch(card.rarity) {
-            case "common":
-                return common
-            case "uncommon":
-                return uncommon
-            case "rare":
-                return rare
-            case "mythic":
-                return mythic
-            default:
-                return LinearGradient(colors: [Color.black], startPoint: .topLeading, endPoint: .bottomTrailing)
-        }
-    }
-    
-    // colors by rarity
-    let common = LinearGradient(
-        colors: [Color.gray.opacity(0.8), Color.gray.opacity(0.5), Color.gray.opacity(0.8)],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-     let uncommon = LinearGradient(
-        colors: [Color.blue, Color.blue.opacity(0.6), Color.blue],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-     let rare = LinearGradient(
-        colors: [Color.yellow, Color.orange, Color.yellow],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-     let mythic = LinearGradient(
-        colors: [Color.red, Color.orange, Color.red],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
         
     // dummy url for webkit
     @State var webURI: URL = URL(string: "about:blank")!
@@ -79,28 +39,9 @@ struct CardInfoView: View {
                         } else {
                             InfoDisplayWidget(typeLine: card.typeLine, colorIdentity: card.colorIdentity, oracleText: card.oracleText)
                         }
-                        // set
-                        if !card.set.isEmpty {
-                            Image(card.set)
-                                .resizable()
-                                .renderingMode(.template)
-                                .scaledToFit()
-                                .frame(width: 50, height: 50)
-                                .padding(5)
-                                .background(color)
-                                .cornerRadius(10)
-                                .foregroundColor(.primary)
-                        } else {
-                            Image("MtgBinder")
-                                .resizable()
-                                .renderingMode(.template)
-                                .scaledToFit()
-                                .frame(width: 50, height: 50)
-                                .padding(5)
-                                .background(color)
-                                .cornerRadius(10)
-                                .foregroundColor(.primary)
-                        }
+                        
+                        // set icon
+                        SetIconWidget(set: card.set, rarity: card.rarity, maxWidth: 50)
                     }
                 }
                 
@@ -132,6 +73,7 @@ struct CardInfoView: View {
             .scrollIndicators(ScrollIndicatorVisibility.hidden)
             .listStyle(.plain)
             .listRowSpacing(10)
+            .navigationTitle(card.name)
             
             // Floating cards
             HStack(){
@@ -161,6 +103,7 @@ struct CardInfoView: View {
         })
         .sheet(isPresented: $sheetIsShowing) {
             WebSheet(url: webURI)
+                .presentationDragIndicator(.visible)
         }
     }
 }
