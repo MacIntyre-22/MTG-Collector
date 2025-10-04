@@ -12,6 +12,14 @@ struct SetIconWidget: View {
     var rarity: String
     var maxWidth: Double
     
+    var img: String {
+        if !set.isEmpty {
+            return set
+        } else {
+            return "MtgBinder"
+        }
+    }
+    
     var color: LinearGradient {
         switch(rarity) {
             case "common":
@@ -55,24 +63,13 @@ struct SetIconWidget: View {
     var body: some View {
         // set
         ZStack {
-            
-            if !set.isEmpty {
-                Image(set)
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .foregroundColor(.white)
-                    .padding(5)
-                    .shadow(radius: 4)
-            } else {
-                Image("MtgBinder")
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .padding(5)
-                    .shadow(radius: 4)
-                    
-            }
+            Image(img)
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .foregroundColor(.white)
+                .padding(5)
+                .shadow(radius: 4)
         }
         .frame(width: maxWidth, height: maxWidth)
         .background(color)

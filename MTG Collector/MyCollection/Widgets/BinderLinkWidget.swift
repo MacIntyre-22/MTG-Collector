@@ -11,11 +11,40 @@ import SwiftData
 struct BinderLinkWidget: View {
     var binder: Binder
     
+    var coverImage: String {
+        if !binder.coverImage.isEmpty {
+            return binder.coverImage
+        } else {
+            return "MtgBinder"
+        }
+    }
+    
     var body: some View {
-        VStack {
-            Text(binder.name)
-            Divider()
-            Text("Card Count: \(binder.cardCount)")
+        HStack {
+            Image("MtgBinder")
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .frame(width: 75, height: 75)
+                .foregroundColor(.black)
+            VStack(alignment: .leading) {
+                Text(binder.name)
+                Divider()
+                
+                
+                HStack {
+                    Text("$ \(binder.totalPrice, specifier: "%.2f")")
+                        .padding(5)
+                        .foregroundColor(.green)
+                        .background(Color.green.opacity(0.2))
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                    Image(systemName: "square.stack")
+                        .foregroundColor(.black)
+                    Text("\(binder.cardCount)")
+                }
+                Spacer()
+            }
+            .padding(10)
         }
     }
 }
