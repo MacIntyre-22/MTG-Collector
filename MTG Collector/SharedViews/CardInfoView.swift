@@ -15,18 +15,46 @@ struct CardInfoView: View {
     // data
     var card: Card
     
-    // query set it belongs to
-    @Query var setInfo: [SetInfo]
-    
-    var set: String {
-        if !setInfo.isEmpty {
-            
-            return (setInfo.first(where: { $0.code == card.set}))?.code ?? ""
-        }else {
-            return ""
+    var color: LinearGradient {
+        switch(card.rarity) {
+            case "common":
+                return common
+            case "uncommon":
+                return uncommon
+            case "rare":
+                return rare
+            case "mythic":
+                return mythic
+            default:
+                return LinearGradient(colors: [Color.black], startPoint: .topLeading, endPoint: .bottomTrailing)
         }
     }
     
+    // colors by rarity
+    let common = LinearGradient(
+        colors: [Color.gray.opacity(0.8), Color.gray.opacity(0.5), Color.gray.opacity(0.8)],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    
+     let uncommon = LinearGradient(
+        colors: [Color.blue, Color.blue.opacity(0.6), Color.blue],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    
+     let rare = LinearGradient(
+        colors: [Color.yellow, Color.orange, Color.yellow],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    
+     let mythic = LinearGradient(
+        colors: [Color.red, Color.orange, Color.red],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+        
     // dummy url for webkit
     @State var webURI: URL = URL(string: "about:blank")!
     @State var sheetIsShowing: Bool = false
@@ -39,20 +67,8 @@ struct CardInfoView: View {
             List() {
                 
                 Section(header: Label("Information", systemImage: "info.circle")) {
-                    VStack(spacing: 8) {
-                        if !set.isEmpty {
-                            Image(set)
-                                .renderingMode(.template)
-                                .foregroundColor(.primary)
-                                .scaledToFit()
-                                .frame(width: 100, height: 100)
-                        } else {
-                            Image("MtgBinder")
-                                .renderingMode(.template)
-                                .foregroundColor(.primary)
-                                .scaledToFit()
-                                .frame(width: 100, height: 100)
-                        }
+                    VStack(alignment: .leading) {
+                        
                         // handle muliple faces
                         if !card.cardFaces.isEmpty {
                             
@@ -62,6 +78,28 @@ struct CardInfoView: View {
                             }
                         } else {
                             InfoDisplayWidget(typeLine: card.typeLine, colorIdentity: card.colorIdentity, oracleText: card.oracleText)
+                        }
+                        // set
+                        if !card.set.isEmpty {
+                            Image(card.set)
+                                .resizable()
+                                .renderingMode(.template)
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .padding(5)
+                                .background(color)
+                                .cornerRadius(10)
+                                .foregroundColor(.primary)
+                        } else {
+                            Image("MtgBinder")
+                                .resizable()
+                                .renderingMode(.template)
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .padding(5)
+                                .background(color)
+                                .cornerRadius(10)
+                                .foregroundColor(.primary)
                         }
                     }
                 }

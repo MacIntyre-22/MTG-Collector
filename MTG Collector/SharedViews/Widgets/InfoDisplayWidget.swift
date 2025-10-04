@@ -48,6 +48,7 @@ struct InfoDisplayWidget: View {
                     .font(.custom("ManaMTG", size: 18))
                     .italic()
                     .lineSpacing(1.3)
+                    .padding(.bottom, 10)
             }
             
             
