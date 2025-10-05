@@ -15,15 +15,16 @@ struct DeckView: View {
         List {
             // MARK: Deck Stats
             Section("Statistics") {
-                
+                DeckStatsWidget(deck: deck)
             }
             
             // MARK: Mainboard
             Section("Mainboard") {
-                ScrollView(.horizontal) {
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(deck.mainboard) { entry in
-                            CardBoardView(entry: entry)
+                            CardEntryView(entry: entry, deleteEntry: {})
+                                .frame(width: 150)
                         }
                     }
                 }
@@ -31,10 +32,11 @@ struct DeckView: View {
             
             // MARK: Sideboard
             Section("Sideboard") {
-                ScrollView(.horizontal) {
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(deck.sideboard) { entry in
-                            CardBoardView(entry: entry)
+                            CardEntryView(entry: entry, deleteEntry: {})
+                                .frame(width: 150)
                         }
                     }
                 }
@@ -42,10 +44,11 @@ struct DeckView: View {
             
             // MARK: Maybeboard
             Section("Maybeboard") {
-                ScrollView(.horizontal) {
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(deck.maybeboard) { entry in
-                            CardBoardView(entry: entry)
+                            CardEntryView(entry: entry, deleteEntry: {})
+                                .frame(width: 150)
                         }
                     }
                 }

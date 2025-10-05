@@ -26,7 +26,7 @@ struct BinderLinkWidget: View {
                 .renderingMode(.template)
                 .scaledToFit()
                 .frame(width: 75, height: 75)
-                .foregroundColor(.black)
+                .foregroundColor(.primary)
             VStack(alignment: .leading) {
                 Text(binder.name)
                 Divider()
@@ -39,7 +39,7 @@ struct BinderLinkWidget: View {
                         .background(Color.green.opacity(0.2))
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                     Image(systemName: "square.stack")
-                        .foregroundColor(.black)
+                        .foregroundColor(.primary)
                     Text("\(binder.cardCount)")
                 }
                 Spacer()

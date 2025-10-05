@@ -28,7 +28,7 @@ struct SearchTabView: View {
                         // pass a model version of the card to the views
                         let tempModel = SFAPI.JSONtoModel(json: card)
                         NavigationLink(destination: CardInfoView(card: tempModel)){
-                            CardGridView(card: tempModel)
+                            CardGridView(card: tempModel, showPreviews: true)
                             // adding styling here makes card grid view more modular
                                 .background(content: {Color.gray.opacity(0.18)})
                                 .cornerRadius(10)

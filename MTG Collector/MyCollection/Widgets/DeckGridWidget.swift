@@ -12,11 +12,21 @@ struct DeckGridWidget: View {
     
     var body: some View {
         VStack {
+            Image("MtgDeck")
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFill()
+                .foregroundColor(.primary)
+                .frame(width: 125)
             Text(deck.name)
-            Divider()
-            Text(deck.ruleType)
-            Text("\(deck.cardCount)")
+                .bold()
+            
         }
+        .foregroundColor(.primary)
+        .padding(10)
+        .background(Color.gray.opacity(0.18))
+        .cornerRadius(10)
+        
     }
 }
 

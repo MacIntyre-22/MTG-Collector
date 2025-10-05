@@ -19,7 +19,7 @@ struct CardEntryView: View {
     
     var body: some View {
         VStack {
-            CardGridView(card: entry.card)
+            CardGridView(card: entry.card, showPreviews: false)
             HStack {
                 Button(action: {
                     // remove 1 quantity

@@ -24,7 +24,7 @@ struct DeckBuildSheet: View {
                         VStack {
                             // pass a model version of the card to the views
                             let tempModel = SFAPI.JSONtoModel(json: card)
-                            CardGridView(card: tempModel)
+                            CardGridView(card: tempModel, showPreviews: false)
                             HStack {
                                 Menu("Add", systemImage: "plus") {
                                     Button("Mainboard") {

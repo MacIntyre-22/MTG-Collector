@@ -20,7 +20,7 @@ struct MyCollectionTabView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("Go to Decks") {
+                Section("") {
                     NavigationLink(destination: AllDecksView()) {
                         AllDecksLinkWidget()
                     }

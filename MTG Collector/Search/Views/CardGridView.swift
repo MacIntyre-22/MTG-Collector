@@ -10,8 +10,12 @@ import SwiftUI
 struct CardGridView: View {
     var card: Card
     
+    var showPreviews: Bool
+    
     // check flip state
     @State private var isFlipped: Bool = false
+    
+    
         
     var multiFaced: [CardFace]? {
         card.cardFaces
@@ -51,25 +55,28 @@ struct CardGridView: View {
                 .lineLimit(1)
                 .truncationMode(.tail)
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    
-                    // show rarity
-                    if !card.rarity.isEmpty {
-                        GridRarityWidget(rarity: card.rarity)
-                    }
-                    // show price
-                    // display each price from prices obj
-                    if !card.prices.usd.isEmpty {
-                        GridPriceWidget(finish: "Base", price: card.prices.usd)
-                    }
-                    
-                    if !card.prices.usdFoil.isEmpty {
-                        GridPriceWidget(finish: "Foil", price: card.prices.usdFoil)
-                    }
-                    
-                    if !card.prices.usdEtched.isEmpty {
-                        GridPriceWidget(finish: "Etched", price: card.prices.usdEtched)
+            
+            if showPreviews {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        
+                        // show rarity
+                        if !card.rarity.isEmpty {
+                            GridRarityWidget(rarity: card.rarity)
+                        }
+                        // show price
+                        // display each price from prices obj
+                        if !card.prices.usd.isEmpty {
+                            GridPriceWidget(finish: "Base", price: card.prices.usd)
+                        }
+                        
+                        if !card.prices.usdFoil.isEmpty {
+                            GridPriceWidget(finish: "Foil", price: card.prices.usdFoil)
+                        }
+                        
+                        if !card.prices.usdEtched.isEmpty {
+                            GridPriceWidget(finish: "Etched", price: card.prices.usdEtched)
+                        }
                     }
                 }
             }
