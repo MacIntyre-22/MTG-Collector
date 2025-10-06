@@ -10,12 +10,12 @@ import SwiftUI
 struct EditBinderSheet: View {
     // environment variables
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
     
     var binder: Binder
-
-    // user input for new binder
-    @State private var name: String
-    @State private var coverImage: String
+    
+    @State var name: String
+    @State var coverImage: String
     
     init(binder: Binder) {
         self.binder = binder
@@ -26,36 +26,26 @@ struct EditBinderSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                // edit binder
-                Section("Binder info") {
+                // new binder form
+                Section("Binder Info") {
                     TextField("Name", text: $name)
                     TextField("Cover Image URL", text: $coverImage)
                 }
             }
-            .navigationTitle("Edit Binder")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        // save binder
-                        saveBinder()
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Save"){
+                        dismiss()
                     }
-                    .disabled(name.isEmpty)
                 }
+            })
+            .navigationTitle("New Binder")
+            .onDisappear() {
+                // set binder values
+                binder.name = $name.wrappedValue
+                binder.coverImage = $coverImage.wrappedValue
             }
         }
-    }
-
-    // MARK: saveBinder
-    private func saveBinder() {
-        // set new values
-        binder.name = name
-        binder.coverImage = coverImage
-        
-        // dismiss
-        dismiss()
     }
 }
 

@@ -22,7 +22,9 @@ struct CardImageView: View {
         } else if !imageURIs.small.isEmpty {
             return imageURIs.small
         } else {
-            return ""
+            
+            // default card is magic back
+            return "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/513b7bfa-42c9-4d08-ad6c-8e5d478c42d3/dalfpib-83f22b02-5802-40b4-901b-3eecf0ca2058.png/v1/fit/w_828,h_1182,q_70,strp/unofficial_magic_the_gathering_six_color_card_back_by_lordnyriox_dalfpib-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTQ2MyIsInBhdGgiOiIvZi81MTNiN2JmYS00MmM5LTRkMDgtYWQ2Yy04ZTVkNDc4YzQyZDMvZGFsZnBpYi04M2YyMmIwMi01ODAyLTQwYjQtOTAxYi0zZWVjZjBjYTIwNTgucG5nIiwid2lkdGgiOiI8PTEwMjQifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.E6ain-taz3WAOjHlySF768nq0Id5NkQMRzOrm95OGXY"
         }
     }
     
@@ -50,7 +52,7 @@ struct CardImageView: View {
                             .resizable()
                             .scaledToFit()
                             .cornerRadius(8)
-                            .onLongPressGesture {
+                            .onTapGesture(count: 2) {
                                 showFullScreen = true
                             }
                             .fullScreenCover(isPresented: $showFullScreen) {

@@ -14,7 +14,6 @@ struct NewBinderSheet: View {
 
     // user input for new binder
     @State private var name: String = ""
-    @State private var notes: String = ""
     @State private var coverImage: String = ""
 
     var body: some View {
@@ -23,8 +22,6 @@ struct NewBinderSheet: View {
                 // new binder form
                 Section("Binder Info") {
                     TextField("Name", text: $name)
-                    TextEditor(text: $notes)
-                        .frame(height: 200)
                     TextField("Cover Image URL", text: $coverImage)
                 }
             }
@@ -47,7 +44,7 @@ struct NewBinderSheet: View {
     // MARK: saveBinder
     private func saveBinder() {
         // make binder model instance
-        let binder = Binder(name: name, notes: notes, coverImage: coverImage)
+        let binder = Binder(name: name, notes: "", coverImage: coverImage)
         // save and dismiss
         modelContext.insert(binder)
         dismiss()

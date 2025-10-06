@@ -9,8 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct AllDecksView: View {
+    
+    @Environment(\.modelContext) var modelContext
     // data
     @Query var decks: [Deck]
+    
+    @State var selectedDeck: Deck?
+    @State var showAlert: Bool = false
     
     var deckCount: Int {
         decks.count
@@ -29,13 +34,22 @@ struct AllDecksView: View {
                     ForEach(decks) { deck in
                         NavigationLink(destination: DeckView(deck: deck)) {
                             DeckGridWidget(deck: deck)
-                                .padding(.bottom, 20)
+                                .contextMenu {
+                                    NavigationLink(destination: EditDeckSheet(deck: deck)) {
+                                        Text("Edit")
+                                    }
+                                    
+                                    Button("Delete", role: .destructive) {
+                                        selectedDeck = deck
+                                        showAlert.toggle()
+                                    }
+                                }
                         }
                     }
                 }
+                .listRowSpacing(30)
             }
             .padding(.horizontal, 10)
-            .listRowSpacing(60)
             .navigationTitle("My Decks")
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -47,6 +61,23 @@ struct AllDecksView: View {
             .sheet(isPresented: $newDeck) {
                 NewDeckSheet()
             }
+            .alert("Confirm", isPresented: $showAlert) {
+                Button("Cancel", role: .cancel) {}
+                
+                Button("Delete", role: .destructive) {
+                    deleteDeck()
+                }
+            } message: {
+                Text("Delete this Deck?")
+            }
+        }
+    }
+    
+    func deleteDeck() {
+        let tempDeck: Deck? = selectedDeck.unsafelyUnwrapped
+        
+        if let deck = tempDeck{
+            modelContext.delete(deck)
         }
     }
 }

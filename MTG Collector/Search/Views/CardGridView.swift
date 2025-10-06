@@ -16,7 +16,7 @@ struct CardGridView: View {
     @State private var isFlipped: Bool = false
     
     
-        
+    // grab card faces if any
     var multiFaced: [CardFace]? {
         card.cardFaces
     }

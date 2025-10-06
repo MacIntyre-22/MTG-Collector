@@ -8,72 +8,49 @@
 import SwiftUI
 
 struct BinderView: View {
+    @Environment(\.modelContext) var modelContext
     var binder: Binder
     
-    @State var showEditSheet: Bool = false
-    @State var showNotesSheet: Bool = false
+    @State var showNotes: Bool = false
+    @State var showEdit: Bool = false
 
     // responsive grid
     let cardColumns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 15)]
     
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading){
-                    Label("Statistics", systemImage: "chart.bar.xaxis")
-                        .fontWeight(.heavy)
-                        .font(.subheadline)
-                        .padding(.top, 15)
-
-                    Divider()
-                    
-                    BinderStatsWidget(binder: binder)
-                }
-                
-                VStack(alignment: .leading) {
-                    Label("Cards", systemImage: "square.stack")
-                        .fontWeight(.heavy)
-                        .font(.subheadline)
-                        .padding(.top, 15)
-                    
-                    Divider()
-                    ScrollView {
-                        LazyVGrid(columns: cardColumns) {
-                            ForEach(binder.cards) { entry in
-                                NavigationLink(destination: CardInfoView(card: entry.card)){
-                                    CardEntryView(entry: entry) {
-                                        // set onDelete
-                                        binder.cards.removeAll { $0.id == entry.id }
-                                    }
-                                }
+            ScrollView {
+                LazyVGrid(columns: cardColumns) {
+                    ForEach(binder.cards) { entry in
+                        NavigationLink(destination: CardInfoView(card: entry.card)){
+                            CardEntryView(entry: entry) {
+                                // set onDelete
+                                binder.cards.removeAll { $0.id == entry.id }
                             }
                         }
                     }
                 }
             }
             .navigationTitle(binder.name)
-            .padding(.horizontal, 15)
-            // edit button
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Notes", systemImage: "note.text"){
-                        showNotesSheet.toggle()
+                        showNotes.toggle()
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Edit", systemImage: "square.and.pencil"){
-                        showEditSheet.toggle()
+                        showEdit.toggle()
                     }
                 }
             })
-            .sheet(isPresented: $showEditSheet) {
+            .sheet(isPresented: $showEdit) {
                 EditBinderSheet(binder: binder)
-                    .presentationDragIndicator(.visible)
-            }
-            .sheet(isPresented: $showNotesSheet) {
-                NotesSheet(binder: binder)
                     .presentationDetents([.medium, .large])
-                    .presentationDragIndicator(.visible)
+            }
+            .sheet(isPresented: $showNotes) {
+                BinderNotesSheet(binder: binder)
+                    .presentationDetents([.medium, .large])
             }
         }
     }

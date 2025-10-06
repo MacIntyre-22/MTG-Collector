@@ -98,7 +98,9 @@ struct CardInfoView: View {
         }
         .toolbar(content: {
             ToolbarItem(placement: .topBarTrailing) {
-                CollectionControllWidget(card: card)
+                Menu("Add", systemImage: "plus.circle") {
+                    CollectionControllWidget(card: card)
+                }
             }
         })
         .sheet(isPresented: $sheetIsShowing) {

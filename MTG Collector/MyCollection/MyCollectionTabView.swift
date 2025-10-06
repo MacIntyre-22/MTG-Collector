@@ -9,13 +9,15 @@ import SwiftUI
 import SwiftData
 
 struct MyCollectionTabView: View {
+    @Environment(\.modelContext) var modelContext
     @Query var binders: [Binder]
     @State var newBinder: Bool = false
+    @State var editBinder: Bool = false
     
-    // stats
-    var binderCount: Int {
-        binders.count
-    }
+    @State var showAlert: Bool = false
+    @State var selectedBinder: Binder?
+    
+    
     
     var body: some View {
         NavigationStack {
@@ -30,6 +32,16 @@ struct MyCollectionTabView: View {
                     ForEach(binders) { binder in
                         NavigationLink(destination: BinderView(binder: binder)) {
                             BinderLinkWidget(binder: binder)
+                                .contextMenu {
+                                    NavigationLink(destination: EditBinderSheet(binder: binder)) {
+                                        Text("Edit")
+                                    }
+                                    
+                                    Button("Delete", role: .destructive) {
+                                        selectedBinder = binder
+                                        showAlert.toggle()
+                                    }
+                                }
                         }
                     }
                 }
@@ -46,6 +58,23 @@ struct MyCollectionTabView: View {
             .sheet(isPresented: $newBinder) {
                 NewBinderSheet()
             }
+            .alert("Confirm", isPresented: $showAlert) {
+                Button("Cancel", role: .cancel) {}
+                
+                Button("Delete", role: .destructive) {
+                    deleteBinder()
+                }
+            } message: {
+                Text("Delete this Binder?")
+            }
+        }
+    }
+    
+    func deleteBinder() {
+        let tempBinder: Binder? = selectedBinder.unsafelyUnwrapped
+        
+        if let binder = tempBinder{
+            modelContext.delete(binder)
         }
     }
 }

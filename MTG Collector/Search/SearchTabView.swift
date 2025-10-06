@@ -6,8 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SearchTabView: View {
+    // environment variables
+    @Environment(\.modelContext) var modelContext
+    // grab all binders
+    @Query var binders: [Binder]
+    @Query var decks: [Deck]
+    
+    
     // Search Card Data
     @State private var scryfallResults: [CardJSON] = []
     
@@ -27,7 +35,9 @@ struct SearchTabView: View {
                     ForEach(scryfallResults) { card in
                         // pass a model version of the card to the views
                         let tempModel = SFAPI.JSONtoModel(json: card)
+                        
                         NavigationLink(destination: CardInfoView(card: tempModel)){
+                            
                             CardGridView(card: tempModel, showPreviews: true)
                             // adding styling here makes card grid view more modular
                                 .background(content: {Color.gray.opacity(0.18)})

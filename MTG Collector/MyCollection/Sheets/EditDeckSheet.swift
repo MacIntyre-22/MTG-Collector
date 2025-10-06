@@ -1,24 +1,27 @@
 //
-//  NewDeckSheet.swift
+//  EditDeckSheet.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-26.
+//  Created by Ben MacIntyre (School) on 2025-10-06.
 //
 
 import SwiftUI
 
-struct NewDeckSheet: View {
+struct EditDeckSheet: View {
     // environment variables
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) var modelContext
     
-    // data
-
-    // user input for new deck
-    @State var name: String = ""
-    @State var coverImage: String = ""
-    // default to casual, no legalities
-    @State var ruleType: String = "casual"
+    var deck: Deck
+    
+    @State var name: String
+    //@State var coverImage: String
+    @State var ruleType: String
+    
+    init(deck: Deck) {
+        self.deck = deck
+        self.name = deck.name
+        self.ruleType = deck.ruleType
+    }
     
     // list of Scryfall legality types
     let legalities = [
@@ -44,10 +47,10 @@ struct NewDeckSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                // edit deck
                 // deck form
                 Section("Deck Info") {
                     TextField("Name", text: $name)
-                    TextField("Cover Image URL", text: $coverImage)
                     
                     // select rule type from array of legalities
                     Picker("Rule Type", selection: $ruleType) {
@@ -61,29 +64,19 @@ struct NewDeckSheet: View {
                 
                 }
             }
-            .navigationTitle("New Deck")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Create") {
-                        // save deck
-                        saveDeck()
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Save"){
+                        dismiss()
                     }
-                    .disabled(name.isEmpty)
                 }
+            })
+            .navigationTitle("Edit Deck")
+            .onDisappear() {
+                deck.name = $name.wrappedValue
+                deck.ruleType = $ruleType.wrappedValue
             }
         }
-    }
-
-    // MARK: saveDeck
-    private func saveDeck() {
-        // make a deck model instance
-        let deck = Deck(name: name, notes: "", ruleType: ruleType)
-        // save and dismiss
-        modelContext.insert(deck)
-        dismiss()
     }
 }
 

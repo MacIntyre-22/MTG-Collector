@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct DeckView: View {
+    @Environment(\.modelContext) var modelContext
     var deck: Deck
-    @State var showBuildSheet: Bool = false
+    
+    @State var showEdit: Bool = false
+    @State var showNotes: Bool = false
     
     var body: some View {
         List {
@@ -23,7 +26,10 @@ struct DeckView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(deck.mainboard) { entry in
-                            CardEntryView(entry: entry, deleteEntry: {})
+                            CardEntryView(entry: entry) {
+                                // set onDelete
+                                deck.mainboard.removeAll { $0.id == entry.id }
+                            }
                                 .frame(width: 150)
                         }
                     }
@@ -35,7 +41,10 @@ struct DeckView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(deck.sideboard) { entry in
-                            CardEntryView(entry: entry, deleteEntry: {})
+                            CardEntryView(entry: entry) {
+                                // set onDelete
+                                deck.sideboard.removeAll { $0.id == entry.id }
+                            }
                                 .frame(width: 150)
                         }
                     }
@@ -47,7 +56,10 @@ struct DeckView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(deck.maybeboard) { entry in
-                            CardEntryView(entry: entry, deleteEntry: {})
+                            CardEntryView(entry: entry) {
+                                // set onDelete
+                                deck.maybeboard.removeAll { $0.id == entry.id }
+                            }
                                 .frame(width: 150)
                         }
                     }
@@ -58,15 +70,24 @@ struct DeckView: View {
         .navigationTitle(deck.name)
         .toolbar(content: {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Build", systemImage: "plus"){
-                    showBuildSheet.toggle()
+                Button("Notes", systemImage: "note.text"){
+                    showNotes.toggle()
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Edit", systemImage: "square.and.pencil"){
+                    showEdit.toggle()
                 }
             }
         })
-        .sheet(isPresented: $showBuildSheet) {
-            DeckBuildSheet(deck: deck)
+        .sheet(isPresented: $showEdit) {
+            EditDeckSheet(deck: deck)
+                .presentationDetents([.medium, .large])
         }
-        Spacer()
+        .sheet(isPresented: $showNotes) {
+            DeckNotesSheet(deck: deck)
+                .presentationDetents([.medium, .large])
+        }
     }
 }
 
