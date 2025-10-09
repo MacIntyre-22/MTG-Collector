@@ -23,16 +23,21 @@ struct BinderView: View {
                 LazyVGrid(columns: cardColumns) {
                     ForEach(binder.cards) { entry in
                         NavigationLink(destination: CardInfoView(card: entry.card)){
-                            CardEntryView(entry: entry) {
-                                // set onDelete
-                                binder.cards.removeAll { $0.id == entry.id }
-                            }
+                            CardEntryView(
+                                entry: entry,
+                                deleteEntry: {binder.cards.removeAll { $0.id == entry.id }},
+                            )
                         }
                     }
                 }
             }
             .navigationTitle(binder.name)
             .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Stats", systemImage: "chart.bar"){
+                        showEdit.toggle()
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Notes", systemImage: "note.text"){
                         showNotes.toggle()

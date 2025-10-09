@@ -10,12 +10,12 @@ import SwiftUI
 struct CardEntryView: View {
     var entry: CardEntry
     
+    // on delete alert
     @State var alertIsShowing: Bool = false
     
-    // taking a closure allows me to use this for any collection
+    // taking closures allows for functionality with different models like binders and decks
     var deleteEntry: () -> Void
-    
-    
+    var contextMenu: (() -> AnyView)? = nil
     
     var body: some View {
         VStack {
@@ -42,7 +42,14 @@ struct CardEntryView: View {
             .padding(10)
             .font(.custom("", size: 30))
         }
-        .background(content: {Color.gray.opacity(0.18)})
+        .contextMenu{
+            if let menu = contextMenu {
+                menu()
+            } else {
+                EmptyView()
+            }
+        }
+        .background(Color.gray.opacity(0.18))
         .cornerRadius(10)
         .alert("Are you sure?", isPresented: $alertIsShowing) {
             Button("Cancel", role: .cancel) { }
@@ -53,6 +60,8 @@ struct CardEntryView: View {
         } message: {
             Text("Remove this card from collection?")
         }
+        
+        
     }
     
     func addCard() {

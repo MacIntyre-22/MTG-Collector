@@ -15,52 +15,59 @@ struct DeckView: View {
     @State var showNotes: Bool = false
     
     var body: some View {
-        List {
-            // MARK: Deck Stats
-            Section("Statistics") {
-                DeckStatsWidget(deck: deck)
-            }
-            
-            // MARK: Mainboard
-            Section("Mainboard") {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(deck.mainboard) { entry in
-                            CardEntryView(entry: entry) {
-                                // set onDelete
-                                deck.mainboard.removeAll { $0.id == entry.id }
+        NavigationStack {
+            List {
+                
+                // MARK: Mainboard
+                Section("Mainboard") {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(deck.mainboard) { entry in
+                                NavigationLink(destination: CardInfoView(card: entry.card)){
+                                    CardEntryView(
+                                        entry: entry,
+                                        deleteEntry: {deck.mainboard.removeAll { $0.id == entry.id }},
+//                                        contextMenu: {
+//                                            ContextMenu(menuItems: {
+//                                                Button("Delete") {
+//                                                    
+//                                                }
+//                                            })
+//                                        }
+                                    )
+                                    .frame(width: 150)
+                                }
                             }
-                                .frame(width: 150)
                         }
                     }
                 }
-            }
-            
-            // MARK: Sideboard
-            Section("Sideboard") {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(deck.sideboard) { entry in
-                            CardEntryView(entry: entry) {
-                                // set onDelete
-                                deck.sideboard.removeAll { $0.id == entry.id }
-                            }
+                
+                // MARK: Sideboard
+                Section("Sideboard") {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(deck.sideboard) { entry in
+                                CardEntryView(
+                                    entry: entry,
+                                    deleteEntry: {deck.sideboard.removeAll { $0.id == entry.id }}
+                                )
                                 .frame(width: 150)
+                            }
                         }
                     }
                 }
-            }
-            
-            // MARK: Maybeboard
-            Section("Maybeboard") {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(deck.maybeboard) { entry in
-                            CardEntryView(entry: entry) {
-                                // set onDelete
-                                deck.maybeboard.removeAll { $0.id == entry.id }
-                            }
+                
+                // MARK: Maybeboard
+                Section("Maybeboard") {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(deck.maybeboard) { entry in
+                                CardEntryView(
+                                    entry: entry,
+                                    deleteEntry: {deck.maybeboard.removeAll { $0.id == entry.id }}
+                                )
                                 .frame(width: 150)
+                            }
                         }
                     }
                 }
