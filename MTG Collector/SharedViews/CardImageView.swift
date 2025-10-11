@@ -52,7 +52,7 @@ struct CardImageView: View {
                             .resizable()
                             .scaledToFit()
                             .cornerRadius(8)
-                            .onTapGesture(count: 2) {
+                            .onLongPressGesture {
                                 showFullScreen = true
                             }
                             .fullScreenCover(isPresented: $showFullScreen) {

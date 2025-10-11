@@ -17,6 +17,9 @@ class Binder {
     var coverImage: String
     var createdAt: Date
     
+    // some controls
+    var showPreviews: Bool = true
+    
     @Relationship var cards: [CardEntry] = []
 
 

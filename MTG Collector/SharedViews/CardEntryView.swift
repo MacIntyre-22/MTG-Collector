@@ -13,13 +13,17 @@ struct CardEntryView: View {
     // on delete alert
     @State var alertIsShowing: Bool = false
     
+    // Show previews
+    var showPreviews: Bool
+    
     // taking closures allows for functionality with different models like binders and decks
-    var deleteEntry: () -> Void
-    var contextMenu: (() -> AnyView)? = nil
+    var deleteEntry: (() -> Void)? = nil
+    
+    
     
     var body: some View {
         VStack {
-            CardGridView(card: entry.card, showPreviews: false)
+            CardGridView(card: entry.card, showPreviews: showPreviews, isFoil: entry.isFoil)
             HStack {
                 Button(action: {
                     // remove 1 quantity
@@ -42,20 +46,15 @@ struct CardEntryView: View {
             .padding(10)
             .font(.custom("", size: 30))
         }
-        .contextMenu{
-            if let menu = contextMenu {
-                menu()
-            } else {
-                EmptyView()
-            }
-        }
         .background(Color.gray.opacity(0.18))
         .cornerRadius(10)
         .alert("Are you sure?", isPresented: $alertIsShowing) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 // perform delete
-                deleteEntry()
+                if let delete = deleteEntry {
+                    delete()
+                }
             }
         } message: {
             Text("Remove this card from collection?")

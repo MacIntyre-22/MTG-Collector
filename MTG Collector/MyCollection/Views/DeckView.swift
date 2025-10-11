@@ -13,62 +13,50 @@ struct DeckView: View {
     
     @State var showEdit: Bool = false
     @State var showNotes: Bool = false
+    @State var selectedBoard: Int = 0
     
     var body: some View {
         NavigationStack {
-            List {
-                
-                // MARK: Mainboard
-                Section("Mainboard") {
-                    ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView {
+                VStack {
+                    VStack {
                         HStack {
-                            ForEach(deck.mainboard) { entry in
-                                NavigationLink(destination: CardInfoView(card: entry.card)){
-                                    CardEntryView(
-                                        entry: entry,
-                                        deleteEntry: {deck.mainboard.removeAll { $0.id == entry.id }},
-//                                        contextMenu: {
-//                                            ContextMenu(menuItems: {
-//                                                Button("Delete") {
-//                                                    
-//                                                }
-//                                            })
-//                                        }
-                                    )
-                                    .frame(width: 150)
-                                }
+                            Button {
+                                deck.showPreviews.toggle()
+                            } label: {
+                                Text("Previews")
+                                    .foregroundColor(.white)
+                                    .padding(5)
+                                    .frame(maxWidth: 100)
+                                    .background(deck.showPreviews ? Color.accentColor : Color.gray)
+                                    .cornerRadius(5)
+                            }
+                            
+                            Spacer()
+                        }
+                        
+                        if let commander = deck.commander {
+                            CommanderWidget(entry: commander) {
+                                // remove commander
+                                deck.commander = nil
                             }
                         }
+                        
+                        Picker("Boards", selection: $selectedBoard) {
+                            Text("Mainboard").tag(0)
+                            Text("Sideboard").tag(1)
+                            Text("Maybeboard").tag(2)
+                        }
+                        .pickerStyle(.segmented)
+                        .tint(Color.accentColor)
                     }
-                }
-                
-                // MARK: Sideboard
-                Section("Sideboard") {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(deck.sideboard) { entry in
-                                CardEntryView(
-                                    entry: entry,
-                                    deleteEntry: {deck.sideboard.removeAll { $0.id == entry.id }}
-                                )
-                                .frame(width: 150)
-                            }
-                        }
-                    }
-                }
-                
-                // MARK: Maybeboard
-                Section("Maybeboard") {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(deck.maybeboard) { entry in
-                                CardEntryView(
-                                    entry: entry,
-                                    deleteEntry: {deck.maybeboard.removeAll { $0.id == entry.id }}
-                                )
-                                .frame(width: 150)
-                            }
-                        }
+                    .padding()
+                    
+                    switch selectedBoard {
+                    case 0: MainboardView(deck: deck)
+                    case 1: SideboardView(deck: deck)
+                    case 2: MaybeboardView(deck: deck)
+                    default: EmptyView()
                     }
                 }
             }
@@ -76,6 +64,11 @@ struct DeckView: View {
         }
         .navigationTitle(deck.name)
         .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Stats", systemImage: "chart.bar"){
+                    showEdit.toggle()
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Notes", systemImage: "note.text"){
                     showNotes.toggle()
@@ -96,5 +89,6 @@ struct DeckView: View {
                 .presentationDetents([.medium, .large])
         }
     }
+    
 }
 

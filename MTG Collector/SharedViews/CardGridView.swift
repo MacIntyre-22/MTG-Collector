@@ -10,7 +10,8 @@ import SwiftUI
 struct CardGridView: View {
     var card: Card
     
-    var showPreviews: Bool
+    var showPreviews: Bool = false
+    var isFoil: Bool = false
     
     // check flip state
     @State private var isFlipped: Bool = false
@@ -29,24 +30,38 @@ struct CardGridView: View {
     
     var body: some View {
         VStack{
-            // if multifaced
-            if let face = currentFace {
-                ZStack(alignment: .topTrailing) {
-                    CardImageView(maxWidth: 220, imageURIs: face.imageURIs)
-                    
-                    Button {
-                        isFlipped.toggle()
-                    } label: {
-                        Image(systemName: "arrow.left.arrow.right.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.white)
-                            .shadow(radius: 7)
+            
+            // foil application
+            ZStack {
+                // if multifaced
+                if let face = currentFace {
+                    ZStack(alignment: .topTrailing) {
+                        CardImageView(maxWidth: 220, imageURIs: face.imageURIs)
+                        
+                        Button {
+                            isFlipped.toggle()
+                        } label: {
+                            Image(systemName: "arrow.left.arrow.right.circle.fill")
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .shadow(radius: 7)
+                        }
                     }
+                } else {
+                    // regular card
+                    CardImageView(maxWidth: 220, imageURIs: card.imageURIs)
                 }
-            } else {
-                // regular card
-                CardImageView(maxWidth: 220, imageURIs: card.imageURIs)
+                
+                if isFoil {
+                    LinearGradient(
+                        colors: [.blue, .purple, .pink, .orange, .yellow],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ).opacity(0.3)
+                }
             }
+            .aspectRatio(0.714, contentMode: .fit)
+            .cornerRadius(8)
             
             
             Text(currentFace?.name ?? card.name)

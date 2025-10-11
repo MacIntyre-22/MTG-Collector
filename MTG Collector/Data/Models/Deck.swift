@@ -13,8 +13,13 @@ class Deck {
     @Attribute(.unique) var id: String = UUID().uuidString
     var name: String
     var notes: String
+    var coverImage: String
     var ruleType: String
     var createdAt: Date
+    var commander: CardEntry?
+    
+    // view controls
+    var showPreviews: Bool = false
     
     @Relationship var mainboard: [CardEntry] = []
     @Relationship var sideboard: [CardEntry] = []
@@ -106,11 +111,12 @@ class Deck {
 
 
     // only require a name for the deck
-    init(name: String, notes: String = "", ruleType: String = "casual") {
+    init(name: String, notes: String = "", coverimage: String = "", ruleType: String = "casual") {
         self.name = name
         self.notes = notes
         self.ruleType = ruleType
         self.createdAt = Date()
+        self.coverImage = coverimage
     }
 
 }

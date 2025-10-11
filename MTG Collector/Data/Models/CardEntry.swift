@@ -11,19 +11,14 @@ import SwiftData
 @Model
 class CardEntry {
     @Attribute(.unique) var id: UUID = UUID()
-    var quantity: Int
-    var finish: String
-    var isCommander: Bool
-    var isDisplay: Bool
+    var quantity: Int = 1
+    var isFoil: Bool = false
+    var favourite: Bool = false
     
     // relationships
     @Relationship var card: Card
 
-    init(card: Card, quantity: Int = 1, finish: String = "base", isCommander: Bool = false, isDisplay: Bool = false) {
+    init(card: Card) {
         self.card = card
-        self.quantity = quantity
-        self.finish = finish
-        self.isCommander = isCommander
-        self.isDisplay = isDisplay
     }
 }
