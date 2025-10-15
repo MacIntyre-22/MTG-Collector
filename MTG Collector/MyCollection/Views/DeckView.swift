@@ -13,6 +13,7 @@ struct DeckView: View {
     
     @State var showEdit: Bool = false
     @State var showNotes: Bool = false
+    @State var showStats: Bool = false
     @State var selectedBoard: Int = 0
     
     var body: some View {
@@ -64,22 +65,30 @@ struct DeckView: View {
         }
         .navigationTitle(deck.name)
         .toolbar(content: {
+            
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Stats", systemImage: "chart.bar"){
-                    showEdit.toggle()
-                }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Notes", systemImage: "note.text"){
-                    showNotes.toggle()
-                }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("Edit", systemImage: "square.and.pencil"){
-                    showEdit.toggle()
-                }
+                Menu{
+                    Button("Stats", systemImage: "chart.bar"){
+                        showStats.toggle()
+                    }
+                    Button("Notes", systemImage: "note.text"){
+                        showNotes.toggle()
+                    }
+                    Button("Edit", systemImage: "square.and.pencil"){
+                        showEdit.toggle()
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .frame(maxWidth: 30, maxHeight: 30)
+                        .foregroundColor(.white)
+                        .padding(5)
+                        .background(Color.accentColor)
+                        .cornerRadius(5)                }
             }
         })
+        .sheet(isPresented: $showStats) {
+            DeckStatsSheet(deck: deck)
+        }
         .sheet(isPresented: $showEdit) {
             EditDeckSheet(deck: deck)
                 .presentationDetents([.medium, .large])

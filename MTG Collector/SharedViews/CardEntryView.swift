@@ -29,22 +29,38 @@ struct CardEntryView: View {
                     // remove 1 quantity
                     removeCard()
                 }) {
-                    Image(systemName: "minus.circle.fill")
+                    Image(systemName: "minus")
+                        .frame(width: 20, height: 20)
+
+                        .foregroundColor(.white)
+                        .padding(5)
+                        .background(Color.accentColor)
+                        .cornerRadius(5)
+                        .bold()
                 }
+                .padding(.trailing, 10)
                 
                 // quantity
                 Text("\(entry.quantity)")
+                    .font(.title)
                     .foregroundColor(.primary)
                 
                 Button(action: {
                     // remove 1 quantity
                     addCard()
                 }) {
-                    Image(systemName: "plus.circle.fill")
+                    Image(systemName: "plus")
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.white)
+                        .padding(5)
+                        .background(Color.accentColor)
+                        .cornerRadius(5)
+                        .bold()
                 }
+                .padding(.leading, 10)
+
             }
             .padding(10)
-            .font(.custom("", size: 30))
         }
         .background(Color.gray.opacity(0.18))
         .cornerRadius(10)

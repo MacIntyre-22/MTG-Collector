@@ -94,7 +94,6 @@ class Deck {
         }
         return counts
     }
-
     
     // total cards of each mana count
     var manaTypeCount: [String: Int] {
@@ -103,7 +102,7 @@ class Deck {
         for entry in mainboard {
             // count or default to 0
             for mana in entry.card.colorIdentity {
-                counts[mana, default: 0] += 1
+                counts[mana, default: 0] += entry.quantity
             }
         }
         return counts

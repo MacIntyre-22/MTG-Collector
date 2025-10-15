@@ -13,6 +13,8 @@ struct BinderView: View {
     
     @State var showNotes: Bool = false
     @State var showEdit: Bool = false
+    @State var showStats: Bool = false
+    
     // card sort method
     // default by name
     @State var filter: (CardEntry, CardEntry) -> Bool = { a, b in
@@ -94,21 +96,30 @@ struct BinderView: View {
             .navigationTitle(binder.name)
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Stats", systemImage: "chart.bar"){
-                        showEdit.toggle()
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Notes", systemImage: "note.text"){
-                        showNotes.toggle()
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Edit", systemImage: "square.and.pencil"){
-                        showEdit.toggle()
+                    Menu{
+                        Button("Stats", systemImage: "chart.bar"){
+                            showStats.toggle()
+                        }
+                        Button("Notes", systemImage: "note.text"){
+                            showNotes.toggle()
+                        }
+                        Button("Edit", systemImage: "square.and.pencil"){
+                            showEdit.toggle()
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .frame(maxWidth: 30, maxHeight: 30)
+                            .foregroundColor(.white)
+                            .padding(5)
+                            .background(Color.accentColor)
+                            .cornerRadius(5)
                     }
                 }
             })
+            .sheet(isPresented: $showStats) {
+                BinderStatsSheet(binder: binder)
+                    
+            }
             .sheet(isPresented: $showEdit) {
                 EditBinderSheet(binder: binder)
                     .presentationDetents([.medium, .large])
