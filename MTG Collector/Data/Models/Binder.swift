@@ -68,7 +68,7 @@ class Binder {
         
         for entry in cards {
             for mana in entry.card.colorIdentity {
-                counts[mana, default: 0] += 1
+                counts[mana, default: 0] += entry.quantity
             }
         }
         return counts

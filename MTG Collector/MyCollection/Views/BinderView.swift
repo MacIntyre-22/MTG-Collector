@@ -108,11 +108,6 @@ struct BinderView: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis")
-                            .frame(maxWidth: 30, maxHeight: 30)
-                            .foregroundColor(.white)
-                            .padding(5)
-                            .background(Color.accentColor)
-                            .cornerRadius(5)
                     }
                 }
             })

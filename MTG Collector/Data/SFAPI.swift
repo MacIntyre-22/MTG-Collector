@@ -27,7 +27,7 @@ struct SFAPI {
             let fetchResults = try decoder.decode(ScryfallCardData.self, from: data)
             return fetchResults.data
         } catch {
-            print("There was an error - \(error)")
+            print("Error with SFAPI.fetchCardData - \(error)")
             return [] 
         }
     }
@@ -45,7 +45,7 @@ struct SFAPI {
                 return nil
             }
         } catch {
-            print("There was an error - \(error)")
+            print("Error with SFAPI.fecthCardId - \(error)")
             return nil
         }
     }
@@ -64,7 +64,7 @@ struct SFAPI {
                 return nil
             }
         } catch {
-            print("There was an error - \(error)")
+            print("Error with SFAPI.fetchCardURI - \(error)")
             return nil
         }
     }
@@ -80,7 +80,7 @@ struct SFAPI {
             let fetchResults = try decoder.decode(ScryfallSetData.self, from: data)
             return fetchResults.data
         } catch {
-            print("There was an error - \(error)")
+            print("Error with SFAPI.fetchSetData - \(error)")
             return []
         }
     }
