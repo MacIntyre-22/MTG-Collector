@@ -60,6 +60,9 @@ struct SearchTabView: View {
                     }
                 }
             })
+            .sheet(isPresented: $showFilters) {
+                FilterSheet(filters: $filters)
+            }
         }
     }
 }
