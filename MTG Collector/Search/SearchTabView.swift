@@ -47,9 +47,9 @@ struct SearchTabView: View {
             .keyboardType(.default)
             .onSubmit(of: .search, {
                 Task {
-                        let results = await SFAPI.fetchCardData(filters: filters)
-                        scryfallResults = results
-                    }
+                    let results = await SFAPI.fetchCardData(filters: filters)
+                    scryfallResults = results
+                }
                 
             })
             // MARK: Filter btn and Sheet
@@ -61,7 +61,12 @@ struct SearchTabView: View {
                 }
             })
             .sheet(isPresented: $showFilters) {
-                FilterSheet(filters: $filters)
+                FilterSheet(filters: $filters) {
+                    Task {
+                        let results = await SFAPI.fetchCardData(filters: filters)
+                        scryfallResults = results
+                    }
+                }
             }
         }
     }

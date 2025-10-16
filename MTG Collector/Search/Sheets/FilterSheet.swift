@@ -9,8 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct FilterSheet: View {
+    @Environment(\.dismiss) var dismiss
+    
     // get filters
     @Binding var filters: CardFilters
+    
+    var onSearch: () -> Void
 
     // for mana range
     @State private var cmcLower: Double = 0
@@ -32,7 +36,7 @@ struct FilterSheet: View {
                             ForEach(allColors, id: \.self) { color in
                                 Button {
                                     // if in list remove it, if not add it
-                                    toggleColor(color: color)
+                                    toggle(array: &filters.colors, value: color)
                                 } label: {
                                     // check if in list
                                     // give it color if it is else gray it out
@@ -49,18 +53,73 @@ struct FilterSheet: View {
                         }
                     }
                 }
+                
+                Section("Types") {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                       HStack {
+                           ForEach(allTypes, id: \.self) { type in
+                               Button {
+                                   // if in list remove it, if not add it
+                                   toggle(array: &filters.types, value: type)
+                               } label: {
+                                   // check if in list
+                                   // give it color if it is else gray it out
+                                   Text(type)
+                                       .padding(5)
+                                       .background(filters.types.contains(where: { $0 == type }) ? .gray.opacity(0.18) : .gray.opacity(0))
+                                       .cornerRadius(5)
+                                   
+                               }
+                           }
+                       }
+                   }
+                }
+                
+                Section("Sets") {
+                    
+                }
+                
+                Section("Rarities") {
+                    
+                }
+                
+                Section("CMC Range") {
+                    
+                }
             }
             .navigationTitle("Card Filters")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        onSearch()
+                        dismiss()
+                    } label: {
+                        Text("Search")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("Close")
+                    }
+                }
+            }
         }
     }
     
     
-    // toggle Color
-    func toggleColor(color: String) {
-        if filters.colors.contains(where: { $0 == color }) {
-            filters.colors.removeAll(where: { $0 == color })
+    // MARK: Toggle Filter
+    // all filters are arrays of strings
+    // removes the given string from given array or adds it if not there
+    func toggle(array: inout [String], value: String) {
+        // checks if in collection and grabs index
+        if let item = array.firstIndex(of: value) {
+            // removes from index
+            array.remove(at: item)
         } else {
-            filters.colors.append(color)
+            // or adds the value
+            array.append(value)
         }
     }
 }
