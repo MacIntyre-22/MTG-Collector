@@ -20,13 +20,11 @@ struct FilterSheet: View {
     
     var onSearch: () -> Void
 
-    // for mana range
-    @State private var cmcLower: Double = 0
-    @State private var cmcUpper: Double = 10
+    // set values for filters
+    let allColors = ["W", "U", "B", "R", "G"]
+    let allTypes = ["Creature", "Instant", "Sorcery", "Artifact", "Enchantment", "Land", "Planeswalker"]
+    let allRarities = ["common", "uncommon", "rare", "mythic"]
 
-    private let allColors = ["W", "U", "B", "R", "G"]
-    private let allTypes = ["Creature", "Instant", "Sorcery", "Artifact", "Enchantment", "Land", "Planeswalker"]
-    private let allRarities = ["common", "uncommon", "rare", "mythic"]
     
     let columns = [
         GridItem(.adaptive(minimum: 100, maximum: 300), spacing: 15),
@@ -87,6 +85,45 @@ struct FilterSheet: View {
                    
                 }
                 
+                Section("Rarities") {
+                    LazyVGrid(columns: columns, spacing: 5) {
+                        ForEach(allRarities, id: \.self) { type in
+                            let contains = filters.rarities.contains(type)
+                            Button {
+                                toggle(array: &filters.rarities, value: type)
+                            } label: {
+                                Text(type.capitalized)
+                                    .foregroundColor(contains ? .white : Color.accentColor)
+                                    .lineLimit(1)
+                                    .frame(maxWidth: 300, maxHeight: 30)
+                                    .padding(5)
+                                    .background(contains ? Color.accentColor : .clear)
+                                    .cornerRadius(5)
+                            }
+                            // required so it doesnt make the whole view a btn
+
+                            .buttonStyle(PlainButtonStyle())
+                       }
+                   }
+                }
+                
+                // cost range
+                Section("CMC Range") {
+                    VStack(alignment: .center) {
+                        HStack(spacing: 40) {
+                            Text("Min: \(Int(filters.cmcLower))")
+                            Text("Max: \(Int(filters.cmcUpper))")
+                        }
+
+                        // dont let higher than higher slider
+                        Slider(value: $filters.cmcLower, in: 0...20, step: 1)
+
+                        // dont allow lower then lower slider
+                        Slider(value: $filters.cmcUpper, in: 0...20, step: 1)
+                    }
+                }
+                
+                // sets
                 Section("Sets") {
                     SetsFilterWidget() { code in
                         toggle(array: &filters.sets, value: code)
@@ -106,14 +143,6 @@ struct FilterSheet: View {
                            }
                        }
                     }
-                }
-                
-                Section("Rarities") {
-                    
-                }
-                
-                Section("CMC Range") {
-                    
                 }
             }
             .navigationTitle("Card Filters")

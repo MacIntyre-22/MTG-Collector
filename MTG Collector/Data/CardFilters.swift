@@ -16,7 +16,8 @@ struct CardFilters {
     var types: [String] = []
     var sets: [String] = []
     var rarities: [String] = []
-    var cmcRange: ClosedRange<Int>? = nil
+    var cmcLower: Double = 0
+    var cmcUpper: Double = 20
 }
 
 // MARK: Query builder
@@ -50,9 +51,14 @@ func buildQuery(from filters: CardFilters) -> String {
     }
     
     // set lowest and highest based on user input
-    if let cmcRange = filters.cmcRange {
-        parts.append("cmc>=\(cmcRange.lowerBound)")
-        parts.append("cmc<=\(cmcRange.upperBound)")
+    if filters.cmcLower < filters.cmcUpper {
+        // if they are properly set then append them to search
+        parts.append("cmc>=\(filters.cmcLower)")
+        parts.append("cmc<=\(filters.cmcUpper)")
+    } else {
+        // if not, set upper to max
+        parts.append("cmc>=\(filters.cmcLower)")
+        parts.append("cmc<=\(20)")
     }
     
     // return the query

@@ -30,14 +30,38 @@ struct SearchTabView: View {
         NavigationStack {
             ScrollView {
                 
-                // MARK: Grid View
-                LazyVGrid(columns: columns) {
-                    ForEach(scryfallResults) { card in
-                        // pass a model version of the card to the views
-                        let tempModel = SFAPI.JSONtoModel(json: card)
-                        
-                        SearchCardView(card: tempModel)
+                // check for succesful search
+                if !scryfallResults.isEmpty {
+                    // MARK: Grid View
+                    LazyVGrid(columns: columns) {
+                        ForEach(scryfallResults) { card in
+                            // pass a model version of the card to the views
+                            let tempModel = SFAPI.JSONtoModel(json: card)
+                            
+                            SearchCardView(card: tempModel)
+                        }
                     }
+                } else {
+                    // display no results
+                    VStack(spacing: 16) {
+                        Image(systemName: "magnifyingglass")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                            .foregroundStyle(.gray)
+                        
+                        Text("No results found")
+                            .font(.title3.bold())
+                            .foregroundStyle(.secondary)
+                        
+                        Text("Try changing your filters or search.")
+                            .font(.subheadline)
+                            .foregroundStyle(.gray)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 30)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 300)
+                    .padding(.top, 100)
                 }
             }
             .navigationTitle("Search")
