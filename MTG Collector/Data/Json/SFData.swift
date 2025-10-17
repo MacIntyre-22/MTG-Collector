@@ -24,7 +24,7 @@ struct SetJSON: Codable {
         case code
         case name
         case releaseDate = "released_at"
-        case type
+        case type = "set_type"
         case cardCount = "card_count"
         case iconURI = "icon_svg_uri"
     }

@@ -9,7 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct FilterSheet: View {
+    @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
+    
+    // query sets
+    @Query var sets: [SetInfo]
     
     // get filters
     @Binding var filters: CardFilters
@@ -23,60 +27,85 @@ struct FilterSheet: View {
     private let allColors = ["W", "U", "B", "R", "G"]
     private let allTypes = ["Creature", "Instant", "Sorcery", "Artifact", "Enchantment", "Land", "Planeswalker"]
     private let allRarities = ["common", "uncommon", "rare", "mythic"]
-    @Query var sets: [SetInfo]
-
+    
+    let columns = [
+        GridItem(.adaptive(minimum: 100, maximum: 300), spacing: 15),
+        GridItem(.adaptive(minimum: 100, maximum: 300), spacing: 15)
+    ]
+    
+    
+    
     var body: some View {
         NavigationView {
             Form {
 
                 Section(header: Text("Colors")) {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            // go through pre set color list
-                            ForEach(allColors, id: \.self) { color in
-                                Button {
-                                    // if in list remove it, if not add it
-                                    toggle(array: &filters.colors, value: color)
-                                } label: {
-                                    // check if in list
-                                    // give it color if it is else gray it out
-                                    Image(color)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(maxWidth: 50, maxHeight: 50)
-                                        .padding(5)
-                                        .background(filters.colors.contains(where: { $0 == color }) ? .gray.opacity(0.18) : .gray.opacity(0))
-                                        .cornerRadius(5)
-                                    
-                                }
+                    HStack(alignment: .center) {
+                        // go through pre set color list
+                        ForEach(allColors, id: \.self) { color in
+                            Button {
+                                // if in list remove it, if not add it
+                                toggle(array: &filters.colors, value: color)
+                            } label: {
+                                // check if in list
+                                // give it color if it is else gray it out
+                                Image(color)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth: 50, maxHeight: 50)
+                                    .padding(5)
+                                    .background(filters.colors.contains(where: { $0 == color }) ? .gray.opacity(0.18) : .gray.opacity(0))
+                                    .cornerRadius(5)
+                                
                             }
+                            // required so it doesnt make the whole view a btn
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                 }
                 
                 Section("Types") {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                       HStack {
-                           ForEach(allTypes, id: \.self) { type in
-                               Button {
-                                   // if in list remove it, if not add it
-                                   toggle(array: &filters.types, value: type)
-                               } label: {
-                                   // check if in list
-                                   // give it color if it is else gray it out
-                                   Text(type)
-                                       .padding(5)
-                                       .background(filters.types.contains(where: { $0 == type }) ? .gray.opacity(0.18) : .gray.opacity(0))
-                                       .cornerRadius(5)
-                                   
-                               }
-                           }
+                    LazyVGrid(columns: columns, spacing: 5) {
+                        ForEach(allTypes, id: \.self) { type in
+                            let contains = filters.types.contains(type)
+                            Button {
+                                toggle(array: &filters.types, value: type)
+                            } label: {
+                                Text(type)
+                                    .foregroundColor(contains ? .white : Color.accentColor)
+                                    .lineLimit(1)
+                                    .frame(maxWidth: 300, maxHeight: 30)
+                                    .padding(5)
+                                    .background(contains ? Color.accentColor : .clear)
+                                    .cornerRadius(5)
+                            }
+                            // required so it doesnt make the whole view a btn
+
+                            .buttonStyle(PlainButtonStyle())
                        }
                    }
+                   
                 }
                 
                 Section("Sets") {
-                    
+                    SetsFilterWidget() { code in
+                        toggle(array: &filters.sets, value: code)
+                    }
+                    VStack(alignment: .leading) {
+                        // get active set filters
+                        Text("Added Sets")
+                            .bold()
+                            .padding(.bottom, 10)
+                        ForEach(filters.sets, id: \.self) { code in
+                           if let set = sets.first(where: { $0.code == code }) {
+                               Text(set.name.capitalized)
+                                   .foregroundColor(.gray)
+                           } else {
+                               Text(code.uppercased())
+                                   .foregroundColor(.secondary)
+                           }
+                       }
+                    }
                 }
                 
                 Section("Rarities") {

@@ -20,7 +20,7 @@ struct InfoRelatedWidget: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(relatedCards, id: \.self) { card in
+                ForEach(relatedCards) { card in
                     CardGridView(card: card, showPreviews: true, isFoil: false)
                         .frame(maxWidth: 150)
                         .background(Color.gray.opacity(0.18))

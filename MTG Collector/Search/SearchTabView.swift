@@ -17,11 +17,11 @@ struct SearchTabView: View {
     
     
     // Search Card Data
-    @State private var scryfallResults: [CardJSON] = []
+    @State var scryfallResults: [CardJSON] = []
     
     // Filters
-    @State private var showFilters = false
-    @State private var filters = CardFilters()
+    @State var showFilters = false
+    @State var filters = CardFilters()
     
     // responsive grid
     let columns = [GridItem(.adaptive(minimum: 180, maximum: 180), spacing: 15)]
