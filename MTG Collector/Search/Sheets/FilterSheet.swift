@@ -36,8 +36,30 @@ struct FilterSheet: View {
     var body: some View {
         NavigationView {
             Form {
+                
+                Section("Reset All") {
+                    // clear results for this section
+                    HStack(alignment: .center) {
+                        Spacer()
+                        Button {
+                            // reset all to default
+                            filters.text = ""
+                            filters.colors = []
+                            filters.types = []
+                            filters.sets = []
+                            filters.rarities = []
+                            filters.cmcLower = 0
+                            filters.cmcUpper = 20
+                        } label: {
+                            Text("Reset")
+                                .bold()
+                        }
+                        Spacer()
+                    }
+                }
 
-                Section(header: Text("Colors")) {
+                Section("Colors") {
+                    
                     HStack(alignment: .center) {
                         // go through pre set color list
                         ForEach(allColors, id: \.self) { color in
@@ -60,9 +82,17 @@ struct FilterSheet: View {
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
+                    
+                    // clear results for this section
+                    Button(role: .destructive) {
+                        filters.colors = []
+                    } label: {
+                        Text("Clear")
+                    }
                 }
                 
                 Section("Types") {
+                    
                     LazyVGrid(columns: columns, spacing: 5) {
                         ForEach(allTypes, id: \.self) { type in
                             let contains = filters.types.contains(type)
@@ -82,10 +112,18 @@ struct FilterSheet: View {
                             .buttonStyle(PlainButtonStyle())
                        }
                    }
+                    
+                    // clear results for this section
+                    Button(role: .destructive) {
+                        filters.types = []
+                    } label: {
+                        Text("Clear")
+                    }
                    
                 }
                 
                 Section("Rarities") {
+                    
                     LazyVGrid(columns: columns, spacing: 5) {
                         ForEach(allRarities, id: \.self) { type in
                             let contains = filters.rarities.contains(type)
@@ -105,10 +143,18 @@ struct FilterSheet: View {
                             .buttonStyle(PlainButtonStyle())
                        }
                    }
+                    
+                    // clear results for this section
+                    Button(role: .destructive) {
+                        filters.rarities = []
+                    } label: {
+                        Text("Clear")
+                    }
                 }
                 
                 // cost range
                 Section("CMC Range") {
+                    
                     VStack(alignment: .center) {
                         HStack(spacing: 40) {
                             Text("Min: \(Int(filters.cmcLower))")
@@ -121,10 +167,19 @@ struct FilterSheet: View {
                         // dont allow lower then lower slider
                         Slider(value: $filters.cmcUpper, in: 0...20, step: 1)
                     }
+                    
+                    // clear results for this section
+                    Button(role: .destructive) {
+                        filters.cmcLower = 0
+                        filters.cmcUpper = 20
+                    } label: {
+                        Text("Clear")
+                    }
                 }
                 
                 // sets
                 Section("Sets") {
+                    
                     SetsFilterWidget() { code in
                         toggle(array: &filters.sets, value: code)
                     }
@@ -143,6 +198,14 @@ struct FilterSheet: View {
                            }
                        }
                     }
+                    
+                    // clear results for this section
+                    Button(role: .destructive) {
+                        filters.sets = []
+                    } label: {
+                        Text("Clear")
+                    }
+                    
                 }
             }
             .navigationTitle("Card Filters")

@@ -25,10 +25,10 @@ struct SetsFilterWidget: View {
     // have to be computed after query so  init doesnt work
     var sortedSets: [SortedSet] {
         [
-            SortedSet(name: "Core Sets", sets: sets.filter { $0.type == "core" }),
-            SortedSet(name: "Expansion Sets", sets: sets.filter { $0.type == "expansion" }),
-            SortedSet(name: "Master Sets", sets: sets.filter { $0.type == "masters" }),
-            SortedSet(name: "Commander Sets", sets: sets.filter { $0.type == "commander" })
+            SortedSet(name: "Core Sets", sets: sets.filter { $0.type == "core" }.sorted { $0.name < $1.name }),
+            SortedSet(name: "Expansion Sets", sets: sets.filter { $0.type == "expansion" }.sorted { $0.name < $1.name }),
+            SortedSet(name: "Master Sets", sets: sets.filter { $0.type == "masters" }.sorted { $0.name < $1.name }),
+            SortedSet(name: "Commander Sets", sets: sets.filter { $0.type == "commander" }.sorted { $0.name < $1.name })
         ]
     }
     

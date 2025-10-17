@@ -23,6 +23,8 @@ struct SearchTabView: View {
     @State var showFilters = false
     @State var filters = CardFilters()
     
+    @State var isSearching: Bool = false
+    
     // responsive grid
     let columns = [GridItem(.adaptive(minimum: 180, maximum: 180), spacing: 15)]
     
@@ -30,38 +32,47 @@ struct SearchTabView: View {
         NavigationStack {
             ScrollView {
                 
-                // check for succesful search
-                if !scryfallResults.isEmpty {
-                    // MARK: Grid View
-                    LazyVGrid(columns: columns) {
-                        ForEach(scryfallResults) { card in
-                            // pass a model version of the card to the views
-                            let tempModel = SFAPI.JSONtoModel(json: card)
-                            
-                            SearchCardView(card: tempModel)
-                        }
-                    }
-                } else {
+                if isSearching {
                     // display no results
                     VStack(spacing: 16) {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 80, height: 80)
-                            .foregroundStyle(.gray)
-                        
-                        Text("No results found")
-                            .font(.title3.bold())
-                            .foregroundStyle(.secondary)
-                        
-                        Text("Try changing your filters or search.")
-                            .font(.subheadline)
-                            .foregroundStyle(.gray)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 30)
+                        ProgressView()
                     }
                     .frame(maxWidth: .infinity, minHeight: 300)
                     .padding(.top, 100)
+                } else {
+                    // check for succesful search
+                    if !scryfallResults.isEmpty {
+                        // MARK: Grid View
+                        LazyVGrid(columns: columns) {
+                            ForEach(scryfallResults) { card in
+                                // pass a model version of the card to the views
+                                let tempModel = SFAPI.JSONtoModel(json: card)
+                                
+                                SearchCardView(card: tempModel)
+                            }
+                        }
+                    } else {
+                        // display no results
+                        VStack(spacing: 16) {
+                            Image(systemName: "magnifyingglass")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 80, height: 80)
+                                .foregroundStyle(.gray)
+                            
+                            Text("No results found")
+                                .font(.title3.bold())
+                                .foregroundStyle(.secondary)
+                            
+                            Text("Try changing your filters or search.")
+                                .font(.subheadline)
+                                .foregroundStyle(.gray)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 30)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 300)
+                        .padding(.top, 100)
+                    }
                 }
             }
             .navigationTitle("Search")
@@ -71,8 +82,7 @@ struct SearchTabView: View {
             .keyboardType(.default)
             .onSubmit(of: .search, {
                 Task {
-                    let results = await SFAPI.fetchCardData(filters: filters)
-                    scryfallResults = results
+                    await search()
                 }
                 
             })
@@ -87,11 +97,17 @@ struct SearchTabView: View {
             .sheet(isPresented: $showFilters) {
                 FilterSheet(filters: $filters) {
                     Task {
-                        let results = await SFAPI.fetchCardData(filters: filters)
-                        scryfallResults = results
+                        await search()
                     }
                 }
             }
         }
+    }
+    
+    func search() async {
+        isSearching = true
+        let results = await SFAPI.fetchCardData(filters: filters)
+        scryfallResults = results
+        isSearching = false
     }
 }
