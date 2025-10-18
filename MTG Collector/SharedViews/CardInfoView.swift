@@ -81,10 +81,10 @@ struct CardInfoView: View {
                 HStack(spacing: 8) {
                     if !card.cardFaces.isEmpty {
                         ForEach(card.cardFaces) { face in
-                            CardImageView(maxWidth: 75, imageURIs: face.imageURIs)
+                            CardImageView(maxWidth: 75, name: face.name, imageURIs: face.imageURIs)
                         }
                     } else {
-                        CardImageView(maxWidth: 100, imageURIs: card.imageURIs)
+                        CardImageView(maxWidth: 100, name: card.name, imageURIs: card.imageURIs)
                     }
                 }
                 .padding(8)

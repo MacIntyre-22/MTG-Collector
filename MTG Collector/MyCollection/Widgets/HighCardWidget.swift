@@ -17,7 +17,7 @@ struct HighCardWidget: View {
                     .font(.title3)
                     .bold()
                 HStack(spacing: 20) {
-                    CardImageView(maxWidth: 100, imageURIs: entry.card.imageURIs)
+                    CardImageView(maxWidth: 100, name: entry.card.name, imageURIs: entry.card.imageURIs)
                     VStack(alignment: .leading) {
                         
                         // name

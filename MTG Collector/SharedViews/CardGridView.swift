@@ -12,6 +12,7 @@ struct CardGridView: View {
     
     var showPreviews: Bool = false
     var isFoil: Bool = false
+    var showNames: Bool = false
     
     // check flip state
     @State private var isFlipped: Bool = false
@@ -28,49 +29,83 @@ struct CardGridView: View {
         return isFlipped ? faces.last : faces.first
     }
     
+    var gradFoil: LinearGradient = LinearGradient(
+                                        colors: [.blue, .purple, .pink, .orange, .yellow],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+    
     var body: some View {
         VStack{
             
             // foil application
             ZStack {
                 // if multifaced
-                if let face = currentFace {
-                    ZStack(alignment: .topTrailing) {
-                        CardImageView(maxWidth: 220, imageURIs: face.imageURIs)
-                        
-                        Button {
-                            isFlipped.toggle()
-                        } label: {
-                            Image(systemName: "arrow.left.arrow.right.circle.fill")
-                                .font(.title)
-                                .foregroundColor(.white)
-                                .shadow(radius: 7)
+                if let faces = multiFaced, faces.count > 1 {
+                    // Front face
+                    ZStack {
+                        CardImageView(maxWidth: 220, name: faces.first!.name, imageURIs: faces.first!.imageURIs)
+                        // foil check
+                        if isFoil {
+                            gradFoil.opacity(0.3)
                         }
                     }
+                    .opacity(isFlipped ? 0 : 1)
+                    .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+
+                    // Back face
+                    ZStack {
+                        CardImageView(maxWidth: 220, name: faces.last!.name, imageURIs: faces.last!.imageURIs)
+                        // foil check
+                        if isFoil {
+                            gradFoil.opacity(0.3)
+                        }
+                    }
+                    .opacity(isFlipped ? 1 : 0)
+                    .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
+                    
                 } else {
-                    // regular card
-                    CardImageView(maxWidth: 220, imageURIs: card.imageURIs)
+                    // Single-faced card
+                    CardImageView(maxWidth: 220, name: card.name, imageURIs: card.imageURIs)
                 }
                 
-                if isFoil {
-                    LinearGradient(
-                        colors: [.blue, .purple, .pink, .orange, .yellow],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ).opacity(0.3)
+                // set foil over card image if set
+                
+                // set flip button over both if it is multifaced
+                if multiFaced != nil {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.6)) {
+                                    isFlipped.toggle()
+                                }
+                            } label: {
+                                Image(systemName: "arrow.left.arrow.right.circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(.white)
+                                    .shadow(radius: 7)
+                            }
+                        }
+                        Spacer()
+                    }
+                    .padding(4)
                 }
             }
             .aspectRatio(0.714, contentMode: .fit)
             .cornerRadius(8)
             
             
-            Text(currentFace?.name ?? card.name)
-                .font(.headline)
-                .foregroundColor(.primary)
-                .lineLimit(1)
-                .truncationMode(.tail)
+            // show names
+            if showNames {
+                Text(currentFace?.name ?? card.name)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+            }
             
-            
+            // show previews
             if showPreviews {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {

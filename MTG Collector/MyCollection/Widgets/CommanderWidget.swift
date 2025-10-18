@@ -17,7 +17,7 @@ struct CommanderWidget: View {
                 
             HStack {
                 // card display
-                CardImageView(maxWidth: 85, imageURIs: entry.card.imageURIs)
+                CardImageView(maxWidth: 85, name: entry.card.name, imageURIs: entry.card.imageURIs)
                 
                 VStack(alignment: .leading) {
                     Text("Commander")

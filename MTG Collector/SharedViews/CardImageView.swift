@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CardImageView: View {
     var maxWidth: Double
+    var name: String
     var imageURIs: ImageURIs
     
     // grab preferred url and if not check the next
@@ -33,10 +34,15 @@ struct CardImageView: View {
     var body: some View {
         
         ZStack {
-            // fallack color
+            // fallack display
+            // show name on gray background
             Rectangle()
                 .fill(Color.gray.opacity(0.3))
                 .cornerRadius(8)
+            
+            Text(name)
+                .bold()
+                .padding(10)
             
             // set image from passed string url
             if let url = URL(string: imageUrl) {
@@ -58,15 +64,11 @@ struct CardImageView: View {
                             .fullScreenCover(isPresented: $showFullScreen) {
                                 ZStack() {
                                     Color.gray.opacity(0.3).ignoresSafeArea()
-                                    AsyncImage(url: url) { image in
-                                        image
-                                            .resizable()
-                                            .scaledToFit()
-                                            .cornerRadius(17)
-                                            .padding()
-                                    } placeholder: {
-                                        ProgressView()
-                                    }
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .cornerRadius(17)
+                                        .padding()
                                     
                                     VStack {
                                         HStack {
