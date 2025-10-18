@@ -23,12 +23,6 @@ struct CardGridView: View {
         card.cardFaces
     }
     
-    // set current face
-    var currentFace: CardFace? {
-        guard let faces = multiFaced else { return nil }
-        return isFlipped ? faces.last : faces.first
-    }
-    
     var gradFoil: LinearGradient = LinearGradient(
                                         colors: [.blue, .purple, .pink, .orange, .yellow],
                                         startPoint: .topLeading,
@@ -38,7 +32,6 @@ struct CardGridView: View {
     var body: some View {
         VStack{
             
-            // foil application
             ZStack {
                 // if multifaced
                 if let faces = multiFaced, faces.count > 1 {
@@ -65,14 +58,12 @@ struct CardGridView: View {
                     .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
                     
                 } else {
-                    // Single-faced card
+                    // Single faced card
                     CardImageView(maxWidth: 220, name: card.name, imageURIs: card.imageURIs)
                 }
                 
-                // set foil over card image if set
-                
                 // set flip button over both if it is multifaced
-                if multiFaced != nil {
+                if let faces = multiFaced, faces.count > 1 {
                     VStack {
                         HStack {
                             Spacer()
@@ -94,16 +85,6 @@ struct CardGridView: View {
             }
             .aspectRatio(0.714, contentMode: .fit)
             .cornerRadius(8)
-            
-            
-            // show names
-            if showNames {
-                Text(currentFace?.name ?? card.name)
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-            }
             
             // show previews
             if showPreviews {
