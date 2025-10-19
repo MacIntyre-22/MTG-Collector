@@ -98,7 +98,7 @@ struct CardInfoView: View {
         }
         .toolbar(content: {
             ToolbarItem(placement: .topBarTrailing) {
-                Menu("Add", systemImage: "plus.circle") {
+                Menu("Add", systemImage: "plus") {
                     CollectionControllWidget(card: card)
                 }
             }

@@ -46,10 +46,12 @@ struct SuggestionWidget: View {
                                 let cardJson = collection.shuffled()[i]
                                 let cardModel = SFAPI.JSONtoModel(json: cardJson)
                                 
-                                CardGridView(card: cardModel, showPreviews: true)
-                                    .frame(width: 180)
-                                    .background(content: {Color.gray.opacity(0.18)})
-                                    .cornerRadius(10)
+                                NavigationLink(destination: CardInfoView(card: cardModel)) {
+                                    CardGridView(card: cardModel, showPreviews: true)
+                                        .frame(width: 180)
+                                        .background(content: {Color.gray.opacity(0.18)})
+                                        .cornerRadius(10)
+                                }
                                 
                             }
                         }
@@ -70,9 +72,7 @@ struct SuggestionWidget: View {
                             .lineLimit(1)
                         Spacer()
                         // view all
-                        Button {
-                            
-                        } label: {
+                        NavigationLink(destination: SuggestionView(systemImage: systemImage, title: title, description: description, collection: collection)) {
                             Text("View All")
                                 .foregroundColor(.white)
                                 .padding(5)
