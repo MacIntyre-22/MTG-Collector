@@ -32,6 +32,23 @@ struct SFAPI {
         }
     }
     
+    // MARK: Card Data by static query
+    // for random collections
+    static func fetchCardQuery(query: String) async -> [CardJSON] {
+        do {
+            let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            let url = URL(string: "https://api.scryfall.com/cards/search?q=\(encoded)")!
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decoder = JSONDecoder()
+            let fetchResults = try decoder.decode(ScryfallCardData.self, from: data)
+            return fetchResults.data
+        } catch {
+            print("Error with SFAPI.fetchCardQuery - \(error)")
+            return []
+        }
+    }
+    
+    
     // MARK: Card Data by ID
     // can return nil
     static func fetchCardId(id: String) async -> CardJSON? {

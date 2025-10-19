@@ -8,14 +8,10 @@ import Foundation
 
 // MARK: Home Suggestions Data
 struct HomeSuggestions {
-    var newCards: [Card] = []
-    var previewCards: [Card] = []
-    var popularCommander: [Card] = []
-    var showcaseCards: [Card] = []
-    var fullArtLands: [Card] = []
-    var standardLegal: [Card] = []
-    var modernStaples: [Card] = []
-    var budgetPicks: [Card] = []
-    var expensiveHighlights: [Card] = []
-    var randomFun: [Card] = []
+    var newCards: [CardJSON] = []
+    var popularCards: [CardJSON] = []
+    var fullArt: [CardJSON] = []
+    var oldSchool: [CardJSON] = []
+    var expensive: [CardJSON] = []
+    var budget: [CardJSON] = []
 }
