@@ -8,11 +8,29 @@
 import SwiftUI
 
 struct SettingsTabView: View {
+    
+    @Bindable var settings: Settings
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 15) {
+                    
+                    // color theme
+                    ThemePickerWidget(selection: $settings.theme)
+                    
+                    // delete data
+                    DeleteDataWidget()
+                    
+                    // app info
+                    AppInfoWidget()
+                }
+                .padding(.horizontal, 10)
+            }
+            .navigationTitle("Settings")
+            
+        }
+        
     }
 }
 
-#Preview {
-    SettingsTabView()
-}
