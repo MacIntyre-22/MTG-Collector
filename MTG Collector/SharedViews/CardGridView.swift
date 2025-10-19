@@ -59,7 +59,13 @@ struct CardGridView: View {
                     
                 } else {
                     // Single faced card
-                    CardImageView(maxWidth: 220, name: card.name, imageURIs: card.imageURIs)
+                    ZStack {
+                        CardImageView(maxWidth: 220, name: card.name, imageURIs: card.imageURIs)
+                        // foil check
+                        if isFoil {
+                            gradFoil.opacity(0.3)
+                        }
+                    }
                 }
                 
                 // set flip button over both if it is multifaced

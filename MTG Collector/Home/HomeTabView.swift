@@ -23,22 +23,22 @@ struct HomeTabView: View {
             .navigationTitle("Home")
         }
         .task {
-            // grab set data
-            // load once
-            // commented out so i stop making calls while testing
-//            if !isLoaded {
-//                let tempSets: [SetJSON] = await SFAPI.fetchSetData()
-//                for set in tempSets {
-//                    
-//                    // convert and insert
-//                    let tempSet: SetInfo = SFAPI.setToModel(json: set)
-//                    if !setList.contains(where: { $0.code == tempSet.code }) {
-//                        // insert
-//                        modelContext.insert(tempSet)
-//                    }
-//                }
-//                isLoaded.toggle()
-//            }
+             // grab set data
+             // load once
+             // commented out so i stop making calls while testing
+            if !isLoaded {
+                let tempSets: [SetJSON] = await SFAPI.fetchSetData()
+                for set in tempSets {
+                    
+                    // convert and insert
+                    let tempSet: SetInfo = SFAPI.setToModel(json: set)
+                    if !setList.contains(where: { $0.code == tempSet.code }) {
+                        // insert
+                        modelContext.insert(tempSet)
+                    }
+                }
+                isLoaded.toggle()
+            }
         }
     }
 }
