@@ -59,8 +59,8 @@ struct HomeTabView: View {
             }
         }
         .task {
-             // grab set data and home suggestion cards
-             // load once
+            // grab set data and home suggestion cards
+            // load once
             if !isLoaded {
                 
                 // grab card suggestions

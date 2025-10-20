@@ -34,7 +34,7 @@ struct ThemePickerWidget: View {
             .frame(minHeight: 45)
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(.white)
+                    .fill(.background)
                     .shadow(color: .gray.opacity(0.25), radius: 15, x: 0, y: 0)
             )
         }
