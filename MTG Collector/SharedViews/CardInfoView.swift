@@ -21,91 +21,102 @@ struct CardInfoView: View {
     
     
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            
-            // The main scrollable list
-            List() {
+        NavigationStack {
+            ZStack(alignment: .bottomLeading) {
                 
-                Section(header: Label("Information", systemImage: "info.circle")) {
-                    VStack(alignment: .leading) {
+                // The main scrollable list
+                ScrollView(showsIndicators: false) {
+                    
+                    VStack(spacing: 15) {
                         
-                        // handle muliple faces
+                        ZStack {
+                            VStack(alignment: .leading) {
+                                
+                                // handle muliple faces
+                                if !card.cardFaces.isEmpty {
+                                    
+                                    ForEach(card.cardFaces) { face in
+                                        InfoDisplayWidget(name: face.name, typeLine: face.typeLine, colorIdentity: card.colorIdentity, oracleText: face.oracleText)
+                                            .padding(.bottom, 10)
+                                    }
+                                } else {
+                                    InfoDisplayWidget(typeLine: card.typeLine, colorIdentity: card.colorIdentity, oracleText: card.oracleText)
+                                }
+                                
+                                // set icon
+                                SetIconWidget(set: card.set, rarity: card.rarity, maxWidth: 50)
+                            }
+                            .padding(10)
+                            .cornerRadius(9)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.background)
+                                    .shadow(color: .gray.opacity(0.25), radius: 15, x: 0, y: 0)
+                            )
+                        }
+                        
+                        // Legalities info here
+                        InfoLegalWidget(legalities: card.legalities)
+                        
+                        // related card items
+                        if !card.allParts.isEmpty {
+                            InfoRelatedWidget(cardParts: card.allParts)
+                        }
+                        
+                        
+                        // pricing info
+                        if !(card.prices.usd.isEmpty && card.prices.usdFoil.isEmpty && card.prices.usdEtched.isEmpty) {
+                            InfoPriceWidget(prices: card.prices)
+                        }
+                        
+                        
+                        // purchase links here
+                        if !(card.purchaseURIs.cardhoarder.isEmpty && card.purchaseURIs.cardmarket.isEmpty && card.purchaseURIs.tcgplayer.isEmpty) {
+                            InfoPurchaseWidget(purchaseURIs: card.purchaseURIs, sheetIsShowing: $sheetIsShowing, webURI: $webURI)
+                        }
+                        
+                        // Additional info here
+                        InfoOtherWidget(releasedAt: card.releasedAt, finishes: card.finishes, set: card.set, reserved: card.reserved)
+                        
+                    }
+                    .padding(.horizontal, 10)
+                    
+                }
+                
+                
+                // Floating cards
+                HStack(){
+                    Spacer()
+                    HStack(spacing: 8) {
                         if !card.cardFaces.isEmpty {
-                            
                             ForEach(card.cardFaces) { face in
-                                InfoDisplayWidget(name: face.name, typeLine: face.typeLine, colorIdentity: card.colorIdentity, oracleText: face.oracleText)
-                                    .padding(.bottom, 10)
+                                CardImageView(maxWidth: 75, name: face.name, imageURIs: face.imageURIs)
                             }
                         } else {
-                            InfoDisplayWidget(typeLine: card.typeLine, colorIdentity: card.colorIdentity, oracleText: card.oracleText)
+                            CardImageView(maxWidth: 100, name: card.name, imageURIs: card.imageURIs)
                         }
-                        
-                        // set icon
-                        SetIconWidget(set: card.set, rarity: card.rarity, maxWidth: 50)
                     }
+                    .padding(8)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(8)
+                    
+                    .shadow(radius: 4)
                 }
-                
-                Section(header: Label("Legalities", systemImage: "book.circle")) {
-                    // Legalities info here
-                    InfoLegalWidget(legalities: card.legalities)
-                }
-                
-                Section(header: Label("Related Cards", systemImage: "plus.circle")) {
-                    // related card items
-                    InfoRelatedWidget(cardParts: card.allParts)
-                }
-                
-                Section(header: Label("Pricing", systemImage: "tag.circle")) {
-                    // pricing info
-                    InfoPriceWidget(prices: card.prices)
-                }
-                
-                Section(header: Label("Purchase Links", systemImage: "link.circle")) {
-                    // purchase links here
-                    InfoPurchaseWidget(purchaseURIs: card.purchaseURIs, sheetIsShowing: $sheetIsShowing, webURI: $webURI)
-                }
-                
-                Section(header: Label("Other", systemImage: "ellipsis.circle")) {
-                    // Additional info here
-                    InfoOtherWidget(releasedAt: card.releasedAt, finishes: card.finishes, set: card.set, reserved: card.reserved)
-                }
+                .frame(height: 150)
+                .padding()
             }
-            .scrollIndicators(ScrollIndicatorVisibility.hidden)
-            .listStyle(.plain)
-            .listRowSpacing(10)
             .navigationTitle(card.name)
-            
-            // Floating cards
-            HStack(){
-                Spacer()
-                HStack(spacing: 8) {
-                    if !card.cardFaces.isEmpty {
-                        ForEach(card.cardFaces) { face in
-                            CardImageView(maxWidth: 75, name: face.name, imageURIs: face.imageURIs)
-                        }
-                    } else {
-                        CardImageView(maxWidth: 100, name: card.name, imageURIs: card.imageURIs)
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu("Add", systemImage: "plus") {
+                        CollectionControllWidget(card: card)
                     }
                 }
-                .padding(8)
-                .background(.ultraThinMaterial)
-                .cornerRadius(8)
-                
-                .shadow(radius: 4)
+            })
+            .sheet(isPresented: $sheetIsShowing) {
+                WebSheet(url: webURI)
+                    .presentationDragIndicator(.visible)
             }
-            .frame(height: 150)
-            .padding()
-        }
-        .toolbar(content: {
-            ToolbarItem(placement: .topBarTrailing) {
-                Menu("Add", systemImage: "plus") {
-                    CollectionControllWidget(card: card)
-                }
-            }
-        })
-        .sheet(isPresented: $sheetIsShowing) {
-            WebSheet(url: webURI)
-                .presentationDragIndicator(.visible)
         }
     }
 }

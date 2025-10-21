@@ -11,27 +11,36 @@ struct InfoLegalWidget: View {
     var legalities: [String: String]
     
     let columns = [
-        GridItem(.adaptive(minimum: 100, maximum: 300), spacing: 15),
-        GridItem(.adaptive(minimum: 100, maximum: 300), spacing: 15)
+        GridItem(.adaptive(minimum: 200, maximum: 600), spacing: 15),
+        GridItem(.adaptive(minimum: 200, maximum: 600), spacing: 15)
     ]
     
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 5) {
-            // loop through legalities
-            ForEach(legalities.keys.sorted(), id: \.self) { format in
-                // get status
-                if let status = legalities[format] {
-                    // display format with color based on status
-                    Text("\(format.capitalized)")
-                        .lineLimit(1)
-                        .frame(maxWidth: 300)
-                        .padding(5)
-                        .foregroundColor(.white)
-                        .background(color(for: status))
-                        .cornerRadius(5)
+        ZStack {
+            LazyVGrid(columns: columns, spacing: 5) {
+                // loop through legalities
+                ForEach(legalities.keys.sorted(), id: \.self) { format in
+                    // get status
+                    if let status = legalities[format] {
+                        // display format with color based on status
+                        Text("\(format.capitalized)")
+                            .lineLimit(1)
+                            .frame(maxWidth: 300)
+                            .padding(5)
+                            .foregroundColor(.white)
+                            .background(color(for: status))
+                            .cornerRadius(5)
+                    }
                 }
             }
-       }
+            .padding(15)
+            .cornerRadius(9)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(.background)
+                    .shadow(color: .gray.opacity(0.25), radius: 15, x: 0, y: 0)
+            )
+        }
     }
     
     

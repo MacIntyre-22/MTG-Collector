@@ -18,24 +18,33 @@ struct InfoRelatedWidget: View {
     @State private var isLoaded = false
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(relatedCards) { card in
-                    CardGridView(card: card, showPreviews: true, isFoil: false)
-                        .frame(maxWidth: 150)
-                        .background(Color.gray.opacity(0.18))
-                        .cornerRadius(10)
+        ZStack {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(relatedCards) { card in
+                        CardGridView(card: card, showPreviews: true, isFoil: false)
+                            .frame(maxWidth: 180)
+                            .background(Color.gray.opacity(0.18))
+                            .cornerRadius(10)
+                    }
+                }
+                .frame(maxHeight: 275)
+                
+            }
+            // only run once
+            .task {
+                if !isLoaded {
+                    await getCardParts()
+                    isLoaded = true
                 }
             }
-            .frame(maxHeight: 275)
-            
-        }
-        // only run once
-        .task {
-            if !isLoaded {
-                await getCardParts()
-                isLoaded = true
-            }
+            .padding(15)
+            .cornerRadius(9)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(.background)
+                    .shadow(color: .gray.opacity(0.25), radius: 15, x: 0, y: 0)
+            )
         }
         
     }

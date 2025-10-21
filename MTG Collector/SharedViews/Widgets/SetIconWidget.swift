@@ -63,13 +63,27 @@ struct SetIconWidget: View {
     var body: some View {
         // set
         ZStack {
-            Image(img)
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .foregroundColor(.white)
-                .padding(5)
-                .shadow(radius: 4)
+            
+            // check if asset exists
+            // i dont have every set logo
+            if UIImage(named: img) != nil {
+                Image(img)
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .foregroundColor(.white)
+                    .padding(5)
+                    .shadow(radius: 4)
+            } else {
+                // default is just mtg logo
+                Image("Logo")
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .foregroundColor(.white)
+                    .padding(5)
+                    .shadow(radius: 4)
+            }
         }
         .frame(width: maxWidth, height: maxWidth)
         .background(color)

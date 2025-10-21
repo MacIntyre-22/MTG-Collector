@@ -14,24 +14,36 @@ struct InfoOtherWidget: View {
     var reserved: Bool
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Released: \(releasedAt)")
+        ZStack {
             HStack {
-                Text("Finishes Available: ")
-                ForEach(finishes, id: \.self) { finish in
-                    Text(finish.capitalized)
+                VStack(alignment: .leading) {
+                    Text("Released: \(releasedAt)")
+                    HStack {
+                        Text("Finishes Available: ")
+                        ForEach(finishes, id: \.self) { finish in
+                            Text(finish.capitalized)
+                                .italic()
+                        }
+                    }
+                    HStack {
+                        Text("Set Code:")
+                        Text("\(set.uppercased())")
+                            .bold()
+                    }
+                    
+                    Text(reserved ? "This card is Reserved" : "This card is not Reserved")
                         .italic()
                 }
+                Spacer()
             }
-            HStack {
-                Text("Set Code:")
-                Text("\(set.uppercased())")
-                    .bold()
-            }
-                
-            Text(reserved ? "This card is Reserved" : "This card is not Reserved")
-                .italic()
-        }
+            .padding(15)
+            .cornerRadius(9)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(.background)
+                    .shadow(color: .gray.opacity(0.25), radius: 15, x: 0, y: 0)
+            )
+    }
     }
 }
 
