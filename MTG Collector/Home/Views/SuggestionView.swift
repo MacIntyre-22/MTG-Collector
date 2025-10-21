@@ -20,19 +20,15 @@ struct SuggestionView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack {
-                    // title
-                    Label(title, systemImage: systemImage)
-                        .font(.title2)
-                        .bold()
+                VStack(alignment: .leading) {
                     
+                    // description
                     Text(description)
                         .foregroundColor(.gray)
                         .italic()
                         .lineLimit(1)
                     
                 }
-                .padding()
                 
                 
                 // display cards in grid
@@ -45,6 +41,8 @@ struct SuggestionView: View {
                     }
                 }
             }
+            .navigationTitle(title)
+            .toolbarTitleDisplayMode(.large)
             
         }
     }

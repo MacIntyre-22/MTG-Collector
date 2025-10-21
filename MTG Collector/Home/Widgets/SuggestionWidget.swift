@@ -15,6 +15,10 @@ struct SuggestionWidget: View {
     var description: String
     var collection: [CardJSON]
     
+    @State var rotation: Double = 0
+    
+    // get a shuffle function from parent
+    var shuffle: () -> Void
     
     var body: some View {
         ZStack {
@@ -25,7 +29,22 @@ struct SuggestionWidget: View {
                         .font(.title2)
                         .bold()
                     Spacer()
-                    
+                    Button {
+                        
+                        // spin button
+                        rotation += 360
+                        
+                        // reshuffle the collection
+                        shuffle()
+                        
+                    } label: {
+                        Image(systemName: "arrow.trianglehead.2.clockwise")
+                            .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 25, height: 25)
+                            .rotationEffect(.degrees(rotation))
+                    }
                 }
                 .padding(.horizontal, 15)
                 .padding(.top, 20)
@@ -43,7 +62,7 @@ struct SuggestionWidget: View {
                                 // dont want to show all the cards
                                 
                                 // get card data types
-                                let cardJson = collection.shuffled()[i]
+                                let cardJson = collection[i]
                                 let cardModel = SFAPI.JSONtoModel(json: cardJson)
                                 
                                 NavigationLink(destination: CardInfoView(card: cardModel)) {
@@ -52,9 +71,11 @@ struct SuggestionWidget: View {
                                         .background(content: {Color.gray.opacity(0.18)})
                                         .cornerRadius(10)
                                 }
-                                
                             }
                         }
+                        
+                        // view all card
+                        // todo
                     }
                 }
                 .padding(.bottom, 20)
@@ -91,7 +112,6 @@ struct SuggestionWidget: View {
                     .shadow(color: .gray.opacity(0.25), radius: 15, x: 0, y: 0)
             )
         }
-        
     }
 }
 

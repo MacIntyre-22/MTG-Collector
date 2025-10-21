@@ -41,17 +41,17 @@ struct HomeTabView: View {
                 
                 VStack(spacing: 30) {
                     
-                    SuggestionWidget(systemImage: "sparkles", title: "New", description: "Some of the newest released cards", collection: homeSuggestions.newCards)
+                    SuggestionWidget(systemImage: "sparkles", title: "New", description: "Recently released cards", collection: homeSuggestions.newCards) {homeSuggestions.newCards = homeSuggestions.newCards.shuffled()}
                     
-                    SuggestionWidget(systemImage: "chart.line.uptrend.xyaxis", title: "Popular", description: "Popular cards based on their ranking", collection: homeSuggestions.popularCards)
+                    SuggestionWidget(systemImage: "chart.line.uptrend.xyaxis", title: "Popular", description: "Popular cards based on their ranking", collection: homeSuggestions.popularCards) {homeSuggestions.popularCards = homeSuggestions.popularCards.shuffled()}
                     
-                    SuggestionWidget(systemImage: "crown", title: "Pricey", description: "Most expensive cards", collection: homeSuggestions.expensive)
+                    SuggestionWidget(systemImage: "crown", title: "Pricey", description: "Some of the most expensive cards", collection: homeSuggestions.expensive) {homeSuggestions.expensive = homeSuggestions.expensive.shuffled()}
                     
-                    SuggestionWidget(systemImage: "dollarsign", title: "Budget", description: "Cards under $5", collection: homeSuggestions.budget)
+                    SuggestionWidget(systemImage: "dollarsign", title: "Budget", description: "Cards under $5", collection: homeSuggestions.budget) {homeSuggestions.budget = homeSuggestions.budget.shuffled()}
                     
-                    SuggestionWidget(systemImage: "paintbrush.pointed", title: "Full Art", description: "Full art and borderless cards", collection: homeSuggestions.fullArt)
+                    SuggestionWidget(systemImage: "paintbrush.pointed", title: "Full Art", description: "Full art and borderless cards", collection: homeSuggestions.fullArt) {homeSuggestions.fullArt = homeSuggestions.fullArt.shuffled()}
                     
-                    SuggestionWidget(systemImage: "hourglass", title: "Old School", description: "Classic cards from 93 or 97", collection: homeSuggestions.oldSchool)
+                    SuggestionWidget(systemImage: "hourglass", title: "Old School", description: "Classic cards with 93 and 97 border", collection: homeSuggestions.oldSchool) {homeSuggestions.oldSchool = homeSuggestions.oldSchool.shuffled()}
                     
                     
                 }
