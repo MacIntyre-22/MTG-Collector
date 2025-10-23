@@ -19,6 +19,9 @@ class Binder {
     
     // some controls
     var showPreviews: Bool = true
+    var showControls: Bool = false
+    var pinned: Bool = false
+    var showCover = true
     
     @Relationship var cards: [CardEntry] = []
 

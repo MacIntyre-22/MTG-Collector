@@ -46,7 +46,7 @@ struct CardInfoView: View {
                                 // set icon
                                 SetIconWidget(set: card.set, rarity: card.rarity, maxWidth: 50)
                             }
-                            .padding(10)
+                            .padding(15)
                             .cornerRadius(9)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)

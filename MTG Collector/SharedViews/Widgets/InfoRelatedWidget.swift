@@ -22,10 +22,12 @@ struct InfoRelatedWidget: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(relatedCards) { card in
-                        CardGridView(card: card, showPreviews: true, isFoil: false)
-                            .frame(maxWidth: 180)
-                            .background(Color.gray.opacity(0.18))
-                            .cornerRadius(10)
+                        NavigationLink(destination: CardInfoView(card: card)) {
+                            CardGridView(card: card, showPreviews: true, isFoil: false)
+                                .frame(maxWidth: 180)
+                                .background(Color.gray.opacity(0.18))
+                                .cornerRadius(10)
+                        }
                     }
                 }
                 .frame(maxHeight: 275)

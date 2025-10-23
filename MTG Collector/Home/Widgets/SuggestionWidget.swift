@@ -56,8 +56,8 @@ struct SuggestionWidget: View {
                     HStack {
                         Spacer()
                         // cards preview
-                        if collection.count >= 6 {
-                            ForEach(0..<6) { i in
+                        if collection.count >= 10 {
+                            ForEach(0..<10) { i in
                                 // take index from collectioin in
                                 // dont want to show all the cards
                                 

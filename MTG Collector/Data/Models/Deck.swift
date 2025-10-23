@@ -18,8 +18,11 @@ class Deck {
     var createdAt: Date
     var commander: CardEntry?
     
-    // view controls
-    var showPreviews: Bool = false
+    // some controls
+    var showPreviews: Bool = true
+    var showControls: Bool = false
+    var pinned: Bool = false
+    var showCover = true
     
     @Relationship var mainboard: [CardEntry] = []
     @Relationship var sideboard: [CardEntry] = []
