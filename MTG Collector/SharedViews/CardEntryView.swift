@@ -14,7 +14,8 @@ struct CardEntryView: View {
     @State var alertIsShowing: Bool = false
     
     // Show previews
-    var showPreviews: Bool
+    var showPreviews: Bool = true
+    var showControls: Bool = false
     
     // taking closures allows for functionality with different models like binders and decks
     var deleteEntry: (() -> Void)? = nil
@@ -23,44 +24,65 @@ struct CardEntryView: View {
     
     var body: some View {
         VStack {
-            CardGridView(card: entry.card, showPreviews: showPreviews, isFoil: entry.isFoil)
-            HStack {
-                Button(action: {
-                    // remove 1 quantity
-                    removeCard()
-                }) {
-                    Image(systemName: "minus")
-                        .frame(width: 20, height: 20)
-
-                        .foregroundColor(.white)
-                        .padding(5)
-                        .background(Color.accentColor)
-                        .cornerRadius(5)
-                        .bold()
-                }
-                .padding(.trailing, 10)
+            
+            ZStack(alignment: .topLeading) {
+                CardGridView(card: entry.card, showPreviews: showPreviews, isFoil: entry.isFoil)
                 
-                // quantity
-                Text("\(entry.quantity)")
-                    .font(.title)
-                    .foregroundColor(.primary)
-                
-                Button(action: {
-                    // remove 1 quantity
-                    addCard()
-                }) {
-                    Image(systemName: "plus")
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.white)
-                        .padding(5)
-                        .background(Color.accentColor)
-                        .cornerRadius(5)
-                        .bold()
+                if !showControls {
+                    VStack {
+                        Text("x\(entry.quantity)")
+                            .foregroundColor(.white)
+                            .bold()
+                            .shadow(radius: 4)
+                            .font(.headline)
+                            .padding(5)
+                        
+                        
+                    }
+                    .padding(.top, 30)
                 }
-                .padding(.leading, 10)
-
             }
-            .padding(10)
+            
+            
+            if showControls {
+                HStack {
+                    Button(action: {
+                        // remove 1 quantity
+                        removeCard()
+                    }) {
+                        Image(systemName: "minus")
+                            .frame(width: 20, height: 20)
+                        
+                            .foregroundColor(.white)
+                            .padding(5)
+                            .background(Color.accentColor)
+                            .cornerRadius(5)
+                            .bold()
+                    }
+                    .padding(.trailing, 10)
+                    
+                    // quantity
+                    Text("\(entry.quantity)")
+                        .font(.title)
+                        .foregroundColor(.primary)
+                    
+                    Button(action: {
+                        // remove 1 quantity
+                        addCard()
+                    }) {
+                        Image(systemName: "plus")
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                            .padding(5)
+                            .background(Color.accentColor)
+                            .cornerRadius(5)
+                            .bold()
+                    }
+                    .padding(.leading, 10)
+                    
+                }
+                .padding(10)
+            }
         }
         .background(Color.gray.opacity(0.18))
         .cornerRadius(10)

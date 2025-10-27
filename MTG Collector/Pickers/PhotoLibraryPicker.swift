@@ -18,7 +18,7 @@ import PhotosUI
 
 struct PhotoLibraryPicker: UIViewControllerRepresentable{
     typealias UIViewControllerType = PHPickerViewController
-    @Binding var image: UIImage
+    @Binding var image: UIImage?
     @Environment(\.dismiss) private var dismiss
  
     

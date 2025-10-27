@@ -15,11 +15,11 @@ struct EditBinderSheet: View {
     var binder: Binder
     
     @State var name: String
-    @State var selectedImage: UIImage
-    @State var pinned: Bool = false
-    @State var showPreviews: Bool = false
-    @State var showControls: Bool = false
-    @State var showCover: Bool = false
+    @State var selectedImage: UIImage? = nil
+    @State var pinned: Bool
+    @State var showPreviews: Bool
+    @State var showControls: Bool
+    @State var showCover: Bool
 
     
     // for image
@@ -35,7 +35,7 @@ struct EditBinderSheet: View {
         self.showPreviews = binder.showPreviews
         self.showControls = binder.showControls
         self.showCover = binder.showCover
-        self.selectedImage = ImageManager.fetchImage(withIdentifier: binder.id) ?? UIImage(named: "MtgBinder")!
+        // image init is in onAppear
     }
 
     var body: some View {
@@ -49,7 +49,7 @@ struct EditBinderSheet: View {
                                 Color.gray
                                     .frame(width: 200, height: 200)
                                     .cornerRadius(10)
-                                Image(uiImage: selectedImage)
+                                Image(uiImage: selectedImage ?? UIImage(named: "MtgBinder")!)
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 200, height: 200)
@@ -109,7 +109,9 @@ struct EditBinderSheet: View {
             )
             .fullScreenCover(isPresented: $showImagePicker) {
                 // save image
-                ImageManager.saveImage(forImage: selectedImage, withIdentifier: binder.id)
+                if let image = selectedImage {
+                    ImageManager.saveImage(forImage: image, withIdentifier: binder.id)
+                }
             } content: {
                 if photoSource == .camera{
                     CameraPicker(image: $selectedImage)
@@ -117,6 +119,12 @@ struct EditBinderSheet: View {
                 } else {
                     //load the photopicker
                     PhotoLibraryPicker(image: $selectedImage)
+                }
+            }
+            .onAppear {
+                // on appear grab image if not already set
+                if selectedImage == nil {
+                    selectedImage = ImageManager.fetchImage(withIdentifier: binder.id)
                 }
             }
         }

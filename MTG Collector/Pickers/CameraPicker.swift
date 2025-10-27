@@ -11,7 +11,7 @@ import SwiftUI
 
 struct CameraPicker:UIViewControllerRepresentable{
     typealias UIViewControllerType = UIImagePickerController
-    @Binding var image: UIImage
+    @Binding var image: UIImage?
     @Environment(\.dismiss) var dismiss
     
     func makeUIViewController(context: Context) -> UIImagePickerController {

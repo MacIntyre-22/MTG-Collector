@@ -14,7 +14,7 @@ struct NewBinderSheet: View {
 
     // user input for new binder
     @State private var name: String = ""
-    @State var selectedImage: UIImage = UIImage(named: "MtgBinder")!
+    @State var selectedImage: UIImage?
     
     // for image
     @State var showSourceSelection = false
@@ -33,7 +33,7 @@ struct NewBinderSheet: View {
                                 Color.gray
                                     .frame(width: 200, height: 200)
                                     .cornerRadius(10)
-                                Image(uiImage: selectedImage)
+                                Image(uiImage: selectedImage ?? UIImage(named: "MtgBinder")!)
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 200, height: 200)
@@ -99,7 +99,9 @@ struct NewBinderSheet: View {
         let binder = Binder(name: name, notes: "")
         
         // save image
-        ImageManager.saveImage(forImage: selectedImage, withIdentifier: binder.id)
+        if let image = selectedImage {
+            ImageManager.saveImage(forImage: image, withIdentifier: binder.id)
+        }
         
         // save and dismiss
         modelContext.insert(binder)

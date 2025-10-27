@@ -27,70 +27,21 @@ struct BinderView: View {
     var body: some View {
         NavigationStack {
             
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 
-                // cover image
-                if binder.showCover {
-                    VStack {
-                        ZStack(alignment: .center) {
-                            Color.gray
-                                .frame(width: 250, height: 250)
-                                .cornerRadius(10)
-                            Image(uiImage: coverImage)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 250, height: 250)
-                                .cornerRadius(10)
-                        }
-                        .padding()
-                        
-                        Text(binder.name)
-                            .font(.title)
-                            .bold()
-                        
-                        HStack {
-                            Text(binder.totalPrice, format: .currency(code: "CAD"))
-                                .padding(5)
-                                .foregroundColor(.green)
-                                .background(Color.green.opacity(0.2))
-                                .clipShape(RoundedRectangle(cornerRadius: 5))
-                            Image(systemName: "square.stack")
-                                .foregroundColor(.primary)
-                            Text("\(binder.cardCount)")
-                        }
-                        
-                        Divider()
-                        
-                    }
-                    .padding()
-                } else {
-                    HStack {
-                        Text(binder.name)
-                            .font(.title)
-                            .bold()
-                            .padding(.leading, 20)
-                        Spacer()
-                    }
-                }
-                
+                HeaderWidget(showCover: binder.showCover, coverImage: coverImage, name: binder.name, price: binder.totalPrice, count: binder.cardCount)
                 
                 // card grid
                 LazyVGrid(columns: cardColumns) {
-                    ForEach(binder.cards) { entry in
+                    ForEach(binder.cards.sorted(by: { $0.dateAdded > $1.dateAdded})) { entry in
                         
                         //
-                        BinderCardView(entry: entry, deleteEntry: {binder.cards.removeAll(where: { $0.id == entry.id }) }, showPreviews: binder.showPreviews)
+                        BinderCardView(entry: entry, deleteEntry: {binder.cards.removeAll(where: { $0.id == entry.id }) }, showPreviews: binder.showPreviews, showControls: binder.showControls)
                         
                     }
                 }
             }
             .toolbar(content: {
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Filters", systemImage: "slider.horizontal.3") {
-                        print("Hello world")
-                    }
-                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu{
                         Button("Stats", systemImage: "chart.bar"){

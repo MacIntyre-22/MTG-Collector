@@ -57,6 +57,7 @@ struct HomeTabView: View {
                 }
                 .padding(.horizontal, 10)
             }
+            .navigationBarTitleDisplayMode(.large)
         }
         .task {
             // grab set data and home suggestion cards

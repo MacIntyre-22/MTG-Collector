@@ -14,11 +14,13 @@ class CardEntry {
     var quantity: Int = 1
     var isFoil: Bool = false
     var favourite: Bool = false
+    var dateAdded: Date
     
     // relationships
     @Relationship var card: Card
 
     init(card: Card) {
         self.card = card
+        self.dateAdded = Date()
     }
 }

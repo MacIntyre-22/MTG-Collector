@@ -9,18 +9,32 @@ import SwiftUI
 
 struct AllDecksLinkWidget: View {
     var body: some View {
-        HStack {
-            Image("MtgDeck")
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .frame(width: 75, height: 75)
-                .foregroundColor(.primary)
-                .padding(10)
-            VStack(alignment: .leading) {
-                Text("My Decks")
+        ZStack {
+            HStack {
+                Image("MtgDeck")
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: 75, height: 75)
+                    .foregroundColor(.primary)
+                    .padding(10)
+                Text("Decks")
+                    .foregroundColor(.primary)
+                    .bold()
+                    .font(.title2)
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.primary)
+                    .bold()
+                Spacer()
             }
-            .padding(10)
+            .padding()
+            .frame(maxWidth: 600)
+            .frame(minHeight: 100)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(.background)
+                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
+            )
         }
     }
 }

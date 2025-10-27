@@ -12,7 +12,7 @@ struct AllDecksView: View {
     
     @Environment(\.modelContext) var modelContext
     // data
-    @Query var decks: [Deck]
+    @Query(sort: \Deck.editedAt, order: .reverse) var decks: [Deck]
     
     @State var selectedDeck: Deck?
     @State var showAlert: Bool = false
@@ -21,8 +21,8 @@ struct AllDecksView: View {
         decks.count
     }
     
-    let columns = [GridItem(.adaptive(minimum: 150, maximum: 150), spacing: 30)]
-
+    let columns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 20),
+                   GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 20)]
     
     // state variables
     @State var newDeck: Bool = false
@@ -30,8 +30,8 @@ struct AllDecksView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: columns) {
-                    ForEach(decks) { deck in
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(decks.sorted(by: {$0.pinned && !$1.pinned})) { deck in
                         NavigationLink(destination: DeckView(deck: deck)) {
                             DeckGridWidget(deck: deck)
                                 .contextMenu {
@@ -47,7 +47,9 @@ struct AllDecksView: View {
                         }
                     }
                 }
-                .listRowSpacing(30)
+                .padding()
+                
+                
             }
             .padding(.horizontal, 10)
             .navigationTitle("My Decks")

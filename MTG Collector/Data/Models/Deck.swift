@@ -13,14 +13,14 @@ class Deck {
     @Attribute(.unique) var id: String = UUID().uuidString
     var name: String
     var notes: String
-    var coverImage: String
     var ruleType: String
     var createdAt: Date
+    var editedAt: Date
     var commander: CardEntry?
     
     // some controls
     var showPreviews: Bool = true
-    var showControls: Bool = false
+    var showControls: Bool = true
     var pinned: Bool = false
     var showCover = true
     
@@ -34,6 +34,12 @@ class Deck {
     var cardCount: Int {
         // start at 0 and add each card in the mainboard ONLY
         mainboard.reduce(0) { $0 + $1.quantity }
+    }
+    
+    // unique
+    var uniqueCount: Int {
+        // count entries
+        mainboard.count
     }
     
     // count lands
@@ -75,14 +81,6 @@ class Deck {
         return temp
     }
     
-    // get an array of all contained mana types
-    var manaTypes: [String] {
-        // based off mana count
-        // grab any key where the value is greater than 1
-        // gets the colour identity of the set
-        return manaTypeCount.compactMap { $0.value > 0 ? $0.key : nil }.sorted()
-    }
-    
     // totals of card types as a dict
     var cardTypeCount: [String: Int] {
         var counts: [String: Int] = [:]
@@ -110,6 +108,16 @@ class Deck {
         }
         return counts
     }
+    
+    var totalPrice: Double {
+        // get each price
+        mainboard.reduce(0) { total, entry in
+            // convert to Double
+            let price = Double(entry.card.prices.usd) ?? 0
+            // add price of entry and duplicates
+            return total + price * Double(entry.quantity)
+        }
+    }
 
 
     // only require a name for the deck
@@ -118,7 +126,7 @@ class Deck {
         self.notes = notes
         self.ruleType = ruleType
         self.createdAt = Date()
-        self.coverImage = coverimage
+        self.editedAt = Date()
     }
 
 }

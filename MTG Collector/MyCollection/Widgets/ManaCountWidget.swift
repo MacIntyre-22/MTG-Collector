@@ -41,7 +41,7 @@ struct ManaCountWidget: View {
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(.background)
-                    .shadow(color: .gray.opacity(0.18), radius: 15, x: 0, y: 0)
+                    .shadow(color: .gray.opacity(0.18), radius: 6, x: 0, y: 0)
             )
         }
     }

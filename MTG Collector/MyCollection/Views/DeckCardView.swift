@@ -12,6 +12,28 @@ struct DeckCardView: View {
     var entry: CardEntry
     var deleteEntry: () -> Void
     
+    // comp
+    var legalStatus: Int {
+        var status = 0
+        for legality in entry.card.legalities {
+            if legality.key == deck.ruleType {
+                switch legality.value {
+                case "legal":
+                    status = 1
+                case "not_legal":
+                    status = 2
+                case "banned":
+                    status = 3
+                case "restricted":
+                    status = 4
+                default:
+                    status = 0
+                }
+            }
+        }
+        return status
+    }
+    
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -21,56 +43,67 @@ struct DeckCardView: View {
                 CardEntryView(
                     entry: entry,
                     showPreviews: deck.showPreviews,
+                    showControls: deck.showControls,
                     deleteEntry: {deleteEntry()},
                 )
             }
             
-            // controls
-            HStack {
-                Menu {
-                    Button("Toggle Foil") {
-                        entry.isFoil.toggle()
+            
+            if deck.showControls {
+                // controls
+                VStack {
+                    Menu {
+                        Button("Toggle Foil") {
+                            entry.isFoil.toggle()
+                        }
+                        
+                        Button("Make Commander") {
+                            deck.commander = entry
+                        }
+                        
+                        // move controls
+                        Button("Mainboard") {
+                            mvtoMain(entry: entry)
+                        }
+                        Button("Sideboard") {
+                            mvtoSideboard(entry: entry)
+                        }
+                        Button("Maybeboard") {
+                            mvtoMaybeboard(entry: entry)
+                        }
+                        
+                        Button("Delete", role: .destructive) {
+                            deleteEntry()
+                        }
+                        
+                    } label: {
+                        Image(systemName: "pencil.line")
+                            .foregroundColor(.white)
+                            .padding(5)
+                            .background(Color.accentColor)
+                            .cornerRadius(5)
+                            .bold()
+                            .shadow(radius: 4)
+                    }
+                    .padding(5)
+                    
+                    // display if it is legal
+                    if legalStatus > 1 {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(((legalStatus%4) == 0) ? .orange : .red )
+                            .bold()
+                            .shadow(radius: 4)
                     }
                     
-                    Button("Make Commander") {
-                        deck.commander = entry
-                    }
-                    
-                    // move controls
-                    Button("Mainboard") {
-                        mvtoMain(entry: entry)
-                    }
-                    Button("Sideboard") {
-                        mvtoSideboard(entry: entry)
-                    }
-                    Button("Maybeboard") {
-                        mvtoMaybeboard(entry: entry)
-                    }
-                    
-                    Button("Delete", role: .destructive) {
-                        deleteEntry()
-                    }
-                    
-                } label: {
-                    Image(systemName: "pencil.line")
-                        .foregroundColor(.white)
-                        .padding(5)
-                        .background(Color.accentColor)
-                        .cornerRadius(5)
-                        .bold()
-                        .shadow(radius: 4)
                 }
-                .padding(5)
-                
+                .padding(.top, 30)
             }
-            .padding(.top, 30)
         }
     }
     
-    // MARK: isLegal
-    func isLegal() {
-        
-    }
     
     // MARK: Board moving
     func removeAll(entry: CardEntry) {

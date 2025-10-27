@@ -12,7 +12,7 @@ struct BinderStatsSheet: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack {
                     
                     HStack(spacing: 20) {
@@ -20,7 +20,7 @@ struct BinderStatsSheet: View {
                         StatWidget(text: "\(binder.cardCount)", label: Label("Cards", systemImage: "square.stack"))
                         
                         // Totals price
-                        StatWidget(text: "$"+String(format: "%.1f", binder.totalPrice), label: Label("Cost", systemImage: "chart.line.uptrend.xyaxis"))
+                        PriceStatWidget(price: binder.totalPrice)
                     }
                     .padding(.bottom, 20)
                     

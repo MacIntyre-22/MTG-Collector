@@ -19,7 +19,7 @@ class ImageManager {
     // save image using id
     static func saveImage(forImage image: UIImage, withIdentifier id: String){
         if var imagePath = documentDirectory?.appendingPathComponent(id){
-            imagePath = imagePath.appendingPathExtension("jpg")
+            imagePath = imagePath.appendingPathExtension("png")
             if let data = image.jpegData(compressionQuality: 0.8){
                 do {
                     try data.write(to: imagePath)
@@ -32,7 +32,7 @@ class ImageManager {
     
     // get image by id
     static func fetchImage(withIdentifier id: String) -> UIImage?{
-        if let imagePath = documentDirectory?.appendingPathComponent(id).appendingPathExtension("jpg"), let imageFromDisk = UIImage(contentsOfFile: imagePath.path){
+        if let imagePath = documentDirectory?.appendingPathComponent(id).appendingPathExtension("png"), let imageFromDisk = UIImage(contentsOfFile: imagePath.path){
             return imageFromDisk
         }
         

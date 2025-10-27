@@ -12,40 +12,75 @@ struct BinderLinkWidget: View {
     var binder: Binder
     
     var body: some View {
-        HStack {
-            if let image =  ImageManager.fetchImage(withIdentifier: binder.id){
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 100, height: 100)
-                    .cornerRadius(10)
-            } else {
-                Image("MtgBinder")
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .foregroundColor(.primary)
-            }
-            VStack(alignment: .leading) {
-                Spacer()
-                Text(binder.name)
-                Divider()
-                
-                
-                HStack {
-                    Text(binder.totalPrice, format: .currency(code: "CAD"))
+        ZStack {
+            HStack {
+                ZStack(alignment: .topLeading) {
+                    if let image =  ImageManager.fetchImage(withIdentifier: binder.id){
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 100, height: 100)
+                            .cornerRadius(10)
+                    } else {
+                        Color.gray
+                            .frame(width: 100, height: 100)
+                            .cornerRadius(10)
+                        Image("MtgBinder")
+                            .resizable()
+                            .renderingMode(.template)
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                            .foregroundColor(.white)
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        Button {
+                            // set pinned
+                            binder.pinned.toggle()
+                        } label: {
+                            Image(systemName: binder.pinned ? "pin.fill"
+                                  : "pin")
+                            .resizable()
+                            .frame(width: 15, height: 20)
+                            .shadow(radius: 10)
+                        }
                         .padding(5)
-                        .foregroundColor(.green)
-                        .background(Color.green.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                    Image(systemName: "square.stack")
-                        .foregroundColor(.primary)
-                    Text("\(binder.cardCount)")
+                    }
+                    
+                    
                 }
-                Spacer()
+                
+                VStack(alignment: .leading) {
+                    Spacer()
+                    Text(binder.name)
+                        .foregroundColor(.primary)
+                    Divider()
+                    
+                    
+                    HStack {
+                        Text(binder.totalPrice, format: .currency(code: "CAD"))
+                            .padding(5)
+                            .foregroundColor(.green)
+                            .background(Color.green.opacity(0.2))
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                        Image(systemName: "square.stack")
+                            .foregroundColor(.primary)
+                        Text("\(binder.cardCount)")
+                            .foregroundColor(.primary)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.leading, 10)
             }
-            .padding(10)
+            .padding()
+            .frame(maxWidth: 600)
+            .frame(minHeight: 100)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(.background)
+                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
+            )
         }
     }
 }

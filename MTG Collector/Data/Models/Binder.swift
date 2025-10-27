@@ -16,10 +16,11 @@ class Binder {
     var notes: String
     var coverImage: String
     var createdAt: Date
+    var editedAt: Date
     
     // some controls
     var showPreviews: Bool = true
-    var showControls: Bool = false
+    var showControls: Bool = true
     var pinned: Bool = false
     var showCover = true
     
@@ -93,6 +94,7 @@ class Binder {
         self.notes = notes
         self.coverImage = coverImage
         self.createdAt = Date()
+        self.editedAt = Date()
     }
 
 

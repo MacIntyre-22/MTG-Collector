@@ -12,9 +12,9 @@ struct CollectionControllWidget: View {
     // environment variables
     @Environment(\.modelContext) var modelContext
     // grab all decks and binders
-    @Query var binders: [Binder]
-    @Query var decks: [Deck]
-    
+    @Query(sort: \Binder.editedAt, order: .reverse) var binders: [Binder]
+    @Query(sort: \Deck.editedAt, order: .reverse) var decks: [Deck]
+
     // get card to add
     var card: Card
     
@@ -25,9 +25,17 @@ struct CollectionControllWidget: View {
             // MARK: Binders Menu
             Menu("Binders") {
                 if !binders.isEmpty {
-                    ForEach(binders) { binder in
-                        Button(binder.name) {
+                    ForEach(binders.sorted(by: {$0.pinned && !$1.pinned})) { binder in
+                        Button{
                             addCard(collection: &binder.cards)
+                            binder.editedAt = Date()
+                            
+                        } label: {
+                            if binder.pinned {
+                                Label(binder.name, systemImage: "pin.fill")
+                            } else {
+                                Text(binder.name)
+                            }
                         }
                     }
                 } else {
@@ -39,18 +47,26 @@ struct CollectionControllWidget: View {
             // MARK: Decks Menu
             Menu("Decks") {
                 if !decks.isEmpty {
-                    ForEach(decks) { deck in
-                        Menu(deck.name) {
+                    ForEach(decks.sorted(by: {$0.pinned && !$1.pinned})) { deck in
+                        Menu {
                             Button("Mainboard") {
                                 addCard(collection: &deck.mainboard)
+                                deck.editedAt = Date()
                             }
                             Button("Sideboard") {
                                 addCard(collection: &deck.sideboard)
+                                deck.editedAt = Date()
                             }
                             Button("Maybeboard") {
                                 addCard(collection: &deck.maybeboard)
+                                deck.editedAt = Date()
                             }
-                        }
+                        } label: {
+                            if deck.pinned {
+                                Label(deck.name, systemImage: "pin.fill")
+                            } else {
+                                Text(deck.name)
+                            }                        }
                     }
                 } else {
                     Text("No Decks available")
@@ -62,7 +78,7 @@ struct CollectionControllWidget: View {
     
     // MARK: Add Card
     // takes a collection
-    private func addCard(collection: inout [CardEntry]) {
+    func addCard(collection: inout [CardEntry]) {
 
         // create cardEntry and add to collection
         let entry = CardEntry(card: card)

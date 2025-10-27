@@ -12,7 +12,7 @@ struct DeckStatsSheet: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack {
                     // grid style , but its static
                     // two widgets
@@ -29,6 +29,13 @@ struct DeckStatsSheet: View {
                         StatWidget(text: String(format: "%.1f", deck.avgManaCost), label: Label("Avg. Mana", systemImage: "bolt"))
                         
                         LegalWidget(isLegal: deck.isLegal, ruleType: deck.ruleType)
+                    }
+                    .padding(.bottom, 10)
+                    
+                    HStack(spacing: 20) {
+                        StatWidget(text: "\(deck.uniqueCount)", label: Label("Unique", systemImage: "sparkle"))
+                        
+                        PriceStatWidget(price: deck.totalPrice)
                     }
                     .padding(.bottom, 10)
                     

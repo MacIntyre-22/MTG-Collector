@@ -16,7 +16,7 @@ struct MaybeboardView: View {
     
     var body: some View {
         LazyVGrid(columns: cardColumns) {
-            ForEach(deck.maybeboard) { entry in
+            ForEach(deck.maybeboard.sorted(by: { $0.dateAdded > $1.dateAdded})) { entry in
                 
                 //
                 DeckCardView(deck: deck, entry: entry, deleteEntry: {deck.maybeboard.removeAll(where: { $0.id == entry.id })})

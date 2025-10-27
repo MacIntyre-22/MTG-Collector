@@ -1,24 +1,23 @@
 //
-//  StatWidget.swift
+//  PriceStatWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-11.
+//  Created by Ben MacIntyre (School) on 2025-10-23.
 //
 
 import SwiftUI
 
-struct StatWidget: View {
+struct PriceStatWidget: View {
     
-    var text: String
-    var label: Label<Text, Image>
+    var price: Double
     
     var body: some View {
         ZStack {
             VStack {
-                label
+                Label("Cost", systemImage: "chart.line.uptrend.xyaxis")
                     .foregroundColor(.gray)
                     .italic()
-                Text(text)
+                Text(price, format: .currency(code: "CAD"))
                     .lineLimit(1)
                     .font(.title)
                     .bold()
@@ -31,7 +30,5 @@ struct StatWidget: View {
                     .fill(.background)
                     .shadow(color: .gray.opacity(0.18), radius: 6, x: 0, y: 0)
             )
-        }
-    }
+        }    }
 }
-

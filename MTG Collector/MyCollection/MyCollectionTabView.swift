@@ -10,7 +10,8 @@ import SwiftData
 
 struct MyCollectionTabView: View {
     @Environment(\.modelContext) var modelContext
-    @Query var binders: [Binder]
+    // sorted binders
+    @Query(sort: \Binder.editedAt, order: .reverse) var binders: [Binder]
     @State var newBinder: Bool = false
     @State var editBinder: Bool = false
     
@@ -21,32 +22,36 @@ struct MyCollectionTabView: View {
     
     var body: some View {
         NavigationStack {
-            List {
+            ScrollView(showsIndicators: false) {
                 Section("") {
                     NavigationLink(destination: AllDecksView()) {
                         AllDecksLinkWidget()
                     }
+                    .padding(10)
                 }
                 
-                Section("Binders") {
-                    ForEach(binders) { binder in
-                        NavigationLink(destination: BinderView(binder: binder)) {
-                            BinderLinkWidget(binder: binder)
-                                .contextMenu {
-                                    NavigationLink(destination: EditBinderSheet(binder: binder)) {
-                                        Text("Edit")
-                                    }
+                Section("") {
+                    VStack(spacing: 15) {
+                        ForEach(binders.sorted(by: {$0.pinned && !$1.pinned})) { binder in
+                            NavigationLink(destination: BinderView(binder: binder)) {
+                                BinderLinkWidget(binder: binder)
                                     
-                                    Button("Delete", role: .destructive) {
-                                        selectedBinder = binder
-                                        showAlert.toggle()
+                                    .contextMenu {
+                                        NavigationLink(destination: EditBinderSheet(binder: binder)) {
+                                            Text("Edit")
+                                        }
+                                        
+                                        Button("Delete", role: .destructive) {
+                                            selectedBinder = binder
+                                            showAlert.toggle()
+                                        }
                                     }
-                                }
+                            }
                         }
                     }
+                    .padding(.horizontal, 10)
                 }
             }
-            .listRowSpacing(10)
             .navigationTitle("My Collection")
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
