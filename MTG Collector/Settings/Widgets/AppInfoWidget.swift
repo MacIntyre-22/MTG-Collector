@@ -8,16 +8,40 @@
 import SwiftUI
 
 struct AppInfoWidget: View {
+    
+    @State var sheetIsShowing: Bool = false
+    var webURI: URL = URL(string: "https://benmacintyre.ca")!
+    
+    var info: String = """
+    This app is an independent school project and is not affiliated with Wizards of the Coast in any way. All Magic: The Gathering content (card names, images, related marks, and fonts) belong to Wizards of the Coast LLC. 
+    
+    Card data and images are provided by the Scryfall API (https://scryfall.com), used under their API terms of service. This app does not claim ownership of any game content and is for personal use only.
+    """
+    
     var body: some View {
         // app info
         ZStack {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 10) {
                 Label("Information", systemImage: "info.circle")
                     .font(.title2)
                     .bold()
-                Text("description text lorem")
+                Text(info)
                     .foregroundColor(.gray)
+                
+                // developer info
+                HStack {
+                    Text("Developed by ")
+                        .foregroundColor(.gray)
+                    Button {
+                        sheetIsShowing.toggle()
+                    } label: {
+                        Text("benmacintyre.ca")
+                            .italic()
+                            .foregroundColor(.blue)
+                    }
+                }
             }
+            .padding()
             .frame(maxWidth: 600)
             .frame(minHeight: 100)
             .background(
@@ -25,6 +49,10 @@ struct AppInfoWidget: View {
                     .fill(.background)
                     .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
             )
+        }
+        .sheet(isPresented: $sheetIsShowing) {
+            WebSheet(url: webURI)
+                .presentationDragIndicator(.visible)
         }
     }
 }

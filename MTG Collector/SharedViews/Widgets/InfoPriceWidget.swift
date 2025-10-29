@@ -33,7 +33,7 @@ struct InfoPriceWidget: View {
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(.background)
-                    .shadow(color: .gray.opacity(0.25), radius: 15, x: 0, y: 0)
+                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
             )
         }
     }

@@ -19,11 +19,11 @@ struct SettingsTabView: View {
                     // color theme
                     ThemePickerWidget(selection: $settings.theme)
                     
-                    // delete data
-                    DeleteDataWidget()
-                    
                     // app info
                     AppInfoWidget()
+                    
+                    // delete data
+                    DeleteDataWidget()
                 }
                 .padding(.horizontal, 10)
             }
