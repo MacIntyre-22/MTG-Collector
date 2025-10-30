@@ -140,6 +140,10 @@ struct NewDeckSheet: View {
             ImageManager.saveImage(forImage: image, withIdentifier: deck.id)
         }
         
+        // index into spotlight search
+        SFAPI.indexData(id: deck.id, name: deck.name, image: ImageManager.fetchImage(withIdentifier: deck.id), description: "Deck in your collection.")
+        
+        
         // save and dismiss
         modelContext.insert(deck)
         dismiss()

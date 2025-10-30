@@ -103,6 +103,9 @@ struct NewBinderSheet: View {
             ImageManager.saveImage(forImage: image, withIdentifier: binder.id)
         }
         
+        // index into spotlight search
+        SFAPI.indexData(id: binder.id, name: binder.name, image: ImageManager.fetchImage(withIdentifier: binder.id), description: "Binder in your collection.")
+        
         // save and dismiss
         modelContext.insert(binder)
         dismiss()

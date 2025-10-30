@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import CoreSpotlight
+import UIKit
+
 
 struct SFAPI {
     
@@ -106,6 +109,32 @@ struct SFAPI {
             print("Error with SFAPI.fetchSetData - \(error)")
             return []
         }
+    }
+    
+    // MARK: Spotlight Indexing
+    // index binders and decks
+    // not api data but needed a static function
+    static func indexData(id: String, name: String, image: UIImage?, description: String){
+        var attributeSet: CSSearchableItemAttributeSet{
+            let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
+            attributeSet.title = name
+            attributeSet.contentDescription = description
+            attributeSet.keywords = ["Deck", "Binder", "Collection", "Cards", "Magic", "Magic The Gathering", name, description]
+            
+            return attributeSet
+        }
+        
+        let item = CSSearchableItem(uniqueIdentifier: id, domainIdentifier: "mtgcollector", attributeSet: attributeSet)
+        
+        CSSearchableIndex.default().indexSearchableItems([item]){
+            error in
+            if let error = error {
+                print("Problem indexing \(error.localizedDescription)")
+            } else {
+                print("Item indexed - \(name)")
+            }
+        }
+        
     }
     
     // MARKL Convert JSON set to model
