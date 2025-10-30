@@ -31,32 +31,41 @@ struct MTG_TabView: View {
         }
     
     var body: some View {
-        TabView {
-            HomeTabView()
-                .tabItem({
-                    Label("Home", systemImage: "house")
-                })
-            SearchTabView()
-                .tabItem({
-                    Image(systemName: "magnifyingglass")
-                    Text("Search")
-                })
+        ZStack {
+            TabView {
+                HomeTabView()
+                    .tabItem({
+                        Label("Home", systemImage: "house")
+                    })
+                SearchTabView()
+                    .tabItem({
+                        Image(systemName: "magnifyingglass")
+                        Text("Search")
+                    })
+                
+                MyCollectionTabView()
+                    .tabItem({
+                        Image("MtgBinderIcon")
+                            .renderingMode(.template)
+                            .scaledToFit()
+                        Text("My Collection")
+                    })
+                
+                SettingsTabView(settings: settings)
+                    .tabItem({
+                        Image(systemName: "gearshape")
+                        Text("Settings")
+                    })
+            }
+            .tint(Color(settings.theme))
             
-            MyCollectionTabView()
-                .tabItem({
-                    Image("MtgBinderIcon")
-                        .renderingMode(.template)
-                        .scaledToFit()
-                    Text("My Collection")
-                })
-            
-            SettingsTabView(settings: settings)
-                .tabItem({
-                    Image(systemName: "gearshape")
-                    Text("Settings")
-                })
+            if settings.onBoarding {
+                OnBoardingView() {
+                    settings.onBoarding = false
+                }
+                .ignoresSafeArea()
+            }
         }
-        .tint(Color(settings.theme))
     }
 }
 

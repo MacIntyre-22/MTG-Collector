@@ -14,6 +14,7 @@ class Settings {
     
     // set default settings
     var theme: String = "Orange Theme"
+    var onBoarding = true
     
     init() {}
 }
