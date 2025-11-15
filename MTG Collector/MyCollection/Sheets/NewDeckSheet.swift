@@ -141,7 +141,7 @@ struct NewDeckSheet: View {
         }
         
         // index into spotlight search
-        SFAPI.indexData(id: deck.id, name: deck.name, image: ImageManager.fetchImage(withIdentifier: deck.id), description: "Deck in your collection.")
+        Spotlight.indexData(id: deck.id, name: deck.name, image: ImageManager.fetchImage(withIdentifier: deck.id), description: "Deck in your collection.")
         
         
         // save and dismiss

@@ -10,7 +10,7 @@ import SwiftUI
 struct AppInfoWidget: View {
     
     @State var sheetIsShowing: Bool = false
-    var webURI: URL = URL(string: "https://benmacintyre.ca")!
+    var webURI: URL = URL(string: "https://benmacintyre.net")!
     
     var info: String = """
     This app is an independent school project and is not affiliated with Wizards of the Coast in any way. All Magic: The Gathering content (card names, images, related marks, and fonts) belong to Wizards of the Coast LLC. 
@@ -35,7 +35,7 @@ struct AppInfoWidget: View {
                     Button {
                         sheetIsShowing.toggle()
                     } label: {
-                        Text("benmacintyre.ca")
+                        Text("benmacintyre.net")
                             .italic()
                             .foregroundColor(.blue)
                     }

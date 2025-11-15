@@ -66,7 +66,7 @@ struct MTG_TabView: View {
                 .ignoresSafeArea()
             }
         }
-        .onContinueUserActivity(CSSearchableItemActionType, perform: Spotlight.handleSpotlight)
+        
     }
 }
 

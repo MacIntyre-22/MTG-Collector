@@ -61,6 +61,7 @@ struct CommanderWidget: View {
             .padding(10)
             .background(Color.gray.opacity(0.18))
             .cornerRadius(10)
+            .frame(maxWidth: 600)
             
         }
         

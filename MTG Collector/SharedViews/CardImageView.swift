@@ -69,6 +69,7 @@ struct CardImageView: View {
                                         .scaledToFit()
                                         .cornerRadius(17)
                                         .padding()
+                                        .frame(width: 600)
                                     
                                     VStack {
                                         HStack {
