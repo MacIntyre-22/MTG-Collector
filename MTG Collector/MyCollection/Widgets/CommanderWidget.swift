@@ -3,29 +3,36 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-09.
-//
+//  Purpose:
+//      Used to display a decks commander card if it has one
+//  External Types:
+//      CardEntry
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct CommanderWidget: View {
+    
+    // MARK: Stored Properties
+    
     var entry: CardEntry
     var remove: () -> Void
     
+    // MARK: View
     
     var body: some View {
         NavigationLink(destination: CardInfoView(card: entry.card)) {
-                
             HStack {
-                // card display
                 CardImageView(maxWidth: 85, name: entry.card.name, imageURIs: entry.card.imageURIs)
                 
                 VStack(alignment: .leading) {
                     Text("Commander")
                         .bold()
                     Text(entry.card.name)
-                    
                     HStack {
-                    
                         // Multi-face card
                         ForEach(entry.card.colors, id: \.self) { color in
                             Image(color)
@@ -34,8 +41,6 @@ struct CommanderWidget: View {
                         }
                         Spacer()
                     }
-                    
-                    // remove btn
                     
                     Menu {
                         Button("Remove") {
@@ -51,20 +56,15 @@ struct CommanderWidget: View {
                             .shadow(radius: 4)
                     }
                     Spacer()
-                    
                 }
                 .foregroundColor(.primary)
                 .padding(.vertical, 5)
-                
-                
             }
             .padding(10)
             .background(Color.gray.opacity(0.18))
             .cornerRadius(10)
             .frame(maxWidth: 600)
-            
         }
-        
     }
 }
 

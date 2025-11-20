@@ -3,13 +3,25 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//      Used as a list item view to link to the respective deck
+//  External Types:
+//      Binder, ImageManger
+
+// MARK: Imports
 
 import SwiftUI
 import SwiftData
 
+// MARK: Types
+
 struct BinderLinkWidget: View {
+    
+    // MARK: Stored Properties
+    
     var binder: Binder
+    
+    // MARK: View
     
     var body: some View {
         ZStack {
@@ -46,8 +58,6 @@ struct BinderLinkWidget: View {
                         }
                         .padding(5)
                     }
-                    
-                    
                 }
                 
                 VStack(alignment: .leading) {
@@ -55,8 +65,6 @@ struct BinderLinkWidget: View {
                     Text(binder.name)
                         .foregroundColor(.primary)
                     Divider()
-                    
-                    
                     HStack {
                         Text(binder.totalPrice, format: .currency(code: "CAD"))
                             .padding(5)

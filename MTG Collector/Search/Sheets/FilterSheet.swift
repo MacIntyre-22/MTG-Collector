@@ -3,46 +3,50 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-16.
-//
+//  Purpose:
+//      Displays the controls for filters that the user can use for the search
+//      The sets available to filter by are limited because theres so many it actually bricks the app. I could program it better but...
+//  External Types:
+//      SetInfo
+
+// MARK: Imports
 
 import SwiftUI
 import SwiftData
 
+// MARK: Types
+
 struct FilterSheet: View {
-    @Environment(\.modelContext) var modelContext
-    @Environment(\.dismiss) var dismiss
     
-    // query sets
-    @Query var sets: [SetInfo]
-    
-    // get filters
-    @Binding var filters: CardFilters
+    // MARK: Stored Properties
     
     var onSearch: () -> Void
-
-    // set values for filters
+    /// preset values for filters
     let allColors = ["W", "U", "B", "R", "G"]
     let allTypes = ["Creature", "Instant", "Sorcery", "Artifact", "Enchantment", "Land", "Planeswalker"]
     let allRarities = ["common", "uncommon", "rare", "mythic"]
-
-    
     let columns = [
         GridItem(.adaptive(minimum: 100, maximum: 300), spacing: 15),
         GridItem(.adaptive(minimum: 100, maximum: 300), spacing: 15)
     ]
     
+    // MARK: State Properties
+
+    @Environment(\.modelContext) var modelContext
+    @Environment(\.dismiss) var dismiss
+    @Query var sets: [SetInfo]
+    @Binding var filters: CardFilters
     
+    // MARK: View
     
     var body: some View {
         NavigationView {
             Form {
-                
                 Section("Reset All") {
-                    // clear results for this section
                     HStack(alignment: .center) {
                         Spacer()
                         Button {
-                            // reset all to default
+                            /// reset all to default
                             filters.text = ""
                             filters.colors = []
                             filters.types = []
@@ -59,16 +63,14 @@ struct FilterSheet: View {
                 }
 
                 Section("Colors") {
-                    
                     HStack(alignment: .center) {
-                        // go through pre set color list
+                        /// go through pre set color list
                         ForEach(allColors, id: \.self) { color in
                             Button {
-                                // if in list remove it, if not add it
+                                /// if in list remove it, if not add it
                                 toggle(array: &filters.colors, value: color)
                             } label: {
-                                // check if in list
-                                // give it color if it is else gray it out
+                                /// give it color if it is in list else gray it out
                                 Image(color)
                                     .resizable()
                                     .scaledToFit()
@@ -78,12 +80,11 @@ struct FilterSheet: View {
                                     .cornerRadius(5)
                                 
                             }
-                            // required so it doesnt make the whole view a btn
+                            /// required so it doesnt make the whole view a btn
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
                     
-                    // clear results for this section
                     Button(role: .destructive) {
                         filters.colors = []
                     } label: {
@@ -92,7 +93,6 @@ struct FilterSheet: View {
                 }
                 
                 Section("Types") {
-                    
                     LazyVGrid(columns: columns, spacing: 5) {
                         ForEach(allTypes, id: \.self) { type in
                             let contains = filters.types.contains(type)
@@ -107,23 +107,18 @@ struct FilterSheet: View {
                                     .background(contains ? Color.accentColor : .clear)
                                     .cornerRadius(5)
                             }
-                            // required so it doesnt make the whole view a btn
-
                             .buttonStyle(PlainButtonStyle())
                        }
                    }
                     
-                    // clear results for this section
                     Button(role: .destructive) {
                         filters.types = []
                     } label: {
                         Text("Clear")
                     }
-                   
                 }
                 
                 Section("Rarities") {
-                    
                     LazyVGrid(columns: columns, spacing: 5) {
                         ForEach(allRarities, id: \.self) { type in
                             let contains = filters.rarities.contains(type)
@@ -138,13 +133,10 @@ struct FilterSheet: View {
                                     .background(contains ? Color.accentColor : .clear)
                                     .cornerRadius(5)
                             }
-                            // required so it doesnt make the whole view a btn
-
                             .buttonStyle(PlainButtonStyle())
                        }
                    }
                     
-                    // clear results for this section
                     Button(role: .destructive) {
                         filters.rarities = []
                     } label: {
@@ -152,23 +144,16 @@ struct FilterSheet: View {
                     }
                 }
                 
-                // cost range
                 Section("CMC Range") {
-                    
                     VStack(alignment: .center) {
                         HStack(spacing: 40) {
                             Text("Min: \(Int(filters.cmcLower))")
                             Text("Max: \(Int(filters.cmcUpper))")
                         }
-
-                        // dont let higher than higher slider
                         Slider(value: $filters.cmcLower, in: 0...20, step: 1)
-
-                        // dont allow lower then lower slider
                         Slider(value: $filters.cmcUpper, in: 0...20, step: 1)
                     }
                     
-                    // clear results for this section
                     Button(role: .destructive) {
                         filters.cmcLower = 0
                         filters.cmcUpper = 20
@@ -177,14 +162,11 @@ struct FilterSheet: View {
                     }
                 }
                 
-                // sets
                 Section("Sets") {
-                    
                     SetsFilterWidget() { code in
                         toggle(array: &filters.sets, value: code)
                     }
                     VStack(alignment: .leading) {
-                        // get active set filters
                         Text("Added Sets")
                             .bold()
                             .padding(.bottom, 10)
@@ -199,7 +181,6 @@ struct FilterSheet: View {
                        }
                     }
                     
-                    // clear results for this section
                     Button(role: .destructive) {
                         filters.sets = []
                     } label: {
@@ -231,15 +212,16 @@ struct FilterSheet: View {
     
     
     // MARK: Toggle Filter
-    // all filters are arrays of strings
-    // removes the given string from given array or adds it if not there
+    
+    /// all filters are arrays of strings
+    /// removes the given string from given array or adds it if not there
     func toggle(array: inout [String], value: String) {
-        // checks if in collection and grabs index
+        /// checks if in collection and grabs index
         if let item = array.firstIndex(of: value) {
-            // removes from index
+            /// removes from index
             array.remove(at: item)
         } else {
-            // or adds the value
+            /// or adds the value
             array.append(value)
         }
     }

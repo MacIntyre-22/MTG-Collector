@@ -3,30 +3,38 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-03.
-//
+//  Purpose:
+//      Allows the user to chnage properties for the respective binder
+// External Types:
+//      Binder, ImageManager, CameraPicker, PhotoLibraryPicker
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct EditBinderSheet: View {
-    // environment variables
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) var modelContext
+    
+    // MARK: Stored Properties
     
     var binder: Binder
     
+    // MARK: State Properties
+    
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
     @State var name: String
     @State var selectedImage: UIImage? = nil
     @State var pinned: Bool
     @State var showPreviews: Bool
     @State var showControls: Bool
     @State var showCover: Bool
-
-    
-    // for image
     @State var showSourceSelection = false
     @State var photoSource: UIImagePickerController.SourceType = .photoLibrary
-
     @State private var showImagePicker = false
+    
+    // MARK: Initializer
     
     init(binder: Binder) {
         self.binder = binder
@@ -35,15 +43,15 @@ struct EditBinderSheet: View {
         self.showPreviews = binder.showPreviews
         self.showControls = binder.showControls
         self.showCover = binder.showCover
-        // image init is in onAppear
+        /// image init is in onAppear
     }
+    
+    // MARK: View
 
     var body: some View {
         NavigationStack {
             Form {
-                // edit binder form
                 Section("Binder Information") {
-                    
                         VStack(alignment: .center, spacing: 20) {
                             ZStack(alignment: .center) {
                                 Color.gray
@@ -71,7 +79,6 @@ struct EditBinderSheet: View {
                         }
                         .padding(.top, 20)
                 }
-                
                 Section("Controls") {
                     Toggle("Pinned", isOn: $pinned)
                     Toggle("Previews", isOn: $showPreviews)
@@ -88,13 +95,11 @@ struct EditBinderSheet: View {
             })
             .navigationTitle("Edit Binder")
             .onDisappear() {
-                // set binder values
                 binder.name = $name.wrappedValue
                 binder.pinned = $pinned.wrappedValue
                 binder.showPreviews = $showPreviews.wrappedValue
                 binder.showControls = $showControls.wrappedValue
                 binder.showCover = $showCover.wrappedValue
-                
             }
             .confirmationDialog("Select Source",isPresented: $showSourceSelection, actions:{
                 Button("Camera"){
@@ -108,7 +113,6 @@ struct EditBinderSheet: View {
             }
             )
             .fullScreenCover(isPresented: $showImagePicker) {
-                // save image
                 if let image = selectedImage {
                     ImageManager.saveImage(forImage: image, withIdentifier: binder.id)
                 }
@@ -117,12 +121,10 @@ struct EditBinderSheet: View {
                     CameraPicker(image: $selectedImage)
                         .ignoresSafeArea()
                 } else {
-                    //load the photopicker
                     PhotoLibraryPicker(image: $selectedImage)
                 }
             }
             .onAppear {
-                // on appear grab image if not already set
                 if selectedImage == nil {
                     selectedImage = ImageManager.fetchImage(withIdentifier: binder.id)
                 }

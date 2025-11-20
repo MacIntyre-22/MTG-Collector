@@ -3,13 +3,25 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-11.
+//  Purpose:
+//      Displays a
+//  External Types:
 //
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct TypeCountWidget: View {
+    
+    // MARK: Stored Properties
+
     var cardTypeCount: [String: Int]
     
+    // MARK: View
+
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {

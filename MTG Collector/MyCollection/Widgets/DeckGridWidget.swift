@@ -3,12 +3,24 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-26.
-//
+//  Purpose:
+//      Used as a list item in a grid to link to the respective deck
+//  External Types:
+//      Deck, ImageManger
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct DeckGridWidget: View {
+    
+    // MARK: Stored Properties
+
     var deck: Deck
+    
+    // MARK: View
     
     var body: some View {
         VStack(alignment: .center) {
@@ -45,9 +57,7 @@ struct DeckGridWidget: View {
                             .shadow(radius: 4)
                             .foregroundColor(Color.accentColor)
                     }
-                    
                     Spacer()
-                    
                     HStack {
                         // Multi-face card
                         if let commander = deck.commander {
@@ -64,10 +74,8 @@ struct DeckGridWidget: View {
             }
             
             VStack {
-                
                 Text(deck.name)
                     .bold()
-                
                 HStack {
                     Text(deck.totalPrice, format: .currency(code: "CAD"))
                         .padding(5)
@@ -87,7 +95,6 @@ struct DeckGridWidget: View {
         .padding(10)
         .background(Color.gray.opacity(0.18))
         .cornerRadius(10)
-        
     }
 }
 

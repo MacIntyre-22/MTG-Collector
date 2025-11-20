@@ -3,29 +3,34 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//      Displays all decks in a grid view
+//  External Types:
+//      Deck, DeckView, EditDeckSheet, DeckGridWidget, NewDeckSheet
+
+// MARK: Imports
 
 import SwiftUI
 import SwiftData
 
+// MARK: Types
+
 struct AllDecksView: View {
     
-    @Environment(\.modelContext) var modelContext
-    // data
-    @Query(sort: \Deck.editedAt, order: .reverse) var decks: [Deck]
-    
-    @State var selectedDeck: Deck?
-    @State var showAlert: Bool = false
-    
-    var deckCount: Int {
-        decks.count
-    }
+    // MARK: Stored Properties
     
     let columns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 20),
                    GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 20)]
     
-    // state variables
+    // MARK: State Properties
+    
+    @Environment(\.modelContext) var modelContext
+    @Query(sort: \Deck.editedAt, order: .reverse) var decks: [Deck]
+    @State var selectedDeck: Deck?
+    @State var showAlert: Bool = false
     @State var newDeck: Bool = false
+    
+    // MARK: View
     
     var body: some View {
         NavigationStack {
@@ -38,7 +43,6 @@ struct AllDecksView: View {
                                     NavigationLink(destination: EditDeckSheet(deck: deck)) {
                                         Text("Edit")
                                     }
-                                    
                                     Button("Delete", role: .destructive) {
                                         selectedDeck = deck
                                         showAlert.toggle()
@@ -48,8 +52,6 @@ struct AllDecksView: View {
                     }
                 }
                 .padding()
-                
-                
             }
             .padding(.horizontal, 10)
             .navigationTitle("My Decks")
@@ -75,15 +77,11 @@ struct AllDecksView: View {
         }
     }
     
+    // MARK: deleteDeck
     func deleteDeck() {
         let tempDeck: Deck? = selectedDeck.unsafelyUnwrapped
-        
         if let deck = tempDeck{
             modelContext.delete(deck)
         }
     }
-}
-
-#Preview {
-    AllDecksView()
 }

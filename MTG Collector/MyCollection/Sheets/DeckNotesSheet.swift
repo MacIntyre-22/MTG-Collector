@@ -3,23 +3,33 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-06.
-//
+//  Pourpose:
+//      Displays the notes saved in the deck
+//  External Types:
+//      Deck
 
 import SwiftUI
 
 struct DeckNotesSheet: View {
-    // environment variables
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) var modelContext
+
+    // MARK: Stored Properties
     
     var deck: Deck
     
+    // MARK: State Properties
+
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
     @State var notes: String
+    
+    // MARK: Initializer
     
     init(deck: Deck) {
         self.deck = deck
         self.notes = deck.notes
     }
+    
+    // MARK: View
 
     var body: some View {
         NavigationStack {
@@ -41,7 +51,6 @@ struct DeckNotesSheet: View {
                 }
             })
             .onDisappear() {
-                // set notes 
                 deck.notes = $notes.wrappedValue
             }
         }

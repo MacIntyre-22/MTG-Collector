@@ -3,29 +3,34 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//      Allows the user to create a new binder instance
+//  External Types:
+//      Binder, ImageManager, CameraPicker, PhotoLibraryPicker, Spotlight
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct NewBinderSheet: View {
-    // environment variables
+
+    // MARK: State Properties
+
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-
-    // user input for new binder
     @State private var name: String = ""
     @State var selectedImage: UIImage?
-    
-    // for image
     @State var showSourceSelection = false
     @State var photoSource: UIImagePickerController.SourceType = .photoLibrary
-    
     @State private var showImagePicker = false
 
+    // MARK: View
+    
     var body: some View {
         NavigationStack {
             Form {
-                // edit binder form
                 Section("Binder Information") {
                     
                         VStack(alignment: .center, spacing: 20) {
@@ -38,7 +43,6 @@ struct NewBinderSheet: View {
                                     .scaledToFill()
                                     .frame(width: 200, height: 200)
                                     .cornerRadius(10)
-                                    
                                 
                                 Image(systemName: "camera.circle.fill")
                                     .renderingMode(.template)
@@ -64,7 +68,6 @@ struct NewBinderSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") {
-                        // save binder
                         saveBinder()
                     }
                     .disabled(name.isEmpty)
@@ -86,7 +89,6 @@ struct NewBinderSheet: View {
                     CameraPicker(image: $selectedImage)
                         .ignoresSafeArea()
                 } else {
-                    //load the photopicker
                     PhotoLibraryPicker(image: $selectedImage)
                 }
             }
@@ -95,18 +97,12 @@ struct NewBinderSheet: View {
 
     // MARK: saveBinder
     private func saveBinder() {
-        // make binder model instance
         let binder = Binder(name: name, notes: "")
-        
-        // save image
         if let image = selectedImage {
             ImageManager.saveImage(forImage: image, withIdentifier: binder.id)
         }
         
-        // index into spotlight search
         Spotlight.indexData(id: binder.id, name: binder.name, image: ImageManager.fetchImage(withIdentifier: binder.id), description: "Binder in your collection.")
-        
-        // save and dismiss
         modelContext.insert(binder)
         dismiss()
     }

@@ -3,27 +3,36 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-21.
-//
+//  Purpose:
+//         Features various functions to make apis calls in different ways for certain data
+// External Types:
+//         CardFilters, CardJSON, SetJSON, ScryfallCardData, ScrydfallSetData, SetInfo, Card
+
+// MARK: Imports
 
 import Foundation
 import CoreSpotlight
 import UIKit
 
+// MARK: Types
 
 struct SFAPI {
     
-    // MARK: URL Builder
-    // build url from filters struct
+    // MARK: API Functions
+    
+    /// URL Builder
+    /// build url from filters struct
     static func buildSearchURL(filters: CardFilters) -> URL? {
         let query = buildQuery(from: filters)
         let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         return URL(string: "https://api.scryfall.com/cards/search?q=\(encoded)")
     }
     
-    // MARK: Card Data
-    // static fetch data
+    /// Card Data
+    /// querys cards based on CardFilter values
     static func fetchCardData(filters: CardFilters) async -> [CardJSON] {
         do {
+            /// build url using the CardFilters
             let url = buildSearchURL(filters: filters)!
             let (data, _) = try await URLSession.shared.data(from: url)
             let decoder = JSONDecoder()
@@ -35,8 +44,8 @@ struct SFAPI {
         }
     }
     
-    // MARK: Card Data by static query
-    // for random collections
+    /// Card Data by set query, for home suggestions
+    /// for random collections
     static func fetchCardQuery(query: String, shuffle: Bool = true) async -> [CardJSON] {
         do {
             let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -58,8 +67,7 @@ struct SFAPI {
     }
     
     
-    // MARK: Card Data by ID
-    // can return nil
+    /// Card Data by ID
     static func fetchCardId(id: String) async -> CardJSON? {
         do {
             if let url = URL(string: "https://api.scryfall.com/cards/\(id)") {
@@ -76,9 +84,9 @@ struct SFAPI {
         }
     }
     
-    // MARK: Card Data by URI
-    // some objects return a uri right for the object
-    // can return nil
+    /// Card Data by URI
+    /// some objects return a uri right for the object
+    /// can return nil
     static func fetchCardURI(uri: String) async -> CardJSON? {
         do {
             if let url = URL(string: uri) {
@@ -95,8 +103,8 @@ struct SFAPI {
         }
     }
     
-    // MARK: Set Data
-    // fetch set data
+    /// Set Data
+    /// fetch set data
     static func fetchSetData() async -> [SetJSON] {
         do {
             let url = URL(string: "https://api.scryfall.com/sets")!
@@ -111,8 +119,9 @@ struct SFAPI {
         }
     }
     
+    // MARK: Conversion Functions
     
-    // MARKL Convert JSON set to model
+    /// Convert JSON set to model
     static func setToModel(json: SetJSON) -> SetInfo {
         return SetInfo(
             code: json.code ?? "",

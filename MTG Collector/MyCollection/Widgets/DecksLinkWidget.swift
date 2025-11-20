@@ -3,11 +3,19 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//      A Unique widget to link to the decks grid from the collection view
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct AllDecksLinkWidget: View {
+    
+    // MARK: View
+
     var body: some View {
         ZStack {
             HStack {

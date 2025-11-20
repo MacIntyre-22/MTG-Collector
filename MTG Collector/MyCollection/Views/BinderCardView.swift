@@ -3,21 +3,30 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-09.
-//
+//  Purpose:
+//      The view used to display cards in the binder view. Using the CardEntryView, it gives the user control over the card
+//  External Types:
+//      CardEntry, CardInfoView
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct BinderCardView: View {
+    
+    // MARK: Stored Properties
+    
     var entry: CardEntry
     var deleteEntry: () -> Void
     var showPreviews: Bool
     var showControls: Bool
     
+    // MARK: View
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            
-            // card nav link
             NavigationLink(destination: CardInfoView(card: entry.card)){
                 CardEntryView(
                     entry: entry,
@@ -28,7 +37,6 @@ struct BinderCardView: View {
             }
             
             if showControls {
-                // controls
                 VStack {
                     Menu {
                         Button("Toggle Foil") {

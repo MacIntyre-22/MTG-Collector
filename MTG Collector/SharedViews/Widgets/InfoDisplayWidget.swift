@@ -3,35 +3,38 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-28.
-//
+//  Purpose:
+//      Displays basic info passed to it
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct InfoDisplayWidget: View {
+    
+    // MARK: Stored Properties
+
     var name: String?
     var typeLine: String?
     var colorIdentity: [String]?
     var oracleText: String?
     
+    // MARK: View
+
     var body: some View {
         VStack(alignment: .leading) {
-            // name
             if let name = name {
                 Text(name)
                     .bold()
             }
-            
-            // Typeline
             if let typeLine = typeLine {
                 Text(typeLine)
                     .italic()
             }
-            
-            // Colours
             if let colors = colorIdentity {
                 HStack {
-                
-                    // Multi-face card
                     ForEach(colors, id: \.self) { color in
                         Image(color)
                             .resizable()
@@ -41,8 +44,6 @@ struct InfoDisplayWidget: View {
                 }
                 .padding(.vertical, 5)
             }
-            
-            
             if let text = oracleText {
                 Text("\"\(text)\"")
                     .font(.custom("ManaMTG", size: 18))

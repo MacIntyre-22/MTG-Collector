@@ -3,14 +3,26 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-29.
+//  Purpose:
+//      Displays a pricewidget with given finish and price
+//  External Types:
 //
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct PriceWidget: View {
+    
+    // MARK: Stored Properties
+
     var finish: String
     var price: String
     
+    // MARK: View
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(finish.capitalized)
@@ -34,7 +46,9 @@ struct PriceWidget: View {
         .cornerRadius(10)
     }
     
-    // return a gradient based on the finish type
+    // MARK: priceGradient
+    
+    /// return a gradient based on the finish type
     func priceGradient(finish: String) -> LinearGradient {
         switch finish {
         case "Base":

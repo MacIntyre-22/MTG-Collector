@@ -3,13 +3,24 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//         Model for a deck of cards. Holds info about the deck and the three different card arrays.
+//         Computed properties calculate stats as changes are made, ONLY TO THE MAINBOARD ARRAY.
+//  External Types:
+//         CardEntry
+
+// MARK: Imports
+
 import Foundation
 import SwiftData
 
-// MARK: Deck
+// MARK: Types
+
 @Model
 class Deck {
+    
+    // MARK: Stored Properties
+    
     @Attribute(.unique) var id: String = UUID().uuidString
     var name: String
     var notes: String
@@ -18,61 +29,56 @@ class Deck {
     var editedAt: Date
     var commander: CardEntry?
     
-    // some controls
+    /// some controls
     var showPreviews: Bool = true
     var showControls: Bool = true
     var pinned: Bool = false
     var showCover = true
     
+    /// Cards arrays (boards), to hold the cards
     @Relationship var mainboard: [CardEntry] = []
     @Relationship var sideboard: [CardEntry] = []
     @Relationship var maybeboard: [CardEntry] = []
 
-    
-    // computed properties
-    // update on change
+    // MARK: Computed Properties
+
+    /// Total card count
     var cardCount: Int {
-        // start at 0 and add each card in the mainboard ONLY
         mainboard.reduce(0) { $0 + $1.quantity }
     }
     
-    // unique
+    /// Unique card count
     var uniqueCount: Int {
-        // count entries
         mainboard.count
     }
     
-    // count lands
+    /// Total count of cards by typeline: Land (Important for deck bilding in MTG)
     var landCount: Int {
-        // sort by land
+        /// Filter array by lands
         mainboard.filter { entry in
             return entry.card.typeLine.contains("Land")
         }
-        // add quantity
+        /// return last total plus card quantity to get total lands in the array
+        /// cant use .count as their may be only 1 entry that holds multiple lands
         .reduce(0) { $0 + $1.quantity }
     }
 
-    // average mana cost
+    /// Average mana cost
     var avgManaCost: Double {
-        // filter out nils if any
         let costs = mainboard.compactMap { $0.card.cmc }
-        // check if empty
         guard !costs.isEmpty else { return 0 }
-        // add up then divide by the amount of cards that have a mana cost
+        /// add up then divide by the amount of cards that have a mana cost
         return costs.reduce(0, +) / Double(costs.count)
     }
     
-    // is deck as a whole legal
+    /// Legal Status
     var isLegal: Bool {
-        // assumes everycard is legal until it finds one that isnt
+        /// assumes everycard is legal until it finds one that isnt
         var temp: Bool = true
         
-        // get ruletype
         for entry in mainboard {
-            // check card for ruletype and see if legal or not
-            // unless casual
             for legality in entry.card.legalities {
-                // other values that are not "legal" still make the deck not legal (ex: banned, restricted, not_legal)
+                /// any value other than "legal" make the deck not legal (ex: banned, restricted, not_legal)
                 if legality.key == ruleType && legality.value != "legal" {
                     temp = false
                 }
@@ -81,27 +87,25 @@ class Deck {
         return temp
     }
     
-    // totals of card types as a dict
+    /// Total amount of cards by type stored in a dictionary
+    /// Allows me to loop through the dict in a view and not set conditions for 0 values, because values only exists if there are at least 1
     var cardTypeCount: [String: Int] {
         var counts: [String: Int] = [:]
         
         for entry in mainboard {
-            // get the main type, not the subtype
-            // separates (Legendary Creature - Human)
-            // i just want legendary creature, as subtypes are alot more diverse and are not relevant
+            /// get the main type by splitting the type line by "-"
             let mainType = entry.card.typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
-            // create the dict where the parsed string is the key and count is value
             counts[mainType, default: 0] += entry.quantity
         }
         return counts
     }
     
-    // total cards of each mana count
+    /// Total amount of cards per mana type
+    /// Using a dictionary for the same concept as the card type count dictionary
     var manaTypeCount: [String: Int] {
         var counts: [String: Int] = [:]
         
         for entry in mainboard {
-            // count or default to 0
             for mana in entry.card.colorIdentity {
                 counts[mana, default: 0] += entry.quantity
             }
@@ -109,18 +113,16 @@ class Deck {
         return counts
     }
     
+    /// Total price of the deck
     var totalPrice: Double {
-        // get each price
         mainboard.reduce(0) { total, entry in
-            // convert to Double
             let price = Double(entry.card.prices.usd) ?? 0
-            // add price of entry and duplicates
             return total + price * Double(entry.quantity)
         }
     }
 
-
-    // only require a name for the deck
+    // MARK: Initializer
+    
     init(name: String, notes: String = "", coverimage: String = "", ruleType: String = "casual") {
         self.name = name
         self.notes = notes

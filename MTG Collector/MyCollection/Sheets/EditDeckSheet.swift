@@ -3,43 +3,22 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-06.
-//
+//  Purpose:
+//      Allows the user to chnage properties for the respective deck
+//  External Types:
+//      Deck, ImageManager, CameraPicker, PhotoLibraryPicker
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct EditDeckSheet: View {
-    // environment variables
-    @Environment(\.dismiss) var dismiss
     
-    @Bindable var deck: Deck
+    // MARK: Stored Properties
     
-    @State var name: String
-    @State var ruleType: String
-    @State var selectedImage: UIImage?
-    @State var pinned: Bool
-    @State var showPreviews: Bool
-    @State var showControls: Bool
-    @State var showCover: Bool
-
-    
-    // for image
-    @State var showSourceSelection = false
-    @State var photoSource: UIImagePickerController.SourceType = .photoLibrary
-
-    @State private var showImagePicker = false
-    
-    init(deck: Deck) {
-        self.deck = deck
-        self.name = deck.name
-        self.ruleType = deck.ruleType
-        self.pinned = deck.pinned
-        self.showPreviews = deck.showPreviews
-        self.showControls = deck.showControls
-        self.showCover = deck.showCover
-        // set image in on appear
-    }
-    
-    // list of Scryfall legality types
+    /// list of Scryfall legality types
     let legalities = [
         "standard",
         "modern",
@@ -59,12 +38,40 @@ struct EditDeckSheet: View {
         "premodern",
         "penny"
     ]
+    
+    // MARK: State Properties
+
+    @Environment(\.dismiss) var dismiss
+    @Bindable var deck: Deck
+    @State var name: String
+    @State var ruleType: String
+    @State var selectedImage: UIImage?
+    @State var pinned: Bool
+    @State var showPreviews: Bool
+    @State var showControls: Bool
+    @State var showCover: Bool
+    @State var showSourceSelection = false
+    @State var photoSource: UIImagePickerController.SourceType = .photoLibrary
+    @State private var showImagePicker = false
+    
+    // MARK: Initializer
+    
+    init(deck: Deck) {
+        self.deck = deck
+        self.name = deck.name
+        self.ruleType = deck.ruleType
+        self.pinned = deck.pinned
+        self.showPreviews = deck.showPreviews
+        self.showControls = deck.showControls
+        self.showCover = deck.showCover
+        /// set image in on appear
+    }
+    
+    // MARK: View
 
     var body: some View {
         NavigationStack {
             Form {
-                // edit deck
-                // deck form
                 Section("Deck Information") {
                     VStack(alignment: .center, spacing: 20) {
                         ZStack(alignment: .center) {
@@ -91,10 +98,8 @@ struct EditDeckSheet: View {
                             .multilineTextAlignment(.center)
                             .padding(.bottom, 20)
                         
-                        // select rule type from array of legalities
                         Picker("Rule Type", selection: $ruleType) {
                             ForEach(legalities, id: \.self) { legality in
-                                // capitalize for display
                                 Text(legality.capitalized)
                                     .tag(legality)
                             }
@@ -139,7 +144,6 @@ struct EditDeckSheet: View {
             }
             )
             .fullScreenCover(isPresented: $showImagePicker) {
-                // save image
                 if let image = selectedImage {
                     ImageManager.saveImage(forImage: image, withIdentifier: deck.id)
                 }
@@ -148,12 +152,10 @@ struct EditDeckSheet: View {
                     CameraPicker(image: $selectedImage)
                         .ignoresSafeArea()
                 } else {
-                    //load the photopicker
                     PhotoLibraryPicker(image: $selectedImage)
                 }
             }
             .onAppear {
-                // on appear grab image if not already set
                 if selectedImage == nil {
                     selectedImage = ImageManager.fetchImage(withIdentifier: deck.id)
                 }

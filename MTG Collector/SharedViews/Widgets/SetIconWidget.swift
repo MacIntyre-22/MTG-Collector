@@ -3,15 +3,22 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-03.
-//
+//  Purpose:
+//      Displays a set icon and with the rarity as the background
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct SetIconWidget: View {
+    
+    // MARK: Stored Properties
+
     var set: String
     var rarity: String
     var maxWidth: Double
-    
     var img: String {
         if !set.isEmpty {
             return set
@@ -19,7 +26,6 @@ struct SetIconWidget: View {
             return "MtgBinder"
         }
     }
-    
     var color: LinearGradient {
         switch(rarity) {
             case "common":
@@ -35,7 +41,6 @@ struct SetIconWidget: View {
         }
     }
     
-    // colors by rarity
     let common = LinearGradient(
         colors: [Color.gray.opacity(0.8), Color.gray.opacity(0.5), Color.gray.opacity(0.8)],
         startPoint: .topLeading,
@@ -60,12 +65,12 @@ struct SetIconWidget: View {
         endPoint: .bottomTrailing
     )
     
+    // MARK: View
+
     var body: some View {
-        // set
         ZStack {
-            
-            // check if asset exists
-            // i dont have every set logo
+            /// check if asset exists
+            /// i dont have every set logo
             if UIImage(named: img) != nil {
                 Image(img)
                     .resizable()
@@ -75,7 +80,7 @@ struct SetIconWidget: View {
                     .padding(5)
                     .shadow(radius: 4)
             } else {
-                // default is just mtg logo
+                /// default is just planeswalker logo
                 Image("Logo")
                     .resizable()
                     .renderingMode(.template)
@@ -89,6 +94,5 @@ struct SetIconWidget: View {
         .background(color)
         .cornerRadius(10)
         .foregroundColor(.primary)
-        
     }
 }

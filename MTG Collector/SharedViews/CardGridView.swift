@@ -3,42 +3,51 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-21.
-//
+//  Purpose:
+//      Displays a card model with some previews for that card
+//  External Types:
+//      Card, CardFace, CardimageView, GridRarityWidget, GridPriceWidget
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct CardGridView: View {
-    var card: Card
     
+    // MARK: Stored Properties
+
+    var card: Card
     var showPreviews: Bool = false
     var isFoil: Bool = false
     var showNames: Bool = false
-    
-    // check flip state
-    @State private var isFlipped: Bool = false
-    
-    
-    // grab card faces if any
-    var multiFaced: [CardFace]? {
-        card.cardFaces
-    }
-    
     var gradFoil: LinearGradient = LinearGradient(
                                         colors: [.blue, .purple, .pink, .orange, .yellow],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     )
     
+    // MARK: State Properties
+
+    @State private var isFlipped: Bool = false
+    
+    // MARK: Computed Properties
+    
+    var multiFaced: [CardFace]? {
+        card.cardFaces
+    }
+    
+    // MARK: View
+    
     var body: some View {
         VStack{
-            
             ZStack {
-                // if multifaced
+                /// if multifaced
                 if let faces = multiFaced, faces.count > 1 {
-                    // Front face
+                    /// Front face
                     ZStack {
                         CardImageView(maxWidth: 220, name: faces.first!.name, imageURIs: faces.first!.imageURIs)
-                        // foil check
                         if isFoil {
                             gradFoil.opacity(0.3)
                         }
@@ -46,10 +55,9 @@ struct CardGridView: View {
                     .opacity(isFlipped ? 0 : 1)
                     .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
 
-                    // Back face
+                    /// Back face
                     ZStack {
                         CardImageView(maxWidth: 220, name: faces.last!.name, imageURIs: faces.last!.imageURIs)
-                        // foil check
                         if isFoil {
                             gradFoil.opacity(0.3)
                         }
@@ -58,17 +66,16 @@ struct CardGridView: View {
                     .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
                     
                 } else {
-                    // Single faced card
+                    /// Single faced card
                     ZStack {
                         CardImageView(maxWidth: 220, name: card.name, imageURIs: card.imageURIs)
-                        // foil check
                         if isFoil {
                             gradFoil.opacity(0.3)
                         }
                     }
                 }
                 
-                // set flip button over both if it is multifaced
+                /// set flip button over both faces if it is multifaced
                 if let faces = multiFaced, faces.count > 1 {
                     VStack {
                         HStack {
@@ -92,17 +99,12 @@ struct CardGridView: View {
             .aspectRatio(0.714, contentMode: .fit)
             .cornerRadius(8)
             
-            // show previews
             if showPreviews {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        
-                        // show rarity
                         if !card.rarity.isEmpty {
                             GridRarityWidget(rarity: card.rarity)
                         }
-                        // show price
-                        // display each price from prices obj
                         if !card.prices.usd.isEmpty {
                             GridPriceWidget(finish: "Base", price: card.prices.usd)
                         }

@@ -3,19 +3,28 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-19.
-//
+//  Purpose:
+//      Allows the user to select the tint color of the app
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct ThemePickerWidget: View {
     
-    // get current theme
-    @Binding var selection: String
-    // preset themes
+    // MARK: Stored Properties
+
     var allThemes: [String] = ["Orange Theme", "Blue Theme", "Green Theme", "Red Theme"]
     
+    // MARK: State Properties
+    
+    @Binding var selection: String
+    
+    // MARK: View
+    
     var body: some View {
-        // color theme
         ZStack {
             HStack {
                 Text("Theme")
@@ -25,10 +34,8 @@ struct ThemePickerWidget: View {
                     ForEach(allThemes, id: \.self) { theme in
                         Text(theme)
                     }
-                    
                 }
                 .pickerStyle(.menu)
-                    
             }
             .frame(maxWidth: 600)
             .frame(minHeight: 45)

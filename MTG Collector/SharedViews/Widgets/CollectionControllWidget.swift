@@ -3,26 +3,34 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-27.
-//
+//  Purpose:
+//      Allows the user to add a card to one of their collections
+//  External Types:
+//      Binder, Deck, Card, CardEntry
+
+// MARK: Imports
 
 import SwiftUI
 import SwiftData
 
+// MARK: Types
+
 struct CollectionControllWidget: View {
-    // environment variables
+    
+    // MARK: Stored Properties
+
+    var card: Card
+    
+    // MARK: State Properties
+
     @Environment(\.modelContext) var modelContext
-    // grab all decks and binders
     @Query(sort: \Binder.editedAt, order: .reverse) var binders: [Binder]
     @Query(sort: \Deck.editedAt, order: .reverse) var decks: [Deck]
 
-    // get card to add
-    var card: Card
-    
+    // MARK: View
     
     var body: some View {
         HStack() {
-            
-            // MARK: Binders Menu
             Menu("Binders") {
                 if !binders.isEmpty {
                     ForEach(binders.sorted(by: {$0.pinned && !$1.pinned})) { binder in
@@ -44,7 +52,6 @@ struct CollectionControllWidget: View {
                 }
             }
             
-            // MARK: Decks Menu
             Menu("Decks") {
                 if !decks.isEmpty {
                     ForEach(decks.sorted(by: {$0.pinned && !$1.pinned})) { deck in
@@ -77,12 +84,11 @@ struct CollectionControllWidget: View {
     }
     
     // MARK: Add Card
-    // takes a collection
+    
+    /// takes a collection to add to
     func addCard(collection: inout [CardEntry]) {
-
-        // create cardEntry and add to collection
+        /// create cardEntry and add to collection
         let entry = CardEntry(card: card)
         collection.append(entry)
-
     }
 }

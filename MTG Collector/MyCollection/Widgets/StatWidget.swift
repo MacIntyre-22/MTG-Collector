@@ -3,15 +3,24 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-11.
-//
+//  Purpose:
+//      A General stat widget, can be used for any stat where all I needed to pass was a label and a text value (usually a number but can be string)
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct StatWidget: View {
     
+    // MARK: Stored Properties
+
     var text: String
     var label: Label<Text, Image>
     
+    // MARK: View
+
     var body: some View {
         ZStack {
             VStack {

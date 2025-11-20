@@ -5,6 +5,12 @@
 //  Created by Ben MacIntyre (School) on 2025-10-02.
 //
 
+/*
+ 
+ This file was used from a class example
+ 
+ */
+
 import SwiftUI
 import WebKit
 

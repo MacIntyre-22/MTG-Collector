@@ -3,20 +3,30 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-02.
-//
+//  Purpose:
+//      Displays related cards using the RelatedCardObject
+//  External Types:
+//      RelatedCardObject, Card, CardinfoView, CardgridView, SFAPI
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct InfoRelatedWidget: View {
-    // card part data
+
+    // MARK: Stored Properties
+
     var cardParts: [RelatedCardObject]
     
-    // card objects grab from api using related card ids
-    @State var relatedCards: [Card] = []
+    // MARK: State Properties
     
-    // loads multiple times on appear so I set a check value
+    @State var relatedCards: [Card] = []
     @State private var isLoaded = false
     
+    // MARK: View
+
     var body: some View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
@@ -31,9 +41,8 @@ struct InfoRelatedWidget: View {
                     }
                 }
                 .frame(maxHeight: 275)
-                
             }
-            // only run once
+            /// only run once
             .task {
                 if !isLoaded {
                     await getCardParts()
@@ -48,19 +57,17 @@ struct InfoRelatedWidget: View {
                     .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
             )
         }
-        
     }
     
     
-    // MARK: Get Card Parts
-    // fetch card parts using their api
+    // MARK: getCardParts
+    
+    /// fetch card parts using api
     func getCardParts() async {
         for card in cardParts {
-            
-            // fetch a card object by the id privided in card parts
+            /// fetch a card object by the id privided in card parts
             if let jsonPart = await SFAPI.fetchCardURI(uri: card.uri) {
-                
-                // make a model and add it to related cards array
+                /// convert and add
                 let modelPart = SFAPI.JSONtoModel(json: jsonPart)
                 relatedCards.append(modelPart)
             }

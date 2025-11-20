@@ -3,18 +3,29 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-28.
-//
+//  Purpose:
+//      Displays different prices from a prices object
+//  External Types:
+//      Prices, PriceWidget
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct InfoPriceWidget: View {
+
+    // MARK: Stored Properties
+
     var prices: Prices
     
+    // MARK: View
+
     var body: some View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    // display each price from prices obj
                     if !prices.usd.isEmpty {
                         PriceWidget(finish: "Base", price: prices.usd)
                     }

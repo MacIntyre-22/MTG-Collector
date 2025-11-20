@@ -3,13 +3,19 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-19.
-//
+//  Purpose:
+//      Hard coded app info to display for the user
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct AppInfoWidget: View {
     
-    @State var sheetIsShowing: Bool = false
+    // MARK: Stored Properties
+
     var webURI: URL = URL(string: "https://benmacintyre.net")!
     
     var info: String = """
@@ -18,8 +24,13 @@ struct AppInfoWidget: View {
     Card data and images are provided by the Scryfall API (https://scryfall.com), used under their API terms of service. This app does not claim ownership of any game content and is for personal use only.
     """
     
+    // MARK: State Properties
+
+    @State var sheetIsShowing: Bool = false
+    
+    // MARK: View
+
     var body: some View {
-        // app info
         ZStack {
             VStack(alignment: .leading, spacing: 10) {
                 Label("Information", systemImage: "info.circle")
@@ -28,7 +39,6 @@ struct AppInfoWidget: View {
                 Text(info)
                     .foregroundColor(.gray)
                 
-                // developer info
                 HStack {
                     Text("Developed by ")
                         .foregroundColor(.gray)

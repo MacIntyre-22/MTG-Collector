@@ -3,23 +3,35 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-06.
-//
+//  Purpose:
+//      Displays the notes that belong to the binder
+//  External Types:
+//      Binder
+
+// MARK: Imports
 
 import SwiftUI
 
 struct BinderNotesSheet: View {
-    // environment variables
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) var modelContext
+
+    // MARK: Stored Properties
     
     var binder: Binder
-    
+
+    // MARK: State Properties
+
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
     @State var notes: String
+    
+    // MARK: Initializer
     
     init(binder: Binder) {
         self.binder = binder
         self.notes = binder.notes
     }
+    
+    // MARK: View
 
     var body: some View {
         NavigationStack {
@@ -41,7 +53,6 @@ struct BinderNotesSheet: View {
                 }
             })
             .onDisappear() {
-                // set notes
                 binder.notes = $notes.wrappedValue
             }
         }

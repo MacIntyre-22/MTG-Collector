@@ -3,13 +3,23 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-11.
-//
+//  Purpose:
+//      A widget display for the legality of a deck
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct LegalWidget: View {
+    
+    // MARK: Stored Properties
+
     var isLegal: Bool
     var ruleType: String
+    
+    // MARK: View
     
     var body: some View {
         ZStack {

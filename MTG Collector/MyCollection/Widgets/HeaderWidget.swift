@@ -3,11 +3,18 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-23.
-//
+//  Purpose:
+//      Displays deck information link name, price, and image
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct HeaderWidget: View {
+    
+    // MARK: Stored Properties
     
     var showCover: Bool
     var coverImage: UIImage
@@ -15,8 +22,9 @@ struct HeaderWidget: View {
     var price: Double
     var count: Int
     
+    // MARK: View
+
     var body: some View {
-        // cover image
         if showCover {
             VStack {
                 ZStack(alignment: .center) {

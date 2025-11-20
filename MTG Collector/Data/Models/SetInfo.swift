@@ -3,13 +3,21 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//         Stores info about sets, mainly used for filtering
+
+// MARK: Imports
+
 import Foundation
 import SwiftData
 
-// MARK: Scryfall Set Info
+// MARK: Types
+
 @Model
 class SetInfo {
+    
+    // MARK: Stored Properties
+    
     @Attribute(.unique) var code: String
     var name: String
     var releaseDate: String

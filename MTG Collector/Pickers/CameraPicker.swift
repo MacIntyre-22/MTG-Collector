@@ -5,6 +5,12 @@
 //  Created by Ben MacIntyre (School) on 2025-09-22.
 //
 
+/**
+ 
+ This file is used from a class example
+ 
+ **/
+
 import Foundation
 import PhotosUI
 import SwiftUI

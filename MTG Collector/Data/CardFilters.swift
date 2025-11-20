@@ -3,14 +3,20 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//         Stores query params to build querys for api search
+
+// MARK: Imports
 
 import Foundation
 
+// MARK: Types
 
-// MARK: Card filters
-// sets queries for api
 struct CardFilters {
+    
+    // MARK: Stored Properties
+    
+    ///
     var text: String = ""
     var colors: [String] = []
     var types: [String] = []
@@ -21,8 +27,8 @@ struct CardFilters {
 }
 
 // MARK: Query builder
-// cannect all the queries
-// for types sets and rarities, join using or so users can select multiple
+/// Used to build the proper query based on the populated stored properties
+/// for types sets and rarities; join them using OR so users can select multiple
 func buildQuery(from filters: CardFilters) -> String {
     var parts: [String] = []
     
@@ -50,18 +56,17 @@ func buildQuery(from filters: CardFilters) -> String {
         parts.append("(\(joined))")
     }
     
-    // set lowest and highest based on user input
     if filters.cmcLower < filters.cmcUpper {
-        // if they are properly set then append them to search
+        /// if slidders are properly set then append them to search
         parts.append("cmc>=\(filters.cmcLower)")
         parts.append("cmc<=\(filters.cmcUpper)")
     } else {
-        // if not, set upper to max
+        /// if not, set upper to max
+        /// Prevents errors when upper slider is less than lower slider
         parts.append("cmc>=\(filters.cmcLower)")
         parts.append("cmc<=\(20)")
     }
     
-    // return the query
     return parts.joined(separator: " ")
 }
 

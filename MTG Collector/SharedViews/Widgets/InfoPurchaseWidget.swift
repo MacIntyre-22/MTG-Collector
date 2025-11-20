@@ -3,26 +3,37 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-02.
-//
+//  Purpose:
+//      Displays different links to vendors for the card from a PurchaseURIs object
+//  Externa Types:
+//      PurchaseURIs
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct InfoPurchaseWidget: View {
+    
+    // MARK: Stored Properties
+
     var purchaseURIs: PurchaseURIs
     
-    // bindings to display web kit sheet in info view
+    // MARK: State Properties
+
     @Binding var sheetIsShowing: Bool
     @Binding var webURI: URL
     
+    // MARK: View
+
     var body: some View {
         
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    // display each price from prices obj
                     if let url = URL(string: purchaseURIs.tcgplayer) {
                         Button(action: {
-                            // set sheet value and uri
                             sheetIsShowing = true
                             webURI = url
                         }) {
@@ -41,7 +52,6 @@ struct InfoPurchaseWidget: View {
                     
                     if let url = URL(string: purchaseURIs.cardhoarder) {
                         Button(action: {
-                            // set sheet value and uri
                             sheetIsShowing = true
                             webURI = url
                         }) {
@@ -57,10 +67,8 @@ struct InfoPurchaseWidget: View {
                         
                     }
                     
-                    
                     if let url = URL(string: purchaseURIs.cardmarket) {
                         Button(action: {
-                            // set sheet value and uri
                             sheetIsShowing = true
                             webURI = url
                         }) {

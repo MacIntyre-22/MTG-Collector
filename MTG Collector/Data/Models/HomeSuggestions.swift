@@ -3,11 +3,21 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//         Stores resulta from filtered api calls that are used to dsiplay home screen card suggestions
+//  External Types:
+//         CardJSON
+
+// MARK: Imports
+
 import Foundation
 
-// MARK: Home Suggestions Data
+// MARK: Types
+
 struct HomeSuggestions {
+    
+    // MARK: Stored Properties
+    
     var newCards: [CardJSON] = []
     var popularCards: [CardJSON] = []
     var fullArt: [CardJSON] = []

@@ -3,14 +3,23 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-23.
-//
+//  Purpose:
+//      Displays the price of a collection in a widget style
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct PriceStatWidget: View {
     
+    // MARK: Stored Properties
+
     var price: Double
     
+    // MARK: View
+
     var body: some View {
         ZStack {
             VStack {
@@ -30,5 +39,6 @@ struct PriceStatWidget: View {
                     .fill(.background)
                     .shadow(color: .gray.opacity(0.18), radius: 6, x: 0, y: 0)
             )
-        }    }
+        }
+    }
 }

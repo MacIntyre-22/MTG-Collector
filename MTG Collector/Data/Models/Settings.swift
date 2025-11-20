@@ -3,16 +3,18 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-19.
-//
+//  Purpose:
+//         Stores user data for preferences
+
+// MARK: Imports
 
 import Foundation
 import SwiftData
-import SwiftUICore
+
+// MARK: Types
 
 @Model
 class Settings {
-    
-    // set default settings
     var theme: String = "Orange Theme"
     var onBoarding = true
     

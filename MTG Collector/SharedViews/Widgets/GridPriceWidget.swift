@@ -3,14 +3,24 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-28.
-//
+//  Purpose:
+//      Displays the price and finish passed to it
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct GridPriceWidget: View {
+    
+    // MARK: Stored Properties
+
     var finish: String
     var price: String
     
+    // MARK: View
+
     var body: some View {
         Text("$\(price)")
             .bold()
@@ -20,7 +30,9 @@ struct GridPriceWidget: View {
             .clipShape(RoundedRectangle(cornerRadius: 5))
     }
     
-    // return a gradient based on the finish type
+    // MARK: priceGradient
+    
+    /// return a gradient based on the finish type
     func priceGradient(finish: String) -> LinearGradient {
         switch finish {
         case "Base":

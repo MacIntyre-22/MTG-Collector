@@ -3,15 +3,17 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//         This file stores all datatypes for creating json objects from the api
 
-// MARK: Scryfall Set Data
-// for pulling sets only
+// MARK: Types
+
+/// Holds sets results
 struct ScryfallSetData: Decodable {
     var data: [SetJSON]
 }
 
-// MARK: Set Object Json
+/// Holds one set
 struct SetJSON: Codable {
     var code: String?
     var name: String?
@@ -30,13 +32,12 @@ struct SetJSON: Codable {
     }
 }
 
-// MARK: Scryfall Data
-// for search
+/// Holds cards results
 struct ScryfallCardData: Decodable {
     var data: [CardJSON]
 }
 
-// MARK: Card Object JSON
+/// Holds a single card
 struct CardJSON: Codable, Identifiable {
     var id: String?
     var oracleID: String?
@@ -45,29 +46,29 @@ struct CardJSON: Codable, Identifiable {
     var imageStatus: String?
     var imageURIs: ImageURIsJSON?
 
-    // MANA
+    /// mana
     var manaCost: String?
     var cmc: Double?
     var colors: [String]?
     var colorIdentity: [String]?
     var colorIndicator: [String]?
 
-    // text
+    /// text
     var typeLine: String?
     var oracleText: String?
     var keywords: [String]?
 
-    // stats
+    /// stats
     var toughness: String?
     var power: String?
     var loyalty: String?
     var defense: String?
 
-    // Multi face cards
+    /// multi-faced cards
     var layout: String?
     var cardFaces: [CardFaceJSON]?
 
-    // other
+    /// other values I might use
     var rarity: String?
     var flavorText: String?
     var finishes: [String]?
@@ -118,7 +119,8 @@ struct CardJSON: Codable, Identifiable {
     }
 }
 
-// MARK: Image URIs Object JSON
+// MARK: Types used in CardJSON
+
 struct ImageURIsJSON: Codable {
     var small: String?
     var normal: String?
@@ -134,7 +136,6 @@ struct ImageURIsJSON: Codable {
     }
 }
 
-// MARK: Prices Object JSON
 struct PricesJSON: Codable {
     var usd: String?
     var usdFoil: String?
@@ -147,14 +148,13 @@ struct PricesJSON: Codable {
     }
 }
 
-// MARK: Purchase URIs Object JSON
 struct PurchaseURIsJSON: Codable {
     var tcgplayer: String?
     var cardmarket: String?
     var cardhoarder: String?
 }
 
-// MARK: Card Face Object JSON
+/// mini version of card object if a CardJSON is a multi-faced card
 struct CardFaceJSON: Codable, Identifiable {
     var id: String?
     var oracleID: String?
@@ -162,22 +162,24 @@ struct CardFaceJSON: Codable, Identifiable {
     var layout: String?
     var imageURIs: ImageURIsJSON?
     
-    // text
+    /// text
     var typeLine: String?
     var oracleText: String?
     var keywords: [String]?
     
-    // stats
+    /// stats
     var toughness: String?
     var power: String?
     var loyalty: String?
     var defense: String?
     
-    // MANA
+    /// mana
     var manaCost: String?
-    // mana value
+    
+    /// mana value
     var cmc: Double?
-    // colours
+    
+    /// colours
     var colors: [String]?
     var colorIndicator: [String]?
 
@@ -204,7 +206,6 @@ struct CardFaceJSON: Codable, Identifiable {
     }
 }
 
-// MARK: Related Card Object JSON
 struct RelatedCardObjectJSON: Codable {
     var id: String?
     var name: String?

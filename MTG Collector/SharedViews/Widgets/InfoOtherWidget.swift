@@ -3,16 +3,26 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-28.
-//
+//  Purpose:
+//      Displays misc info given to it
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct InfoOtherWidget: View {
+    
+    // MARK: Stored Properties
+
     var releasedAt: String
     var finishes: [String]
     var set: String
     var reserved: Bool
     
+    // MARK: View
+
     var body: some View {
         ZStack {
             HStack {

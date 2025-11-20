@@ -3,16 +3,22 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+//  Purpose:
+//         The Model for the Cards, converted from CardJSON to this Model to be saved locally
+
+// MARK: Imports
+
 import Foundation
 import SwiftUI
 import SwiftData
 
-// All Models have a default value that is empty of their type, no nil values
+// MARK: Types
 
-// MARK: Card Model
 @Model
 class Card {
+    
+    // MARK: Stored Properties
+    
     var id: String
     var oracleID: String
     var name: String
@@ -20,29 +26,29 @@ class Card {
     var imageStatus: String
     var imageURIs: ImageURIs
     
-    // MANA
+    /// mana
     var manaCost: String
     var cmc: Double
     var colors: [String]
     var colorIdentity: [String]
     var colorIndicator: [String]
     
-    // text
+    /// text
     var typeLine: String
     var oracleText: String
     var keywords: [String]
     
-    // stats
+    /// stats
     var toughness: String
     var power: String
     var loyalty: String
     var defense: String
     
-    // Muli face cards
+    /// muli face cards
     var layout: String
     var cardFaces: [CardFace]
     
-    // other
+    /// other
     var rarity: String
     var flavorText: String
     var finishes: [String]
@@ -117,7 +123,8 @@ class Card {
     }
 }
 
-// MARK: Related Card Model
+// MARK: Types used in Card
+
 @Model
 class RelatedCardObject {
     var id: String
@@ -131,7 +138,6 @@ class RelatedCardObject {
     }
 }
 
-// MARK: Image URIs Model
 @Model
 class ImageURIs {
     var small: String
@@ -151,7 +157,6 @@ class ImageURIs {
     }
 }
 
-// MARK: Card Face Object
 @Model
 class CardFace {
     var id: String = UUID().uuidString
@@ -160,22 +165,24 @@ class CardFace {
     var layout: String
     var imageURIs: ImageURIs
     
-    // text
+    /// text
     var typeLine: String
     var oracleText: String
     var keywords: [String]
     
-    // stats
+    /// stats
     var toughness: String
     var power: String
     var loyalty: String
     var defense: String
     
-    // MANA
+    /// mana
     var manaCost: String
-    // mana value
+    
+    /// mana value
     var cmc: Double
-    // colours
+    
+    /// colours
     var colors: [String]
     var colorIndicator: [String]
     
@@ -213,7 +220,6 @@ class CardFace {
     }
 }
 
-// MARK: Prices Model
 @Model
 class Prices {
     var usd: String
@@ -227,7 +233,6 @@ class Prices {
     }
 }
 
-// MARK: Purchase URIs Model
 @Model
 class PurchaseURIs {
     var tcgplayer: String

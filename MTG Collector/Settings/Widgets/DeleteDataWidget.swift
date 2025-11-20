@@ -3,21 +3,31 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-19.
+//  Purpose:
+//      Allows the user to delete all of their data and reset account even onboarding
+//  External Types:
 //
+
+// MARK: Imports
 
 import SwiftUI
 import SwiftData
 
+// MARK: Types
+
 struct DeleteDataWidget: View {
-    @Environment(\.modelContext) var modelContext
     
-    // get whole collection
+    // MARK: State Properties
+    
+    @Environment(\.modelContext) var modelContext
+    /// get whole collection
     @Query var binders: [Binder]
     @Query var decks: [Deck]
     @Query var settings: [Settings]
-    
     @State var showAlert: Bool = false
     
+    // MARK: View
+
     var body: some View {
         ZStack {
             Button(role: .destructive) {

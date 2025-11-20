@@ -3,26 +3,32 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-28.
-//
+//  Purpose:
+//      Displays all the legalities for a card
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct InfoLegalWidget: View {
-    var legalities: [String: String]
     
+    // MARK: Stored Properties
+
+    var legalities: [String: String]
     let columns = [
         GridItem(.adaptive(minimum: 200, maximum: 600), spacing: 15),
         GridItem(.adaptive(minimum: 200, maximum: 600), spacing: 15)
     ]
     
+    // MARK: View
+
     var body: some View {
         ZStack {
             LazyVGrid(columns: columns, spacing: 5) {
-                // loop through legalities
                 ForEach(legalities.keys.sorted(), id: \.self) { format in
-                    // get status
                     if let status = legalities[format] {
-                        // display format with color based on status
                         Text("\(format.capitalized)")
                             .lineLimit(1)
                             .frame(maxWidth: 300)
@@ -44,8 +50,9 @@ struct InfoLegalWidget: View {
     }
     
     
-    // MARK: Color
-    // returns a color based on ststus of legality
+    // MARK: color
+    
+    /// returns a color based on status of legality
     func color(for status: String) -> Color {
         switch status {
         case "legal":

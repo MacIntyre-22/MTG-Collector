@@ -3,15 +3,22 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-30.
-//
+//  Purpose:
+//         Handles spotlight indexing
+
+// MARK: Imports
 
 import CoreSpotlight
 import UIKit
 
+// MARK: Types
+
 struct Spotlight{
    
-    // MARK: Spotlight Indexing
-    // index binders and decks
+    // MARK: Spotlight Functions
+    
+    /// Spotlight Indexing
+    /// index binders and decks
     static func indexData(id: String, name: String, image: UIImage?, description: String){
         var attributeSet: CSSearchableItemAttributeSet{
             let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
@@ -35,7 +42,7 @@ struct Spotlight{
         
     }
     
-    // MARK: Handle Spotlight
+    /// MARK: Handle Spotlight
 //    static func handleSpotlight(userActivity: NSUserActivity, index: inout String)  {
 //        guard let searched = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String else {
 //            return

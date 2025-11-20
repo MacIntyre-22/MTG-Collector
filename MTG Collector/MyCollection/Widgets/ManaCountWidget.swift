@@ -3,12 +3,22 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-11.
-//
+//  Purpose:
+//      Displays the mana count of a collection in a widget style
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct ManaCountWidget: View {
+    
+    // MARK: Stored Properties
+
     var manaTypeCount: [String: Int]
+    
+    // MARK: View
     
     var body: some View {
         ZStack {

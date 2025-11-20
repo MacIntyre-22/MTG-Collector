@@ -3,13 +3,25 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-14.
-//
+//  Purpose:
+//      Displays the collections highest priced card in a display
+//  External Types:
+//      CardEntry, CardImageView, GridRarityWidget, GridPriceWidget
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct HighCardWidget: View {
+    
+    // MARK: Stored Properties
+
     var entry: CardEntry
     
+    // MARK: View
+
     var body: some View {
         ZStack {
             VStack(alignment: .center) {
@@ -19,11 +31,7 @@ struct HighCardWidget: View {
                 HStack(spacing: 20) {
                     CardImageView(maxWidth: 100, name: entry.card.name, imageURIs: entry.card.imageURIs)
                     VStack(alignment: .leading) {
-                        
-                        // name
                         Text(entry.card.name)
-                        
-                        // stats
                         // show rarity
                         if !entry.card.rarity.isEmpty {
                             GridRarityWidget(rarity: entry.card.rarity)
@@ -32,15 +40,12 @@ struct HighCardWidget: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
                                 // show price
-                                // display each price from prices obj
                                 if !entry.card.prices.usd.isEmpty {
                                     GridPriceWidget(finish: "Base", price: entry.card.prices.usd)
                                 }
-                                
                                 if !entry.card.prices.usdFoil.isEmpty {
                                     GridPriceWidget(finish: "Foil", price: entry.card.prices.usdFoil)
                                 }
-                                
                                 if !entry.card.prices.usdEtched.isEmpty {
                                     GridPriceWidget(finish: "Etched", price: entry.card.prices.usdEtched)
                                 }

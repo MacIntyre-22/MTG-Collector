@@ -3,31 +3,39 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-21.
-//
+//  Purpose:
+//      Displays a card entry with some preview information and controls
+//  External Types:
+//      CardEntry, CardGridView
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct CardEntryView: View {
+    
+    // MARK: Stored Properties
+
     var entry: CardEntry
-    
-    // on delete alert
-    @State var alertIsShowing: Bool = false
-    
-    // Show previews
     var showPreviews: Bool = true
     var showControls: Bool = false
     
-    // taking closures allows for functionality with different models like binders and decks
+    // MARK: State Properties
+
+    @State var alertIsShowing: Bool = false
+    
+    /// taking closures allows for functionality with different models like binders and decks
     var deleteEntry: (() -> Void)? = nil
     
-    
+    // MARK: View
     
     var body: some View {
         VStack {
             
             ZStack(alignment: .topLeading) {
                 CardGridView(card: entry.card, showPreviews: showPreviews, isFoil: entry.isFoil)
-                
                 if !showControls {
                     VStack {
                         Text("x\(entry.quantity)")
@@ -47,7 +55,6 @@ struct CardEntryView: View {
             if showControls {
                 HStack {
                     Button(action: {
-                        // remove 1 quantity
                         removeCard()
                     }) {
                         Image(systemName: "minus")
@@ -60,14 +67,11 @@ struct CardEntryView: View {
                             .bold()
                     }
                     .padding(.trailing, 10)
-                    
-                    // quantity
                     Text("\(entry.quantity)")
                         .font(.title)
                         .foregroundColor(.primary)
                     
                     Button(action: {
-                        // remove 1 quantity
                         addCard()
                     }) {
                         Image(systemName: "plus")
@@ -79,7 +83,6 @@ struct CardEntryView: View {
                             .bold()
                     }
                     .padding(.leading, 10)
-                    
                 }
                 .padding(10)
             }
@@ -89,7 +92,6 @@ struct CardEntryView: View {
         .alert("Are you sure?", isPresented: $alertIsShowing) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
-                // perform delete
                 if let delete = deleteEntry {
                     delete()
                 }
@@ -97,15 +99,16 @@ struct CardEntryView: View {
         } message: {
             Text("Remove this card from collection?")
         }
-        
-        
     }
     
+    // MARK: Card Controls
+    
+    /// add a quantity to cardentry
     func addCard() {
-        // add 1 to quantity
         entry.quantity += 1
     }
     
+    /// remove 1 from quantity or toggle alert to delete the entry from the collection
     func removeCard() {
         if entry.quantity == 1 {
             alertIsShowing.toggle()

@@ -3,32 +3,22 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-26.
-//
+//  Purpose:
+//      Allows the user to create a new deck instance
+//  External Types:
+//      Deck, ImageManager, CameraPicker, PhotoLibraryPicker, Spotlight
+
+// MARK: Imports
 
 import SwiftUI
 
-struct NewDeckSheet: View {
-    // environment variables
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) var modelContext
-    
-    // data
+// MARK: Types
 
-    // user input for new deck
-    @State var name: String = ""
-    @State var coverImage: String = ""
-    // default to casual, no legalities
-    @State var ruleType: String = "casual"
+struct NewDeckSheet: View {
     
-    @State var selectedImage: UIImage?
+    // MARK: Stored Properties
     
-    // for image
-    @State var showSourceSelection = false
-    @State var photoSource: UIImagePickerController.SourceType = .photoLibrary
-    
-    @State private var showImagePicker = false
-    
-    // list of Scryfall legality types
+    /// list of Scryfall legality types
     let legalities = [
         "standard",
         "modern",
@@ -49,24 +39,34 @@ struct NewDeckSheet: View {
         "penny"
     ]
 
+    // MARK: State Properties
+    
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
+    @State var name: String = ""
+    @State var coverImage: String = ""
+    @State var ruleType: String = "casual"
+    @State var selectedImage: UIImage?
+    @State var showSourceSelection = false
+    @State var photoSource: UIImagePickerController.SourceType = .photoLibrary
+    @State private var showImagePicker = false
+    
+    // MARK: View
+
     var body: some View {
         NavigationStack {
             Form {
-                // deck form
                 Section("Deck Information") {
                     VStack(alignment: .center, spacing: 20) {
                         ZStack(alignment: .center) {
                             Color.gray
                                 .frame(width: 200, height: 200)
                                 .cornerRadius(10)
-                            // if image is nill display default
-                            // i can force because i know it exists
                             Image(uiImage: selectedImage ?? UIImage(named: "MtgDeck")!)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 200, height: 200)
                                 .cornerRadius(10)
-                                
                             
                             Image(systemName: "camera.circle.fill")
                                 .renderingMode(.template)
@@ -81,10 +81,8 @@ struct NewDeckSheet: View {
                         TextField("Name", text: $name)
                             .multilineTextAlignment(.center)
                         
-                        // select rule type from array of legalities
                         Picker("Rule Type", selection: $ruleType) {
                             ForEach(legalities, id: \.self) { legality in
-                                // capitalize for display
                                 Text(legality.capitalized)
                                     .tag(legality)
                             }
@@ -101,7 +99,6 @@ struct NewDeckSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Create") {
-                        // save deck
                         saveDeck()
                     }
                     .disabled(name.isEmpty)
@@ -123,7 +120,6 @@ struct NewDeckSheet: View {
                     CameraPicker(image: $selectedImage)
                         .ignoresSafeArea()
                 } else {
-                    //load the photopicker
                     PhotoLibraryPicker(image: $selectedImage)
                 }
             }
@@ -132,19 +128,13 @@ struct NewDeckSheet: View {
 
     // MARK: saveDeck
     private func saveDeck() {
-        // make a deck model instance
         let deck = Deck(name: name, notes: "", ruleType: ruleType)
         
-        // save image
         if let image = selectedImage {
             ImageManager.saveImage(forImage: image, withIdentifier: deck.id)
         }
         
-        // index into spotlight search
         Spotlight.indexData(id: deck.id, name: deck.name, image: ImageManager.fetchImage(withIdentifier: deck.id), description: "Deck in your collection.")
-        
-        
-        // save and dismiss
         modelContext.insert(deck)
         dismiss()
     }

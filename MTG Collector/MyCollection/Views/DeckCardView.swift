@@ -3,16 +3,25 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-09.
-//
+//  Purpose:
+//      Displays cards for a deck view. Using CardEntry it enables controls for the deck the card is in.
+//  External Types:
+//      Deck, CardEntry, CardInfoView
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct DeckCardView: View {
+    
+    // MARK: Stored Properties
+    
     var deck: Deck
     var entry: CardEntry
     var deleteEntry: () -> Void
-    
-    // comp
+    /// comp the legal status for the card
     var legalStatus: Int {
         var status = 0
         for legality in entry.card.legalities {
@@ -34,11 +43,10 @@ struct DeckCardView: View {
         return status
     }
     
+    // MARK: View
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            
-            // card nav link
             NavigationLink(destination: CardInfoView(card: entry.card)){
                 CardEntryView(
                     entry: entry,
@@ -48,20 +56,16 @@ struct DeckCardView: View {
                 )
             }
             
-            
             if deck.showControls {
-                // controls
                 VStack {
                     Menu {
+                        /// Controls
                         Button("Toggle Foil") {
                             entry.isFoil.toggle()
                         }
-                        
                         Button("Make Commander") {
                             deck.commander = entry
                         }
-                        
-                        // move controls
                         Button("Mainboard") {
                             mvtoMain(entry: entry)
                         }
@@ -71,7 +75,6 @@ struct DeckCardView: View {
                         Button("Maybeboard") {
                             mvtoMaybeboard(entry: entry)
                         }
-                        
                         Button("Delete", role: .destructive) {
                             deleteEntry()
                         }
@@ -87,25 +90,25 @@ struct DeckCardView: View {
                     }
                     .padding(5)
                     
-                    // display if it is legal
+                    /// Show legal status if not legal
                     if legalStatus > 1 {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 30, height: 30)
+                        /// different status diff colours
                             .foregroundColor(((legalStatus%4) == 0) ? .orange : .red )
                             .bold()
                             .shadow(radius: 4)
                     }
-                    
                 }
                 .padding(.top, 30)
             }
         }
     }
     
+    // MARK: Board Moving Functions
     
-    // MARK: Board moving
     func removeAll(entry: CardEntry) {
         deck.mainboard.removeAll { $0.id == entry.id }
         deck.sideboard.removeAll { $0.id == entry.id }
@@ -114,24 +117,16 @@ struct DeckCardView: View {
     
     func mvtoMain(entry: CardEntry) {
         removeAll(entry: entry)
-        
-        // add to main
         deck.mainboard.append(entry)
     }
     
     func mvtoSideboard(entry: CardEntry) {
         removeAll(entry: entry)
-        
-        // add to sideboard
         deck.sideboard.append(entry)
-
     }
     
     func mvtoMaybeboard(entry: CardEntry) {
         removeAll(entry: entry)
-        
-        // add to maybeboard
         deck.maybeboard.append(entry)
-
     }
 }

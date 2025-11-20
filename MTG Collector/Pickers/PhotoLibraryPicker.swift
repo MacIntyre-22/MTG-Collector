@@ -5,12 +5,11 @@
 //  Created by Ben MacIntyre (School) on 2025-09-22.
 //
 
-//
-//  PhotoLibraryPicker.swift
-//  cameraExample
-//
-//  Created by Darren Takaki on 2025-07-28.
-//
+/**
+ 
+ This file is used from a class example
+ 
+ **/
 
 import Foundation
 import SwiftUI

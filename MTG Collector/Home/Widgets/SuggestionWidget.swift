@@ -3,40 +3,44 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-18.
-//
+//  Purpose:
+//      Displays an array of cards based on hard coded filters
+//  External types:
+//      CardJSON, SFAPI, CardInfoView, CardGridView, SuggestionView
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct SuggestionWidget: View {
     
-    //
+    // MARK: Stored Properties
+    
     var systemImage: String
     var title: String
     var description: String
     var collection: [CardJSON]
+    var shuffle: () -> Void
+    
+    // MARK: State Properties
     
     @State var rotation: Double = 0
     
-    // get a shuffle function from parent
-    var shuffle: () -> Void
+    // MARK: View
     
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
                 HStack {
-                    // title
                     Label(title, systemImage: systemImage)
                         .font(.title2)
                         .bold()
                     Spacer()
                     Button {
-                        
-                        // spin button
                         rotation += 360
-                        
-                        // reshuffle the collection
                         shuffle()
-                        
                     } label: {
                         Image(systemName: "arrow.trianglehead.2.clockwise")
                             .renderingMode(.template)
@@ -49,19 +53,13 @@ struct SuggestionWidget: View {
                 .padding(.horizontal, 15)
                 .padding(.top, 20)
 
-                
-                
-                // display models
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         Spacer()
-                        // cards preview
                         if collection.count >= 10 {
                             ForEach(0..<10) { i in
-                                // take index from collectioin in
-                                // dont want to show all the cards
-                                
-                                // get card data types
+                                /// take index from collectioin in
+                                /// dont want to show all the cards
                                 let cardJson = collection[i]
                                 let cardModel = SFAPI.JSONtoModel(json: cardJson)
                                 
@@ -73,16 +71,11 @@ struct SuggestionWidget: View {
                                 }
                             }
                         }
-                        
-                        // view all card
-                        // todo
                     }
                 }
                 .padding(.bottom, 20)
                 .padding(.horizontal, 10)
                 
-                
-                // info and view all
                 ZStack {
                     Color(red: 20/255, green: 20/255, blue: 20/255)
                     HStack {
@@ -92,7 +85,6 @@ struct SuggestionWidget: View {
                             .italic()
                             .lineLimit(1)
                         Spacer()
-                        // view all
                         NavigationLink(destination: SuggestionView(systemImage: systemImage, title: title, description: description, collection: collection)) {
                             Text("View All")
                                 .foregroundColor(.white)

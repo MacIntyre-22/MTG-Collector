@@ -3,27 +3,33 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-21.
-//
+//  Purpose:
+//      The Home page for my app that displays multiple widgets with suggested cards pulled from the api
+//  External Types:
+//      SetInfo, HomeSuggestions, SuggestionWidget, SFAPI, SetJSON, SetInfo
+
+// MARK: Imports
 
 import SwiftUI
 import SwiftData
 
+// MARK: Types
+
 struct HomeTabView: View {
-    // env
-    // to grab sets, updates for any new sets
+    
+    // MARK: State Properties
+    
     @Environment(\.modelContext) var modelContext
     @Query var setList: [SetInfo]
     @State var isLoaded: Bool = false
-    
-    // home suggestions
     @State var homeSuggestions: HomeSuggestions = HomeSuggestions()
+    
+    // MARK: View
     
     var body: some View {
         NavigationStack {
             ScrollView(.vertical, showsIndicators: false) {
-                
                 VStack(alignment: .center) {
-                    // logo
                     HStack(alignment: .center) {
                         Image("MtgBinder")
                             .renderingMode(.template)
@@ -52,18 +58,15 @@ struct HomeTabView: View {
                     SuggestionWidget(systemImage: "paintbrush.pointed", title: "Full Art", description: "Full art and borderless cards", collection: homeSuggestions.fullArt) {homeSuggestions.fullArt = homeSuggestions.fullArt.shuffled()}
                     
                     SuggestionWidget(systemImage: "hourglass", title: "Old School", description: "Classic cards with 93 and 97 border", collection: homeSuggestions.oldSchool) {homeSuggestions.oldSchool = homeSuggestions.oldSchool.shuffled()}
-                    
-                    
                 }
                 .padding(.horizontal, 10)
             }
         }
         .task {
-            // grab set data and home suggestion cards
-            // load once
+            /// grab set data and home suggestion cards
+            /// load once
             if !isLoaded {
                 
-                // grab card suggestions
                 homeSuggestions.newCards = await SFAPI.fetchCardQuery(query: "(is:rare+or+is:mythic)+game:paper+-t:token&order=released&dir=desc")
                 homeSuggestions.popularCards = await SFAPI.fetchCardQuery(query: "game:paper+-t:land+-t:token&order=edhrec&dir=asc")
                 homeSuggestions.fullArt = await SFAPI.fetchCardQuery(query: "(is:fullart+or+is:borderless+or+is:showcase)+game:paper&order=released&dir=desc")
@@ -71,19 +74,14 @@ struct HomeTabView: View {
                 homeSuggestions.expensive = await SFAPI.fetchCardQuery(query: "(is:mythic+or+is:promo)+game:paper&order=usd&dir=desc")
                 homeSuggestions.budget = await SFAPI.fetchCardQuery(query: "usd<=5+order:edhrec&dir=asc")
                 
-                // load set data
                 let tempSets: [SetJSON] = await SFAPI.fetchSetData()
                 for set in tempSets {
                     
-                    // convert and insert
                     let tempSet: SetInfo = SFAPI.setToModel(json: set)
                     if !setList.contains(where: { $0.code == tempSet.code }) {
-                        // insert
                         modelContext.insert(tempSet)
                     }
                 }
-                
-                // toggle loaded
                 isLoaded.toggle()
             }
         }

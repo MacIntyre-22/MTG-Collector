@@ -3,14 +3,25 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-10-30.
-//
+//  Purpose:
+//      Displays the info for an onboarding page view
+//  External Types:
+//      PageInfo
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct OnBoardPageView: View {
     
+    // MARK: Stored Properties
+
     var pageInfo: PageInfo
     
+    // MARK: View
+
     var body: some View {
         VStack (alignment: .center, spacing: 20){
             Image(systemName: pageInfo.image)
@@ -18,7 +29,6 @@ struct OnBoardPageView: View {
                 .scaledToFit()
                 .frame(width: 100, height: 100)
                 .foregroundColor(.primary)
-                
             Text(pageInfo.title)
                 .bold()
                 .font(.title)

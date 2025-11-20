@@ -3,36 +3,47 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-25.
-//
+// Purpose:
+//     Used to display all binder information and cards
+// External Types:
+//      Deck, ImageManager, HeaderWidget, CommanderWidget, MainboardView, SideboardView, MaybeboardView, DeckStatSheet, EditDeckSheet, DeckNotesSheet
+
+// MARK: Imports
 
 import SwiftUI
 
+// MARK: Types
+
 struct DeckView: View {
-    @Environment(\.modelContext) var modelContext
+    
+    // MARK: Stored Properties
+    
     var deck: Deck
     var coverImage: UIImage
-
     
+    // MARK: State Properties
+
+    @Environment(\.modelContext) var modelContext
     @State var showEdit: Bool = false
     @State var showNotes: Bool = false
     @State var showStats: Bool = false
     @State var selectedBoard: Int = 0
+    
+    // MARK: Initializer
     
     init(deck: Deck) {
         self.deck = deck
         self.coverImage = ImageManager.fetchImage(withIdentifier: deck.id) ?? UIImage(named: "MtgDeck")!
     }
     
+    // MARK: View
+    
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack {
-                    
-                    //header
                     HeaderWidget(showCover: deck.showCover, coverImage: coverImage, name: deck.name, price: deck.totalPrice, count: deck.cardCount)
                     
-    
-                    // display commander card
                     if let commander = deck.commander {
                         CommanderWidget(entry: commander) {
                             // remove commander
@@ -40,9 +51,6 @@ struct DeckView: View {
                         }
                         .padding()
                     }
-        
-                            
-                    
                     switch selectedBoard {
                     case 0: MainboardView(deck: deck)
                     case 1: SideboardView(deck: deck)
@@ -51,7 +59,6 @@ struct DeckView: View {
                     }
                 }
             }
-
         }
         .toolbar(content: {
             

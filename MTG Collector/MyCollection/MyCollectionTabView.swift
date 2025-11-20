@@ -3,22 +3,30 @@
 //  MTG Collector
 //
 //  Created by Ben MacIntyre (School) on 2025-09-21.
-//
+//  Purpose:
+//      The Tab view for a users collection, displays all binders and links the user to all decks in another page
+//  External Types:
+//      Binder, AllDecksView, AllDecksLinkWidget, BinderLinkWidget, BinderView, EditBinderSheet
+
+// MARK: Imports
 
 import SwiftUI
 import SwiftData
 
+// MARK: Types
+
 struct MyCollectionTabView: View {
+    
+    // MARK: State Properties
+
     @Environment(\.modelContext) var modelContext
-    // sorted binders
     @Query(sort: \Binder.editedAt, order: .reverse) var binders: [Binder]
     @State var newBinder: Bool = false
     @State var editBinder: Bool = false
-    
     @State var showAlert: Bool = false
     @State var selectedBinder: Binder?
     
-    
+    // MARK: View
     
     var body: some View {
         NavigationStack {
@@ -75,6 +83,8 @@ struct MyCollectionTabView: View {
         }
     }
     
+    // MARK: deleteBinder
+    
     func deleteBinder() {
         let tempBinder: Binder? = selectedBinder.unsafelyUnwrapped
         
@@ -84,6 +94,3 @@ struct MyCollectionTabView: View {
     }
 }
 
-#Preview {
-    MyCollectionTabView()
-}
