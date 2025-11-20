@@ -103,8 +103,8 @@ class Binder {
         var counts: [String: Int] = [:]
         
         for entry in cards {
-            /// Parse the first part of the typeline, separated by the "-"
-            let mainType = entry.card.typeLine.components(separatedBy: "-")[0].trimmingCharacters(in: .whitespaces)
+            /// get the main type by splitting the type line by "-"
+            let mainType = entry.card.typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
             counts[mainType, default: 0] += entry.quantity
         }
         return counts
