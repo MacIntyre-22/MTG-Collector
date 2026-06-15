@@ -27,6 +27,7 @@ struct DeckView: View {
     @State var showEdit: Bool = false
     @State var showNotes: Bool = false
     @State var showStats: Bool = false
+    @State var showExport: Bool = false
     @State var selectedBoard: Int = 0
     
     // MARK: Initializer
@@ -81,6 +82,9 @@ struct DeckView: View {
                     Button("Notes", systemImage: "note.text"){
                         showNotes.toggle()
                     }
+                    Button("Export", systemImage: "square.and.arrow.up"){
+                        showExport.toggle()
+                    }
                     Button("Settings", systemImage: "gearshape"){
                         showEdit.toggle()
                     }
@@ -91,6 +95,9 @@ struct DeckView: View {
         })
         .sheet(isPresented: $showStats) {
             DeckStatsSheet(deck: deck)
+        }
+        .sheet(isPresented: $showExport) {
+            CollectionExportSheet(deck: deck, entries: deck.mainboard, title: deck.name)
         }
         .sheet(isPresented: $showEdit) {
             EditDeckSheet(deck: deck)

@@ -28,6 +28,7 @@ struct BinderView: View {
     @State var showNotes: Bool = false
     @State var showEdit: Bool = false
     @State var showStats: Bool = false
+    @State var showExport: Bool = false
     
     // MARK: Initializer
     
@@ -64,6 +65,9 @@ struct BinderView: View {
                         Button("Notes", systemImage: "note.text"){
                             showNotes.toggle()
                         }
+                        Button("Export", systemImage: "square.and.arrow.up"){
+                            showExport.toggle()
+                        }
                         Button("Settings", systemImage: "gearshape"){
                             showEdit.toggle()
                         }
@@ -74,6 +78,9 @@ struct BinderView: View {
             })
             .sheet(isPresented: $showStats) {
                 BinderStatsSheet(binder: binder)
+            }
+            .sheet(isPresented: $showExport) {
+                CollectionExportSheet(deck: nil, entries: binder.cards, title: binder.name)
             }
             .sheet(isPresented: $showEdit) {
                 EditBinderSheet(binder: binder)
