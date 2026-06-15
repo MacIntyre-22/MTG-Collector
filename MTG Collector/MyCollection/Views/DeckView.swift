@@ -27,6 +27,7 @@ struct DeckView: View {
     @State var showEdit: Bool = false
     @State var showNotes: Bool = false
     @State var showStats: Bool = false
+    @State var showSuggestions: Bool = false
     @State var selectedBoard: Int = 0
     
     // MARK: Initializer
@@ -78,6 +79,9 @@ struct DeckView: View {
                     Button("Stats", systemImage: "chart.bar"){
                         showStats.toggle()
                     }
+                    Button("Suggestions", systemImage: "wand.and.stars"){
+                        showSuggestions.toggle()
+                    }
                     Button("Notes", systemImage: "note.text"){
                         showNotes.toggle()
                     }
@@ -91,6 +95,9 @@ struct DeckView: View {
         })
         .sheet(isPresented: $showStats) {
             DeckStatsSheet(deck: deck)
+        }
+        .sheet(isPresented: $showSuggestions) {
+            DeckSuggestionsSheet(deck: deck)
         }
         .sheet(isPresented: $showEdit) {
             EditDeckSheet(deck: deck)
