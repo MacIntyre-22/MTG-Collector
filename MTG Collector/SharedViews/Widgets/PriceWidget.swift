@@ -20,7 +20,8 @@ struct PriceWidget: View {
 
     var finish: String
     var price: String
-    
+    var symbol: String = "$"
+
     // MARK: View
 
     var body: some View {
@@ -32,10 +33,10 @@ struct PriceWidget: View {
                 .padding(5)
                 .background(priceGradient(finish: finish))
                 .cornerRadius(5)
-            
+
             Spacer()
-            
-            Text("$\(price)")
+
+            Text("\(symbol)\(price)")
                 .frame(width: 80, alignment: .trailing)
                 .bold()
                 .foregroundColor(.green)

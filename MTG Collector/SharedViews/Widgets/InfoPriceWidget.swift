@@ -29,13 +29,26 @@ struct InfoPriceWidget: View {
                     if !prices.usd.isEmpty {
                         PriceWidget(finish: "Base", price: prices.usd)
                     }
-                    
+
                     if !prices.usdFoil.isEmpty {
                         PriceWidget(finish: "Foil", price: prices.usdFoil)
                     }
-                    
+
                     if !prices.usdEtched.isEmpty {
                         PriceWidget(finish: "Etched", price: prices.usdEtched)
+                    }
+
+                    // EUR (Cardmarket) + MTGO tix
+                    if !prices.eur.isEmpty {
+                        PriceWidget(finish: "EUR", price: prices.eur, symbol: "€")
+                    }
+
+                    if !prices.eurFoil.isEmpty {
+                        PriceWidget(finish: "EUR Foil", price: prices.eurFoil, symbol: "€")
+                    }
+
+                    if !prices.tix.isEmpty {
+                        PriceWidget(finish: "Tix", price: prices.tix, symbol: "")
                     }
                 }
             }

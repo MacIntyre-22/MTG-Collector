@@ -41,11 +41,11 @@ struct CardInfoView: View {
                                 if !card.cardFaces.isEmpty {
                                     
                                     ForEach(card.cardFaces) { face in
-                                        InfoDisplayWidget(name: face.name, typeLine: face.typeLine, colorIdentity: card.colorIdentity, oracleText: face.oracleText)
+                                        InfoDisplayWidget(name: face.name, typeLine: face.typeLine, colorIdentity: card.colorIdentity, oracleText: face.oracleText, producedMana: face.producedMana, flavorText: face.flavorText)
                                             .padding(.bottom, 10)
                                     }
                                 } else {
-                                    InfoDisplayWidget(typeLine: card.typeLine, colorIdentity: card.colorIdentity, oracleText: card.oracleText)
+                                    InfoDisplayWidget(typeLine: card.typeLine, colorIdentity: card.colorIdentity, oracleText: card.oracleText, producedMana: card.producedMana, flavorText: card.flavorText)
                                 }
                                 
                                 SetIconWidget(set: card.set, rarity: card.rarity, maxWidth: 50)
@@ -76,7 +76,7 @@ struct CardInfoView: View {
                         }
                         
                         /// Additional info here
-                        InfoOtherWidget(releasedAt: card.releasedAt, finishes: card.finishes, set: card.set, reserved: card.reserved)
+                        InfoOtherWidget(releasedAt: card.releasedAt, finishes: card.finishes, set: card.set, setName: card.setName, artist: card.artist, collectorNumber: card.collectorNumber, edhrecRank: card.edhrecRank, reserved: card.reserved)
                         
                     }
                     .padding(.horizontal, 10)

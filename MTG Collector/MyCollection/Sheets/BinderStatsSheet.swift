@@ -37,10 +37,17 @@ struct BinderStatsSheet: View {
                     }
                     .padding(.bottom, 20)
 
+                    // Other currencies (EUR / MTGO tix) when available
+                    OtherCurrencyWidget(eur: binder.stats?.totalPriceEUR ?? 0, tix: binder.stats?.totalPriceTix ?? 0)
+                        .padding(.bottom, 10)
+
                     if !binder.highestPricedCardID.isEmpty {
                         HighCardWidget(cardID: binder.highestPricedCardID)
                             .padding(.bottom, 10)
                     }
+
+                    RarityCountWidget(rarities: binder.rarities)
+                        .padding(.bottom, 10)
 
                     ManaCountWidget(manaTypeCount: binder.manaTypeCount)
                         .padding(.bottom, 10)

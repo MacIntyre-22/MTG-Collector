@@ -48,10 +48,17 @@ struct DeckStatsSheet: View {
                         PriceStatWidget(price: deck.totalPrice)
                     }
                     .padding(.bottom, 10)
-                    
+
+                    // Other currencies (EUR / MTGO tix) when available
+                    OtherCurrencyWidget(eur: deck.stats?.totalPriceEUR ?? 0, tix: deck.stats?.totalPriceTix ?? 0)
+                        .padding(.bottom, 10)
+
+                    RarityCountWidget(rarities: deck.stats?.rarityBreakdown ?? [:])
+                        .padding(.bottom, 10)
+
                     ManaCountWidget(manaTypeCount: deck.manaTypeCount)
                         .padding(.bottom, 10)
-                    
+
                     TypeCountWidget(cardTypeCount: deck.cardTypeCount)
                         .padding(.bottom, 10)
                 }
