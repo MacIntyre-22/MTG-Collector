@@ -55,6 +55,8 @@ struct DeleteDataWidget: View {
             }
             
             Button(role: .destructive) {
+                // remove everything from Spotlight
+                Spotlight.deindexAll()
                 // delete all collection data
                 for binder in binders {
                     modelContext.delete(binder)

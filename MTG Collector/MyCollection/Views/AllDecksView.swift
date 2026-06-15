@@ -80,6 +80,7 @@ struct AllDecksView: View {
     // MARK: deleteDeck
     func deleteDeck() {
         if let deck = selectedDeck {
+            Spotlight.deindex(id: deck.id)
             modelContext.delete(deck)
         }
     }

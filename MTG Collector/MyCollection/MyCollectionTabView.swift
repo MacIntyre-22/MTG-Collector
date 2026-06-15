@@ -87,6 +87,7 @@ struct MyCollectionTabView: View {
     
     func deleteBinder() {
         if let binder = selectedBinder {
+            Spotlight.deindex(id: binder.id)
             modelContext.delete(binder)
         }
     }

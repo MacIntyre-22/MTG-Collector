@@ -131,6 +131,8 @@ struct EditDeckSheet: View {
                 deck.showPreviews = $showPreviews.wrappedValue
                 deck.showControls = $showControls.wrappedValue
                 deck.showCover = $showCover.wrappedValue
+                // keep Spotlight in sync with the (possibly renamed) deck
+                Spotlight.indexData(id: deck.id, name: deck.name, image: ImageManager.fetchImage(withIdentifier: deck.id), description: "Deck in your collection.")
             }
             .confirmationDialog("Select Source",isPresented: $showSourceSelection, actions:{
                 Button("Camera"){

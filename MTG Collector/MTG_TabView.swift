@@ -12,15 +12,18 @@
 
 import SwiftUI
 import SwiftData
+import CoreSpotlight
 
 // MARK: Types
 
 struct MTG_TabView: View {
-    
+
     // MARK: State Properties
-    
+
     @Environment(\.modelContext) var modelContext
     @Query var settingsQuery: [Settings]
+    @StateObject private var spotlightRouter = SpotlightRouter()
+    @State private var selectedTab: Int = 0
     
     // MARK: Computed Properties
     
@@ -42,32 +45,44 @@ struct MTG_TabView: View {
 
     var body: some View {
         ZStack {
-            TabView {
+            TabView(selection: $selectedTab) {
                 HomeTabView()
+                    .tag(0)
                     .tabItem({
                         Label("Home", systemImage: "house")
                     })
                 SearchTabView()
+                    .tag(1)
                     .tabItem({
                         Image(systemName: "magnifyingglass")
                         Text("Search")
                     })
-                
+
                 MyCollectionTabView()
+                    .tag(2)
                     .tabItem({
                         Image("MtgBinderIcon")
                             .renderingMode(.template)
                             .scaledToFit()
                         Text("My Collection")
                     })
-                
+
                 SettingsTabView(settings: settings)
+                    .tag(3)
                     .tabItem({
                         Image(systemName: "gearshape")
                         Text("Settings")
                     })
             }
             .tint(Color(settings.theme))
+            .environmentObject(spotlightRouter)
+            .onContinueUserActivity(CSSearchableItemActionType) { activity in
+                if let id = Spotlight.identifier(from: activity) {
+                    spotlightRouter.openID = id
+                    // jump to My Collection; pushing the exact item is wired in Phase 4 nav rework
+                    selectedTab = 2
+                }
+            }
             
             if settings.onBoarding {
                 OnBoardingView() {

@@ -100,6 +100,8 @@ struct EditBinderSheet: View {
                 binder.showPreviews = $showPreviews.wrappedValue
                 binder.showControls = $showControls.wrappedValue
                 binder.showCover = $showCover.wrappedValue
+                // keep Spotlight in sync with the (possibly renamed) binder
+                Spotlight.indexData(id: binder.id, name: binder.name, image: ImageManager.fetchImage(withIdentifier: binder.id), description: "Binder in your collection.")
             }
             .confirmationDialog("Select Source",isPresented: $showSourceSelection, actions:{
                 Button("Camera"){
