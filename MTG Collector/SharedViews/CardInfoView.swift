@@ -77,7 +77,10 @@ struct CardInfoView: View {
                         
                         /// Additional info here
                         InfoOtherWidget(releasedAt: card.releasedAt, finishes: card.finishes, set: card.set, reserved: card.reserved)
-                        
+
+                        /// External links (Scryfall, EDHREC, Gatherer, vendors, …)
+                        ExternalResourcesWidget(context: .card(card))
+
                     }
                     .padding(.horizontal, 10)
                     
