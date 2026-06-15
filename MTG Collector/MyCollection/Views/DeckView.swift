@@ -59,6 +59,9 @@ struct DeckView: View {
                     }
                 }
             }
+            .task {
+                StatsUpdater.update(deck, context: modelContext)
+            }
         }
         .toolbar(content: {
             

@@ -45,9 +45,15 @@ struct BinderView: View {
                 
                 LazyVGrid(columns: cardColumns) {
                     ForEach(binder.cards.sorted(by: { $0.dateAdded > $1.dateAdded})) { entry in
-                        BinderCardView(entry: entry, deleteEntry: {binder.cards.removeAll(where: { $0.id == entry.id }) }, showPreviews: binder.showPreviews, showControls: binder.showControls)
+                        BinderCardView(entry: entry, deleteEntry: {
+                            binder.cards.removeAll(where: { $0.id == entry.id })
+                            StatsUpdater.update(binder, context: modelContext)
+                        }, showPreviews: binder.showPreviews, showControls: binder.showControls)
                     }
                 }
+            }
+            .task {
+                StatsUpdater.update(binder, context: modelContext)
             }
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {

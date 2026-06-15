@@ -11,17 +11,22 @@
 // MARK: Imports
 
 import SwiftUI
+import SwiftData
 
 // MARK: Types
 
 struct DeckStatsSheet: View {
-    
+
     // MARK: Stored Properties
-    
+
     var deck: Deck
-    
+
+    // MARK: State Properties
+
+    @Environment(\.modelContext) private var modelContext
+
     // MARK: View
-    
+
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
@@ -53,6 +58,9 @@ struct DeckStatsSheet: View {
                 .padding()
             }
             .navigationTitle("Statistics")
+            .task {
+                StatsUpdater.update(deck, context: modelContext)
+            }
         }
     }
 }

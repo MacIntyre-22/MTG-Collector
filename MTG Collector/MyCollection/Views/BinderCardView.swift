@@ -1,52 +1,65 @@
-﻿//
+//
 //  BinderCardView.swift
 //  MTG Collector
 //
 //  Created by Ben MacIntyre on 2025-10-09.
 //  Purpose:
-//      The view used to display cards in the binder view. Using the CardEntryView, it gives the user control over the card
+//      The view used to display cards in the binder view. Resolves the entry's card data via
+//      CardStore, then hands it to CardEntryView and the CardInfoView destination.
 //  External Types:
-//      CardEntry, CardInfoView
+//      CardEntry, Card, CardStore, CardInfoView, CardEntryView
 
 // MARK: Imports
 
 import SwiftUI
+import SwiftData
 
 // MARK: Types
 
 struct BinderCardView: View {
-    
+
     // MARK: Stored Properties
-    
+
     var entry: CardEntry
     var deleteEntry: () -> Void
     var showPreviews: Bool
     var showControls: Bool
-    
+
+    // MARK: State Properties
+
+    @Environment(\.modelContext) private var modelContext
+    @State private var card: Card?
+
     // MARK: View
-    
+
     var body: some View {
         ZStack(alignment: .topLeading) {
-            NavigationLink(destination: CardInfoView(card: entry.card)){
+            NavigationLink {
+                if let card {
+                    CardInfoView(card: card)
+                }
+            } label: {
                 CardEntryView(
                     entry: entry,
+                    card: card,
                     showPreviews: showPreviews,
                     showControls: showControls,
-                    deleteEntry: {deleteEntry()},
+                    deleteEntry: { deleteEntry() }
                 )
             }
-            
+
             if showControls {
                 VStack {
                     Menu {
                         Button("Toggle Foil") {
                             entry.isFoil.toggle()
+                            entry.updatedAt = Date()
                         }
-                        
+
                         Button("Delete", role: .destructive) {
                             deleteEntry()
                         }
-                        
+
                     } label: {
                         Image(systemName: "pencil.line")
                             .foregroundColor(.white)
@@ -61,6 +74,10 @@ struct BinderCardView: View {
                 .padding(.top, 30)
             }
         }
+        .task {
+            if card == nil {
+                card = await CardStore.resolve(entry.scryfallCardID, context: modelContext)
+            }
+        }
     }
 }
-

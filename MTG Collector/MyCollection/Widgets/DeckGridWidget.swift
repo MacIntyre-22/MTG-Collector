@@ -11,17 +11,23 @@
 // MARK: Imports
 
 import SwiftUI
+import SwiftData
 
 // MARK: Types
 
 struct DeckGridWidget: View {
-    
+
     // MARK: Stored Properties
 
     var deck: Deck
-    
+
+    // MARK: State Properties
+
+    @Environment(\.modelContext) private var modelContext
+    @State private var commanderColors: [String] = []
+
     // MARK: View
-    
+
     var body: some View {
         VStack(alignment: .center) {
             ZStack(alignment: .topLeading) {
@@ -59,14 +65,12 @@ struct DeckGridWidget: View {
                     }
                     Spacer()
                     HStack {
-                        // Multi-face card
-                        if let commander = deck.commander {
-                            ForEach(commander.card.colors, id: \.self) { color in
-                                Image(color)
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .shadow(radius: 4)
-                            }
+                        // Commander colour identity (resolved from cache)
+                        ForEach(commanderColors, id: \.self) { color in
+                            Image(color)
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .shadow(radius: 4)
                         }
                     }
                 }
@@ -95,6 +99,11 @@ struct DeckGridWidget: View {
         .padding(10)
         .background(Color.gray.opacity(0.18))
         .cornerRadius(10)
+        .task {
+            if let commander = deck.commander, commanderColors.isEmpty {
+                commanderColors = await CardStore.resolve(commander.scryfallCardID, context: modelContext)?.colors ?? []
+            }
+        }
     }
 }
 

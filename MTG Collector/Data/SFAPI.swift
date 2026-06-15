@@ -99,7 +99,27 @@ struct SFAPI {
             return []
         }
     }
-    
+
+    /// Bulk card lookup via /cards/collection (POST). Accepts up to 75 identifiers per call.
+    /// Used by the deck import engine and price refresh. Returns resolved cards + any not found.
+    static func fetchCardCollection(identifiers: [CardIdentifierJSON]) async -> (found: [CardJSON], notFound: [CardIdentifierJSON]) {
+        guard !identifiers.isEmpty, let url = URL(string: "https://api.scryfall.com/cards/collection") else {
+            return ([], [])
+        }
+        do {
+            var req = request(from: url)
+            req.httpMethod = "POST"
+            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            req.httpBody = try JSONEncoder().encode(["identifiers": Array(identifiers.prefix(75))])
+
+            let (data, _) = try await URLSession.shared.data(for: req)
+            let result = try JSONDecoder().decode(ScryfallCollectionData.self, from: data)
+            return (result.data, result.notFound ?? [])
+        } catch {
+            return ([], identifiers)
+        }
+    }
+
     // MARK: Conversion Functions
     
     /// Convert JSON set to model
@@ -115,100 +135,113 @@ struct SFAPI {
     }
     
     // MARK: Convert JSON card to model
+    /// Now that the nested types are Codable structs (not @Model), this is a flat,
+    /// nil-coalescing mapping. No SwiftData objects are created here.
     static func JSONtoModel(json: CardJSON) -> Card {
-        // had to break it up or else it wouldnt run
-        
-        let tempImageURIs: ImageURIs = ImageURIs(
-            small: json.imageURIs?.small ?? "",
-            normal: json.imageURIs?.normal ?? "",
-            large: json.imageURIs?.large ?? "",
-            png: json.imageURIs?.png ?? "",
-            artCrop: json.imageURIs?.artCrop ?? "",
-            borderCrop: json.imageURIs?.borderCrop ?? ""
-        )
-        
-        let tempCardFaces: [CardFace] = (json.cardFaces ?? []).map { face in
-            // had to break it up even more
-            let tempFaceImages: ImageURIs = ImageURIs(
-                small: face.imageURIs?.small ?? "",
-                normal: face.imageURIs?.normal ?? "",
-                large: face.imageURIs?.large ?? "",
-                png: face.imageURIs?.png ?? "",
-                artCrop: face.imageURIs?.artCrop ?? "",
-                borderCrop: face.imageURIs?.borderCrop ?? ""
-            )
-            
-            
-            return CardFace(
-                oracleID: face.oracleID ?? "",
-                name: face.name,
-                layout: face.layout ?? "",
-                imageURIs: tempFaceImages,
-                typeLine: face.typeLine ?? "",
-                oracleText: face.oracleText ?? "",
-                keywords: face.keywords ?? [],
-                toughness: face.toughness ?? "",
-                power: face.power ?? "",
-                loyalty: face.loyalty ?? "",
-                defense: face.defense ?? "",
-                manaCost: face.manaCost ?? "",
-                cmc: face.cmc ?? 0.0,
-                colors: face.colors ?? [],
-                colorIndicator: face.colorIndicator ?? []
-            )
-        }
-        
-        let tempPrices: Prices = Prices(
-            usd: json.prices?.usd ?? "",
-            usdFoil: json.prices?.usdFoil ?? "",
-            usdEtched: json.prices?.usdEtched ?? ""
-        )
-        
-        let tempPurchaseURIs: PurchaseURIs = PurchaseURIs(
-            tcgplayer: json.purchaseURIs?.tcgplayer ?? "",
-            cardmarket: json.purchaseURIs?.cardmarket ?? "",
-            cardhoarder: json.purchaseURIs?.cardhoarder ?? ""
-        )
-        
-        let tempParts: [RelatedCardObject] = (json.allParts ?? []).map {
-            RelatedCardObject(id: $0.id ?? "", name: $0.name ?? "", uri: $0.uri ?? "")
-        }
-        
-        
-        // build card
         return Card(
-                id: json.id ?? "",
-                oracleID: json.oracleID ?? "",
-                name: json.name,
-                releasedAt: json.releasedAt ?? "",
-                imageStatus: json.imageStatus ?? "",
-                imageURIs: tempImageURIs,
-                manaCost: json.manaCost ?? "",
-                cmc: json.cmc ?? 0.0,
-                colors: json.colors ?? [],
-                colorIdentity: json.colorIdentity ?? [],
-                colorIndicator: json.colorIndicator ?? [],
-                typeLine: json.typeLine ?? "",
-                oracleText: json.oracleText ?? "",
-                keywords: json.keywords ?? [],
-                toughness: json.toughness ?? "",
-                power: json.power ?? "",
-                loyalty: json.loyalty ?? "",
-                defense: json.defense ?? "",
-                layout: json.layout ?? "",
-                // map card faces
-                cardFaces: tempCardFaces,
-                rarity: json.rarity ?? "",
-                flavorText: json.flavorText ?? "",
-                finishes: json.finishes ?? [],
-                set: json.set ?? "",
-                prices: tempPrices,
-                purchaseURIs: tempPurchaseURIs,
-                // map card parts
-                allParts: tempParts,
-                reserved: json.reserved,
-                legalities: json.legalities ?? [:]
-            )
+            id: json.id ?? "",
+            oracleID: json.oracleID ?? "",
+            name: json.name,
+            releasedAt: json.releasedAt ?? "",
+            imageStatus: json.imageStatus ?? "",
+            imageURIs: mapImageURIs(json.imageURIs),
+            manaCost: json.manaCost ?? "",
+            cmc: json.cmc ?? 0.0,
+            colors: json.colors ?? [],
+            colorIdentity: json.colorIdentity ?? [],
+            colorIndicator: json.colorIndicator ?? [],
+            producedMana: json.producedMana ?? [],
+            typeLine: json.typeLine ?? "",
+            oracleText: json.oracleText ?? "",
+            keywords: json.keywords ?? [],
+            toughness: json.toughness ?? "",
+            power: json.power ?? "",
+            loyalty: json.loyalty ?? "",
+            defense: json.defense ?? "",
+            layout: json.layout ?? "",
+            cardFaces: (json.cardFaces ?? []).map(mapCardFace),
+            rarity: json.rarity ?? "",
+            flavorText: json.flavorText ?? "",
+            finishes: json.finishes ?? [],
+            set: json.set ?? "",
+            setName: json.setName ?? "",
+            artist: json.artist ?? "",
+            collectorNumber: json.collectorNumber ?? "",
+            edhrecRank: json.edhrecRank ?? 0,
+            scryfallURI: json.scryfallURI ?? "",
+            rulingsURI: json.rulingsURI ?? "",
+            relatedURIs: mapRelatedURIs(json.relatedURIs),
+            prices: mapPrices(json.prices),
+            purchaseURIs: mapPurchaseURIs(json.purchaseURIs),
+            allParts: (json.allParts ?? []).map {
+                RelatedCardObject(id: $0.id ?? "", name: $0.name ?? "", uri: $0.uri ?? "", component: $0.component ?? "")
+            },
+            reserved: json.reserved,
+            legalities: json.legalities ?? [:]
+        )
     }
-    
+
+    // MARK: Nested mappers
+
+    private static func mapImageURIs(_ j: ImageURIsJSON?) -> ImageURIs {
+        ImageURIs(
+            small: j?.small ?? "",
+            normal: j?.normal ?? "",
+            large: j?.large ?? "",
+            png: j?.png ?? "",
+            artCrop: j?.artCrop ?? "",
+            borderCrop: j?.borderCrop ?? ""
+        )
+    }
+
+    private static func mapPrices(_ j: PricesJSON?) -> Prices {
+        Prices(
+            usd: j?.usd ?? "",
+            usdFoil: j?.usdFoil ?? "",
+            usdEtched: j?.usdEtched ?? "",
+            eur: j?.eur ?? "",
+            eurFoil: j?.eurFoil ?? "",
+            tix: j?.tix ?? ""
+        )
+    }
+
+    private static func mapPurchaseURIs(_ j: PurchaseURIsJSON?) -> PurchaseURIs {
+        PurchaseURIs(
+            tcgplayer: j?.tcgplayer ?? "",
+            cardmarket: j?.cardmarket ?? "",
+            cardhoarder: j?.cardhoarder ?? ""
+        )
+    }
+
+    private static func mapRelatedURIs(_ j: RelatedURIsJSON?) -> RelatedURIs {
+        RelatedURIs(
+            edhrec: j?.edhrec ?? "",
+            gatherer: j?.gatherer ?? "",
+            tcgplayerInfiniteDecks: j?.tcgplayerInfiniteDecks ?? "",
+            tcgplayerInfiniteArticles: j?.tcgplayerInfiniteArticles ?? ""
+        )
+    }
+
+    private static func mapCardFace(_ face: CardFaceJSON) -> CardFace {
+        CardFace(
+            oracleID: face.oracleID ?? "",
+            name: face.name,
+            layout: face.layout ?? "",
+            imageURIs: mapImageURIs(face.imageURIs),
+            typeLine: face.typeLine ?? "",
+            oracleText: face.oracleText ?? "",
+            flavorText: face.flavorText ?? "",
+            keywords: face.keywords ?? [],
+            toughness: face.toughness ?? "",
+            power: face.power ?? "",
+            loyalty: face.loyalty ?? "",
+            defense: face.defense ?? "",
+            manaCost: face.manaCost ?? "",
+            cmc: face.cmc ?? 0.0,
+            colors: face.colors ?? [],
+            colorIndicator: face.colorIndicator ?? [],
+            producedMana: face.producedMana ?? []
+        )
+    }
+
 }

@@ -24,6 +24,7 @@ struct DeleteDataWidget: View {
     @Query var binders: [Binder]
     @Query var decks: [Deck]
     @Query var settings: [Settings]
+    @Query var cardCache: [CardCache]
     @State var showAlert: Bool = false
     
     // MARK: View
@@ -54,17 +55,22 @@ struct DeleteDataWidget: View {
             }
             
             Button(role: .destructive) {
-                // delete all data
+                // delete all collection data
                 for binder in binders {
                     modelContext.delete(binder)
                 }
                 for deck in decks {
                     modelContext.delete(deck)
                 }
-                for setting in settings {
-                    modelContext.delete(setting)
+                // clear the local card cache
+                for cached in cardCache {
+                    modelContext.delete(cached)
                 }
-                
+                // reset onboarding so the intro shows again (keeps Settings row intact)
+                for setting in settings {
+                    setting.onBoarding = true
+                }
+
             } label: {
                  Text("Delete")
             }

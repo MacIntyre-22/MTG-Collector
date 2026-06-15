@@ -79,8 +79,7 @@ struct AllDecksView: View {
     
     // MARK: deleteDeck
     func deleteDeck() {
-        let tempDeck: Deck? = selectedDeck.unsafelyUnwrapped
-        if let deck = tempDeck{
+        if let deck = selectedDeck {
             modelContext.delete(deck)
         }
     }
