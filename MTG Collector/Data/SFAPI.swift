@@ -100,6 +100,24 @@ struct SFAPI {
         }
     }
 
+    /// Search by raw Scryfall query string with explicit sort order/direction.
+    /// `order` maps to Scryfall's order param (name, cmc, usd, edhrec, released, color, …).
+    static func fetchCards(query: String, order: String = "name", descending: Bool = false) async -> [CardJSON] {
+        let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let dir = descending ? "desc" : "asc"
+        guard !encoded.isEmpty,
+              let url = URL(string: "https://api.scryfall.com/cards/search?q=\(encoded)&order=\(order)&dir=\(dir)") else {
+            return []
+        }
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let fetchResults = try JSONDecoder().decode(ScryfallCardData.self, from: data)
+            return fetchResults.data
+        } catch {
+            return []
+        }
+    }
+
     /// Bulk card lookup via /cards/collection (POST). Accepts up to 75 identifiers per call.
     /// Used by the deck import engine and price refresh. Returns resolved cards + any not found.
     static func fetchCardCollection(identifiers: [CardIdentifierJSON]) async -> (found: [CardJSON], notFound: [CardIdentifierJSON]) {
