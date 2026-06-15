@@ -1,8 +1,8 @@
-//
+﻿//
 //  CardInfoView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //      Displays all the info for a card model
 //  External Types:
@@ -52,11 +52,7 @@ struct CardInfoView: View {
                             }
                             .padding(15)
                             .cornerRadius(9)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(.background)
-                                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
-                            )
+                            .widgetStyle()
                         }
                         
                         /// Legalities info here

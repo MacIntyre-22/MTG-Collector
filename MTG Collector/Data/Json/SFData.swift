@@ -1,8 +1,8 @@
-//
+﻿//
 //  SFData.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //         This file stores all datatypes for creating json objects from the api
 

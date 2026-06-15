@@ -1,8 +1,8 @@
-//
+﻿//
 //  Settings.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-19.
+//  Created by Ben MacIntyre on 2025-10-19.
 //  Purpose:
 //         Stores user data for preferences
 

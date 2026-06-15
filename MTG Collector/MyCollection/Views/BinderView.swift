@@ -1,8 +1,8 @@
-//
+﻿//
 //  BinderView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //      Used to display all binder information and cards
 //  External Types:

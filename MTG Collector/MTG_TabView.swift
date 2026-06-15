@@ -1,8 +1,8 @@
-//
+﻿//
 //  MTGTab_View.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-19.
+//  Created by Ben MacIntyre on 2025-10-19.
 //  Purpose:
 //      Contains all the tabs for the app, also controls the settings and onboarding
 //  External Types:

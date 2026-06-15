@@ -1,8 +1,8 @@
-//
+﻿//
 //  BinderStatsSheet.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-10.
+//  Created by Ben MacIntyre on 2025-10-10.
 //  Pourpose:
 //      Displays the stats for the respective binder
 //  External Types:

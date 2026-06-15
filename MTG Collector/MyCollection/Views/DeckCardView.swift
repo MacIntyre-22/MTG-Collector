@@ -1,8 +1,8 @@
-//
+﻿//
 //  DeckCardView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-09.
+//  Created by Ben MacIntyre on 2025-10-09.
 //  Purpose:
 //      Displays cards for a deck view. Using CardEntry it enables controls for the deck the card is in.
 //  External Types:

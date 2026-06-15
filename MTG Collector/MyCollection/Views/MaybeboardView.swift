@@ -1,8 +1,8 @@
-//
+﻿//
 //  MaybeboardView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-09.
+//  Created by Ben MacIntyre on 2025-10-09.
 //  Purpose:
 //      Displays the cards in the maybeboard for a deck
 //  External Types:

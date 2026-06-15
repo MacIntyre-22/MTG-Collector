@@ -1,8 +1,8 @@
-//
+﻿//
 //  CollectionControllWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-27.
+//  Created by Ben MacIntyre on 2025-09-27.
 //  Purpose:
 //      Allows the user to add a card to one of their collections
 //  External Types:

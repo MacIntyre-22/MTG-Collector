@@ -1,8 +1,8 @@
-//
+﻿//
 //  SearchCardView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-10.
+//  Created by Ben MacIntyre on 2025-10-10.
 //  Purpose:
 //      Displays a card from the search results and enables collection controlls
 //  External Types:

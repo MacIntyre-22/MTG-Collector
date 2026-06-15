@@ -1,8 +1,8 @@
-//
+﻿//
 //  CardFilters.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //         Stores query params to build querys for api search
 

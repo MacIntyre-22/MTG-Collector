@@ -1,8 +1,8 @@
-//
+﻿//
 //  HomeTabView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-21.
+//  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
 //      The Home page for my app that displays multiple widgets with suggested cards pulled from the api
 //  External Types:

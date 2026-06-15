@@ -1,8 +1,8 @@
-//
+﻿//
 //  SetIconWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-03.
+//  Created by Ben MacIntyre on 2025-10-03.
 //  Purpose:
 //      Displays a set icon and with the rarity as the background
 

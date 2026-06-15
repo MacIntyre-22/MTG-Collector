@@ -1,8 +1,8 @@
-//
+﻿//
 //  CardImageView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //      Dsiplays the cards image and allows for a zoomed in view
 //  External Types:

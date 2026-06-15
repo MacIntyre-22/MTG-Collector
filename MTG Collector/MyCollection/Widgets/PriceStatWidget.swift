@@ -1,8 +1,8 @@
-//
+﻿//
 //  PriceStatWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-23.
+//  Created by Ben MacIntyre on 2025-10-23.
 //  Purpose:
 //      Displays the price of a collection in a widget style
 
@@ -34,11 +34,7 @@ struct PriceStatWidget: View {
             .frame(maxWidth: 270, maxHeight: 100)
             .aspectRatio(1, contentMode: .fill)
             .padding(20)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background)
-                    .shadow(color: .gray.opacity(0.18), radius: 6, x: 0, y: 0)
-            )
+            .widgetStyle()
         }
     }
 }

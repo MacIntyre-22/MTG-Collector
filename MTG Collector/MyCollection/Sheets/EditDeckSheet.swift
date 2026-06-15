@@ -1,8 +1,8 @@
-//
+﻿//
 //  EditDeckSheet.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-06.
+//  Created by Ben MacIntyre on 2025-10-06.
 //  Purpose:
 //      Allows the user to chnage properties for the respective deck
 //  External Types:

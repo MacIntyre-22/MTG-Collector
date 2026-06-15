@@ -1,8 +1,8 @@
-//
+﻿//
 //  OnBoardPageView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-30.
+//  Created by Ben MacIntyre on 2025-10-30.
 //  Purpose:
 //      Displays the info for an onboarding page view
 //  External Types:

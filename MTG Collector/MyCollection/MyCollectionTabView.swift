@@ -1,8 +1,8 @@
-//
+﻿//
 //  MyCollectionTabView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-21.
+//  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
 //      The Tab view for a users collection, displays all binders and links the user to all decks in another page
 //  External Types:
@@ -86,9 +86,7 @@ struct MyCollectionTabView: View {
     // MARK: deleteBinder
     
     func deleteBinder() {
-        let tempBinder: Binder? = selectedBinder.unsafelyUnwrapped
-        
-        if let binder = tempBinder{
+        if let binder = selectedBinder {
             modelContext.delete(binder)
         }
     }

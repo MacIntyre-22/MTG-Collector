@@ -1,8 +1,8 @@
-//
+﻿//
 //  GridRarityWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-28.
+//  Created by Ben MacIntyre on 2025-09-28.
 //  Purpose:
 //      Displays the rarity based on whats passed to it
 

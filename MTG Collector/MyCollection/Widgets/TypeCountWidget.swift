@@ -1,8 +1,8 @@
-//
+﻿//
 //  TypeCountWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-11.
+//  Created by Ben MacIntyre on 2025-10-11.
 //  Purpose:
 //      Displays a
 //  External Types:
@@ -44,11 +44,7 @@ struct TypeCountWidget: View {
             .frame(maxWidth: 600)
             .frame(minHeight: 100)
             .padding(20)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background)
-                    .shadow(color: .gray.opacity(0.18), radius: 6, x: 0, y: 0)
-            )
+            .widgetStyle()
         }
     }
 }

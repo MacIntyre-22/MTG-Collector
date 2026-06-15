@@ -1,8 +1,8 @@
-//
+﻿//
 //  Spotlight.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-30.
+//  Created by Ben MacIntyre on 2025-10-30.
 //  Purpose:
 //         Handles spotlight indexing
 
@@ -31,14 +31,7 @@ struct Spotlight{
         
         let item = CSSearchableItem(uniqueIdentifier: id, domainIdentifier: "mtgcollector", attributeSet: attributeSet)
         
-        CSSearchableIndex.default().indexSearchableItems([item]){
-            error in
-            if let error = error {
-                print("Problem indexing \(error.localizedDescription)")
-            } else {
-                print("Item indexed - \(name)")
-            }
-        }
+        CSSearchableIndex.default().indexSearchableItems([item]) { _ in }
         
     }
     

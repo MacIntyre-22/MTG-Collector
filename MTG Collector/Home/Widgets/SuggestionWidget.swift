@@ -1,8 +1,8 @@
-//
+﻿//
 //  SuggestionWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-18.
+//  Created by Ben MacIntyre on 2025-10-18.
 //  Purpose:
 //      Displays an array of cards based on hard coded filters
 //  External types:
@@ -98,11 +98,7 @@ struct SuggestionWidget: View {
                 }
             }
             .cornerRadius(9)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background)
-                    .shadow(color: .gray.opacity(0.25), radius: 15, x: 0, y: 0)
-            )
+            .widgetStyle()
         }
     }
 }

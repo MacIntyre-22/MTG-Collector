@@ -1,8 +1,8 @@
-//
+﻿//
 //  NewDeckSheet.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-26.
+//  Created by Ben MacIntyre on 2025-09-26.
 //  Purpose:
 //      Allows the user to create a new deck instance
 //  External Types:

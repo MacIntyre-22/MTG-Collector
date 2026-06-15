@@ -1,8 +1,8 @@
-//
+﻿//
 //  MTG_CollectorApp.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-19.
+//  Created by Ben MacIntyre on 2025-09-19.
 //  Purpose:
 //      Top level app struct
 //  External Types:

@@ -1,8 +1,8 @@
-//
+﻿//
 //  Card.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //         The Model for the Cards, converted from CardJSON to this Model to be saved locally
 

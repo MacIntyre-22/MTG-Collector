@@ -1,8 +1,8 @@
-//
+﻿//
 //  SFAPI.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-21.
+//  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
 //         Features various functions to make apis calls in different ways for certain data
 // External Types:
@@ -17,9 +17,17 @@ import UIKit
 // MARK: Types
 
 struct SFAPI {
-    
+
+    // MARK: Private Helpers
+
+    private static func request(from url: URL) -> URLRequest {
+        var req = URLRequest(url: url)
+        req.setValue("MTGCollector/1.0 (benmacintyre09@gmail.com)", forHTTPHeaderField: "User-Agent")
+        return req
+    }
+
     // MARK: API Functions
-    
+
     /// URL Builder
     /// build url from filters struct
     static func buildSearchURL(filters: CardFilters) -> URL? {
@@ -27,94 +35,67 @@ struct SFAPI {
         let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         return URL(string: "https://api.scryfall.com/cards/search?q=\(encoded)")
     }
-    
+
     /// Card Data
     /// querys cards based on CardFilter values
     static func fetchCardData(filters: CardFilters) async -> [CardJSON] {
+        guard let url = buildSearchURL(filters: filters) else { return [] }
         do {
-            /// build url using the CardFilters
-            let url = buildSearchURL(filters: filters)!
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decoder = JSONDecoder()
-            let fetchResults = try decoder.decode(ScryfallCardData.self, from: data)
+            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let fetchResults = try JSONDecoder().decode(ScryfallCardData.self, from: data)
             return fetchResults.data
         } catch {
-            print("Error with SFAPI.fetchCardData - \(error)")
-            return [] 
-        }
-    }
-    
-    /// Card Data by set query, for home suggestions
-    /// for random collections
-    static func fetchCardQuery(query: String, shuffle: Bool = true) async -> [CardJSON] {
-        do {
-            let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-            let url = URL(string: "https://api.scryfall.com/cards/search?q=\(encoded)")!
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decoder = JSONDecoder()
-            let fetchResults = try decoder.decode(ScryfallCardData.self, from: data)
-            
-            // shuffle these cards so that the output is never the same
-            if shuffle {
-                return fetchResults.data.shuffled()
-            } else {
-                return fetchResults.data
-            }
-        } catch {
-            print("Error with SFAPI.fetchCardQuery - \(error)")
             return []
         }
     }
-    
-    
+
+    /// Card Data by set query, for home suggestions
+    /// for random collections
+    static func fetchCardQuery(query: String, shuffle: Bool = true) async -> [CardJSON] {
+        let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        guard let url = URL(string: "https://api.scryfall.com/cards/search?q=\(encoded)") else { return [] }
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let fetchResults = try JSONDecoder().decode(ScryfallCardData.self, from: data)
+            return shuffle ? fetchResults.data.shuffled() : fetchResults.data
+        } catch {
+            return []
+        }
+    }
+
     /// Card Data by ID
     static func fetchCardId(id: String) async -> CardJSON? {
+        guard let url = URL(string: "https://api.scryfall.com/cards/\(id)") else { return nil }
         do {
-            if let url = URL(string: "https://api.scryfall.com/cards/\(id)") {
-                let (data, _) = try await URLSession.shared.data(from: url)
-                let decoder = JSONDecoder()
-                let fetchResults = try decoder.decode(CardJSON.self, from: data)
-                return fetchResults
-            }else {
-                return nil
-            }
+            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            return try JSONDecoder().decode(CardJSON.self, from: data)
         } catch {
-            print("Error with SFAPI.fecthCardId - \(error)")
             return nil
         }
     }
-    
+
     /// Card Data by URI
     /// some objects return a uri right for the object
     /// can return nil
     static func fetchCardURI(uri: String) async -> CardJSON? {
+        guard let url = URL(string: uri) else { return nil }
         do {
-            if let url = URL(string: uri) {
-                let (data, _) = try await URLSession.shared.data(from: url)
-                let decoder = JSONDecoder()
-                let fetchResults = try decoder.decode(CardJSON.self, from: data)
-                return fetchResults
-            }else {
-                return nil
-            }
+            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            return try JSONDecoder().decode(CardJSON.self, from: data)
         } catch {
-            print("Error with SFAPI.fetchCardURI - \(error)")
             return nil
         }
     }
-    
+
     /// Set Data
     /// fetch set data
     static func fetchSetData() async -> [SetJSON] {
+        guard let url = URL(string: "https://api.scryfall.com/sets") else { return [] }
         do {
-            let url = URL(string: "https://api.scryfall.com/sets")!
-            
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decoder = JSONDecoder()
-            let fetchResults = try decoder.decode(ScryfallSetData.self, from: data)
+            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let fetchResults = try JSONDecoder().decode(ScryfallSetData.self, from: data)
             return fetchResults.data
         } catch {
-            print("Error with SFAPI.fetchSetData - \(error)")
             return []
         }
     }

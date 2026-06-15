@@ -1,8 +1,8 @@
-//
+﻿//
 //  BinderCardView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-09.
+//  Created by Ben MacIntyre on 2025-10-09.
 //  Purpose:
 //      The view used to display cards in the binder view. Using the CardEntryView, it gives the user control over the card
 //  External Types:

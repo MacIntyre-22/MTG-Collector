@@ -1,8 +1,8 @@
-//
+﻿//
 //  CommanderWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-09.
+//  Created by Ben MacIntyre on 2025-10-09.
 //  Purpose:
 //      Used to display a decks commander card if it has one
 //  External Types:

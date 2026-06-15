@@ -1,8 +1,8 @@
-//
+﻿//
 //  AllDecksLinkWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //      A Unique widget to link to the decks grid from the collection view
 
@@ -38,11 +38,7 @@ struct AllDecksLinkWidget: View {
             .padding()
             .frame(maxWidth: 600)
             .frame(minHeight: 100)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background)
-                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
-            )
+            .widgetStyle()
         }
     }
 }

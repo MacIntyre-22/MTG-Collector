@@ -1,8 +1,8 @@
-//
+﻿//
 //  DeckNotesSheet.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-06.
+//  Created by Ben MacIntyre on 2025-10-06.
 //  Pourpose:
 //      Displays the notes saved in the deck
 //  External Types:

@@ -1,8 +1,8 @@
-//
+﻿//
 //  PriceWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-29.
+//  Created by Ben MacIntyre on 2025-09-29.
 //  Purpose:
 //      Displays a pricewidget with given finish and price
 //  External Types:

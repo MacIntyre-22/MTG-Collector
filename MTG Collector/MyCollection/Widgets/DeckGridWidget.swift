@@ -1,8 +1,8 @@
-//
+﻿//
 //  DeckGridWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-26.
+//  Created by Ben MacIntyre on 2025-09-26.
 //  Purpose:
 //      Used as a list item in a grid to link to the respective deck
 //  External Types:

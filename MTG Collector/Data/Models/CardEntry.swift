@@ -1,8 +1,8 @@
-//
+﻿//
 //  CardEntry.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //         CardEntry stores a Card Model and information about that card, relating to the collection the entry is in
 //  External Types:

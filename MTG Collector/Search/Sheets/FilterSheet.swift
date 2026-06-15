@@ -1,8 +1,8 @@
-//
+﻿//
 //  FilterSheet.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-16.
+//  Created by Ben MacIntyre on 2025-10-16.
 //  Purpose:
 //      Displays the controls for filters that the user can use for the search
 //      The sets available to filter by are limited because theres so many it actually bricks the app. I could program it better but...

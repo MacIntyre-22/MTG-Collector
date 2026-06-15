@@ -1,8 +1,8 @@
-//
+﻿//
 //  SearchTabView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-21.
+//  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
 //      Displays the tab to search cards from the api and add them to your collection
 //  External Types:

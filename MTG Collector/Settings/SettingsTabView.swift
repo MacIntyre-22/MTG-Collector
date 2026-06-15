@@ -1,8 +1,8 @@
-//
+﻿//
 //  SettingsTabView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-21.
+//  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
 //      Displays the widgets for the settings
 //  External Types:

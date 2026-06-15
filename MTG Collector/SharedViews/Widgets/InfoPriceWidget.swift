@@ -1,8 +1,8 @@
-//
+﻿//
 //  InfoPriceWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-28.
+//  Created by Ben MacIntyre on 2025-09-28.
 //  Purpose:
 //      Displays different prices from a prices object
 //  External Types:
@@ -41,11 +41,7 @@ struct InfoPriceWidget: View {
             }
             .padding(15)
             .cornerRadius(9)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background)
-                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
-            )
+            .widgetStyle()
         }
     }
 }

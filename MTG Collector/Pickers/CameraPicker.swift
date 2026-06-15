@@ -1,8 +1,8 @@
-//
+﻿//
 //  CameraPicker.swift
 //  Inventory Tracker
 //
-//  Created by Ben MacIntyre (School) on 2025-09-22.
+//  Created by Ben MacIntyre on 2025-09-22.
 //
 
 /**

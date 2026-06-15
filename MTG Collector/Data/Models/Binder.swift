@@ -1,8 +1,8 @@
-//
+﻿//
 //  Binder.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //         Model for a card binder. Holds info about the binder and the actual card array. Computed properties calculate stats as changes are made.
 //  External Types:
@@ -104,7 +104,7 @@ class Binder {
         
         for entry in cards {
             /// get the main type by splitting the type line by "-"
-            let mainType = entry.card.typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
+            let mainType = entry.card.typeLine.components(separatedBy: "â€”")[0].trimmingCharacters(in: .whitespaces)
             counts[mainType, default: 0] += entry.quantity
         }
         return counts

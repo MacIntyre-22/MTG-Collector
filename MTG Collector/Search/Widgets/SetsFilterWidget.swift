@@ -1,8 +1,8 @@
-//
+﻿//
 //  SetsFilterWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-16.
+//  Created by Ben MacIntyre on 2025-10-16.
 //  Purpose:
 //      The Widget to display some sets to filter by
 //  External Types:

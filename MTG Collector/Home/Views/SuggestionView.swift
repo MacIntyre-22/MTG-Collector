@@ -1,8 +1,8 @@
-//
+﻿//
 //  SuggestionView.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-18.
+//  Created by Ben MacIntyre on 2025-10-18.
 //  Purpose:
 //         Displays the suggestion widgets with cards based off of hard coded filters. Meant as a discovery
 //  External Types:

@@ -1,8 +1,8 @@
-//
+﻿//
 //  ImageManager.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-22.
+//  Created by Ben MacIntyre on 2025-10-22.
 //  Purpose:
 //         Manages adding images from user library and camera
 
@@ -32,7 +32,7 @@ class ImageManager {
                 do {
                     try data.write(to: imagePath)
                 } catch {
-                    print("Error saving image - \(error.localizedDescription)")
+                    return
                 }
             }
         }

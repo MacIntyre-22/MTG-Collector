@@ -1,8 +1,8 @@
-//
+﻿//
 //  InfoPurchaseWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-02.
+//  Created by Ben MacIntyre on 2025-10-02.
 //  Purpose:
 //      Displays different links to vendors for the card from a PurchaseURIs object
 //  Externa Types:
@@ -86,11 +86,7 @@ struct InfoPurchaseWidget: View {
             }
             .padding(15)
             .cornerRadius(9)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background)
-                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
-            )
+            .widgetStyle()
         }
     }
 }

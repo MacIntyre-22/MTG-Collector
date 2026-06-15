@@ -1,8 +1,8 @@
-//
+﻿//
 //  DeleteDataWidget.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-10-19.
+//  Created by Ben MacIntyre on 2025-10-19.
 //  Purpose:
 //      Allows the user to delete all of their data and reset account even onboarding
 //  External Types:
@@ -43,7 +43,7 @@ struct DeleteDataWidget: View {
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(.red)
-                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
+                    .shadow(color: .gray.opacity(0.25), radius: 6)
             )
         }
         .alert("Continue?", isPresented: $showAlert) {

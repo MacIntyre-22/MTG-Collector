@@ -1,8 +1,8 @@
-//
+﻿//
 //  Deck.swift
 //  MTG Collector
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //         Model for a deck of cards. Holds info about the deck and the three different card arrays.
 //         Computed properties calculate stats as changes are made, ONLY TO THE MAINBOARD ARRAY.
@@ -94,7 +94,7 @@ class Deck {
         
         for entry in mainboard {
             /// get the main type by splitting the type line by "-"
-            let mainType = entry.card.typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
+            let mainType = entry.card.typeLine.components(separatedBy: "â€”")[0].trimmingCharacters(in: .whitespaces)
             counts[mainType, default: 0] += entry.quantity
         }
         return counts
