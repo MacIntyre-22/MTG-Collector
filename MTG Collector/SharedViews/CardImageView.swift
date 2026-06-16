@@ -1,6 +1,6 @@
 ﻿//
 //  CardImageView.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
@@ -72,21 +72,37 @@ struct CardImageView: View {
                             }
                             .fullScreenCover(isPresented: $showFullScreen) {
                                 ZStack() {
-                                    Color.gray.opacity(0.3).ignoresSafeArea()
+                                    /// blurred card art filling the background.
+                                    /// Sized from the screen via GeometryReader so it fills and
+                                    /// clips to the full bounds (incl. safe area) without inflating
+                                    /// the ZStack — which keeps the foreground card its normal size.
+                                    GeometryReader { geo in
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: geo.size.width, height: geo.size.height)
+                                            .clipped()
+                                            .blur(radius: 35, opaque: true)
+                                            .overlay(Color.black.opacity(0.3))
+                                    }
+                                    .ignoresSafeArea()
+
                                     image
                                         .resizable()
                                         .scaledToFit()
                                         .cornerRadius(17)
                                         .padding()
                                         .frame(maxWidth: 600)
-                                    
+                                        .shadow(radius: 12)
+
                                     VStack {
                                         HStack {
                                             Spacer()
                                             Text("Tap to Exit")
                                                 .italic()
                                                 .bold()
-                                                .foregroundColor(.primary)
+                                                .foregroundColor(.white)
+                                                .shadow(radius: 4)
                                         }
                                         Spacer()
                                     }
@@ -95,7 +111,7 @@ struct CardImageView: View {
                                 .onTapGesture(count: 1, perform: {
                                     showFullScreen = false
                                 })
-                                
+
                             }
                         /// All fail cases are just filled with a gray view
                     case .failure:
