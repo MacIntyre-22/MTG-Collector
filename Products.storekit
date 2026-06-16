@@ -1,0 +1,31 @@
+{
+  "identifier" : "CARDHOARD-STOREKIT",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "3.99",
+      "familyShareable" : false,
+      "internalID" : "1001",
+      "localizations" : [
+        {
+          "description" : "Unlock unlimited binders & decks, detailed stats, iCloud sync, deck import, unlimited scanning, and CSV export.",
+          "displayName" : "Card Hoard Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "net.benmacintyre.cardhoard.pro",
+      "referenceName" : "Card Hoard Pro",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

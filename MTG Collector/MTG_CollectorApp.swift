@@ -46,10 +46,15 @@ struct MTG_CollectorApp: App {
             // re-fetched from Scryfall per device. Never synced.
             let cacheSchema = Schema([CardCache.self, SetInfo.self])
 
-            // TODO(device): when enabling Pro iCloud sync, set the synced config's
-            // cloudKitDatabase to .automatic AND enable the iCloud + CloudKit capability in
-            // Xcode. Must be verified on a real device — the simulator is unreliable for sync.
-            let syncedConfig = ModelConfiguration("Synced", schema: syncedSchema, cloudKitDatabase: .none)
+            // iCloud sync follows the user's preference (stored in UserDefaults so it's readable
+            // here, before the SwiftData Settings record exists). Default on; applies at launch.
+            // Verify on a real device — the simulator is unreliable for CloudKit.
+            let syncEnabled = UserDefaults.standard.object(forKey: "iCloudSyncEnabled") as? Bool ?? true
+            let syncedConfig = ModelConfiguration(
+                "Synced",
+                schema: syncedSchema,
+                cloudKitDatabase: syncEnabled ? .automatic : .none
+            )
             let cacheConfig = ModelConfiguration("Cache", schema: cacheSchema, cloudKitDatabase: .none)
 
             container = try ModelContainer(

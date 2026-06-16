@@ -21,6 +21,7 @@ struct MTG_TabView: View {
     
     @Environment(\.modelContext) var modelContext
     @Query var settingsQuery: [Settings]
+    @State private var pro = ProAccessManager()
     
     // MARK: Computed Properties
     
@@ -68,7 +69,7 @@ struct MTG_TabView: View {
                     })
             }
             .tint(Color(settings.theme))
-            
+
             if settings.onBoarding {
                 OnBoardingView() {
                     settings.onBoarding = false
@@ -76,7 +77,12 @@ struct MTG_TabView: View {
                 .ignoresSafeArea()
             }
         }
-        
+        .environment(pro)
+        .environment(\.appCurrency, settings.appCurrency)
+        .onChange(of: pro.isPro) { _, isPro in
+            // mirror the verified entitlement into the persisted Settings flag for offline gating
+            settings.isPro = isPro
+        }
     }
 }
 
