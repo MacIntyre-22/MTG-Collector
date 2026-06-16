@@ -58,9 +58,6 @@ struct WholeCollectionStatsWidget: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Your Collection")
-                .font(.headline)
-
             HStack {
                 statBlock(value: totalUSD.formatted(.currency(code: "CAD")), label: "Value")
                 Spacer()
