@@ -33,6 +33,23 @@ struct PriceWidget: View {
         }
     }
 
+    /// Foil and Etched get the subtle linear shimmer; Base stays calm.
+    var shine: ShineLevel {
+        switch finish {
+        case "Foil", "Etched": return .linear
+        default: return .none
+        }
+    }
+
+    /// Holo colours per finish (Foil = rainbow, Etched = silvery chrome).
+    var holoColors: [Color] {
+        switch finish {
+        case "Foil": return [.blue, .purple, .pink, .orange, .yellow, .green]
+        case "Etched": return [.gray, .white, .black, .gray, .white]
+        default: return [tint]
+        }
+    }
+
     // MARK: View
 
     var body: some View {
@@ -42,7 +59,7 @@ struct PriceWidget: View {
                 .italic()
                 .foregroundColor(.white)
                 .padding(5)
-                .glassEffect(.regular.tint(tint), in: RoundedRectangle(cornerRadius: 5))
+                .holoPill(level: shine, colors: holoColors, tint: tint)
 
             Spacer()
 

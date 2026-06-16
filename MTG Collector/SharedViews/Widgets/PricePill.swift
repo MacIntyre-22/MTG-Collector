@@ -31,7 +31,8 @@ struct PricePill: View {
     var body: some View {
         Text(price, format: .currency(code: currencyCode))
             .padding(5)
-            .foregroundColor(tint)
-            .glassEffect(.regular.tint(tint), in: RoundedRectangle(cornerRadius: 5))
+            // lighten the text relative to the tint so it reads light-on-dark on the glass
+            .foregroundColor(tint.mix(with: .white, by: 0.5))
+            .pillStyle(.tinted(tint))
     }
 }

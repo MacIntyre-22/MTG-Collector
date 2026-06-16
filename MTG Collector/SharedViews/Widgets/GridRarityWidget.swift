@@ -31,6 +31,24 @@ struct GridRarityWidget: View {
         }
     }
 
+    /// Only rare/mythic get the foil treatment, so they pop against the calmer lower tiers.
+    var shine: ShineLevel {
+        switch rarity {
+        case "rare": return .holo
+        case "mythic": return .mythic
+        default: return .none
+        }
+    }
+
+    /// Holo gradient colours per tier (rare = gold, mythic = fiery).
+    var holoColors: [Color] {
+        switch rarity {
+        case "rare": return [.yellow, .orange, .white, .yellow, .orange]
+        case "mythic": return [.red, .orange, .yellow, .pink, .red]
+        default: return [tint]
+        }
+    }
+
     // MARK: View
 
     var body: some View {
@@ -39,7 +57,7 @@ struct GridRarityWidget: View {
             .bold()
             .padding(5)
             .foregroundColor(.white)
-            .glassEffect(.regular.tint(tint), in: RoundedRectangle(cornerRadius: 5))
+            .holoPill(level: shine, colors: holoColors, tint: tint)
     }
 }
 

@@ -28,6 +28,7 @@ struct CardEntryView: View {
 
     // MARK: State Properties
 
+    @Environment(\.cardGlass) private var cardGlass
     @State var alertIsShowing: Bool = false
 
     /// taking closures allows for functionality with different models like binders and decks
@@ -95,6 +96,7 @@ struct CardEntryView: View {
                 .padding(10)
             }
         }
+        .widgetStyle(cardGlass)
         .alert("Are you sure?", isPresented: $alertIsShowing) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {

@@ -71,8 +71,7 @@ struct CommanderWidget: View {
                 .padding(.vertical, 5)
             }
             .padding(10)
-            .background(Color.gray.opacity(0.18))
-            .cornerRadius(10)
+            .widgetStyle(.translucent)
             .frame(maxWidth: 600)
         }
         .task {

@@ -41,7 +41,7 @@ struct CardGridView: View {
     // MARK: View
     
     var body: some View {
-        VStack{
+        VStack(spacing: 6) {
             ZStack {
                 /// if multifaced
                 if let faces = multiFaced, faces.count > 1 {
@@ -98,7 +98,8 @@ struct CardGridView: View {
             }
             .aspectRatio(0.714, contentMode: .fit)
             .cornerRadius(8)
-            
+            .padding([.horizontal, .top], 10)
+
             if showPreviews {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
@@ -108,19 +109,23 @@ struct CardGridView: View {
                         if !card.prices.usd.isEmpty {
                             GridPriceWidget(finish: "Base", price: card.prices.usd)
                         }
-                        
+
                         if !card.prices.usdFoil.isEmpty {
                             GridPriceWidget(finish: "Foil", price: card.prices.usdFoil)
                         }
-                        
+
                         if !card.prices.usdEtched.isEmpty {
                             GridPriceWidget(finish: "Etched", price: card.prices.usdEtched)
                         }
                     }
+                    // small vertical room for the pill shadows; horizontal inset so the row
+                    // doesn't sit flush against the card edge but can still scroll to it
+                    .padding(.vertical, 2)
+                    .padding(.horizontal, 10)
                 }
             }
         }
-        .padding(10)
+        .padding(.bottom, 10)
     }
     
 }

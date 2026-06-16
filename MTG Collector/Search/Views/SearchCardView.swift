@@ -33,7 +33,7 @@ struct SearchCardView: View {
         ZStack(alignment: .topLeading) {
             NavigationLink(destination: CardInfoView(card: card)){
                 CardGridView(card: card, showPreviews: true)
-                    .widgetStyle()
+                    .widgetStyle(.solid)
             }
             /// controls
             HStack {

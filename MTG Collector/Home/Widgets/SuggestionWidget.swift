@@ -66,8 +66,7 @@ struct SuggestionWidget: View {
                                 NavigationLink(destination: CardInfoView(card: cardModel)) {
                                     CardGridView(card: cardModel, showPreviews: true)
                                         .frame(width: 180)
-                                        .background(content: {Color.gray.opacity(0.18)})
-                                        .cornerRadius(10)
+                                        .widgetStyle(.solid)
                                 }
                             }
                         }

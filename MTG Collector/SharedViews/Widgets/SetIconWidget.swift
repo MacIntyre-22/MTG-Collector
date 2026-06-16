@@ -37,6 +37,24 @@ struct SetIconWidget: View {
         }
     }
 
+    /// Only rare/mythic get the foil treatment.
+    var shine: ShineLevel {
+        switch rarity {
+        case "rare": return .holo
+        case "mythic": return .mythic
+        default: return .none
+        }
+    }
+
+    /// Holo gradient colours per tier (rare = gold, mythic = fiery).
+    var holoColors: [Color] {
+        switch rarity {
+        case "rare": return [.yellow, .orange, .white, .yellow, .orange]
+        case "mythic": return [.red, .orange, .yellow, .pink, .red]
+        default: return [tint]
+        }
+    }
+
     // MARK: View
 
     var body: some View {
@@ -63,7 +81,7 @@ struct SetIconWidget: View {
             }
         }
         .frame(width: maxWidth, height: maxWidth)
-        .glassEffect(.regular.tint(tint), in: RoundedRectangle(cornerRadius: 10))
+        .holoBox(level: shine, colors: holoColors, tint: tint)
         .foregroundColor(.primary)
     }
 }
