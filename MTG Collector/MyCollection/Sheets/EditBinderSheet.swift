@@ -1,6 +1,6 @@
 ﻿//
 //  EditBinderSheet.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2025-10-03.
 //  Purpose:

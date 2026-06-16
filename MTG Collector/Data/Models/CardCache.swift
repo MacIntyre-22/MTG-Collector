@@ -1,6 +1,6 @@
 //
 //  CardCache.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2026-06-15.
 //  Purpose:

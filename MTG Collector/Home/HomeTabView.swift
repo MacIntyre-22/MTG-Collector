@@ -1,6 +1,6 @@
 ﻿//
 //  HomeTabView.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
@@ -37,7 +37,7 @@ struct HomeTabView: View {
                             .scaledToFit()
                             .frame(width: 60, height: 60)
                         
-                        Text("MTG Collector")
+                        Text("Card Hoard")
                             .font(.title)
                             .bold()
                     }

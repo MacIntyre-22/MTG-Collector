@@ -1,4 +1,4 @@
-# MTG Collector
+# Card Hoard
 ## Ben MacIntyre
 
 ## Description

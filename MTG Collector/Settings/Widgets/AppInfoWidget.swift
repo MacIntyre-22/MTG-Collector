@@ -1,6 +1,6 @@
 ﻿//
 //  AppInfoWidget.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2025-10-19.
 //  Purpose:
@@ -19,7 +19,7 @@ struct AppInfoWidget: View {
     var webURI: URL = URL(string: "https://benmacintyre.net")!
     
     var info: String = """
-    MTG Collector is an independent app and is not affiliated with Wizards of the Coast in any way. All Magic: The Gathering content (card names, images, related marks, and fonts) belong to Wizards of the Coast LLC.
+    Card Hoard is an independent app and is not affiliated with Wizards of the Coast in any way. All Magic: The Gathering content (card names, images, related marks, and fonts) belong to Wizards of the Coast LLC.
 
     Card data and images are provided by the Scryfall API (https://scryfall.com), used under their API terms of service. This app does not claim ownership of any game content.
     """

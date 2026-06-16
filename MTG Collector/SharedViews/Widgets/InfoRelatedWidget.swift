@@ -1,6 +1,6 @@
 ﻿//
 //  InfoRelatedWidget.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2025-10-02.
 //  Purpose:

@@ -1,6 +1,6 @@
 //
 //  Collection.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2026-06-15.
 //  Purpose:
@@ -18,6 +18,7 @@ import SwiftData
 
 // MARK: Types
 
+@available(iOS 26, *)
 @Model
 class Collection {
 
