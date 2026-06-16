@@ -1,6 +1,6 @@
 //
 //  FilterSheetView.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2026-06-15.
 //  Purpose:
@@ -209,7 +209,7 @@ struct FilterSheetView: View {
 
     private var setsSection: some View {
         Section("Sets") {
-            SetsFilterWidget { code in
+            SetsFilterWidget(selected: filters.sets) { code in
                 toggle(array: &filters.sets, value: code)
             }
             VStack(alignment: .leading) {

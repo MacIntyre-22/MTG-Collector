@@ -1,6 +1,6 @@
 //
 //  SFData.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
@@ -32,9 +32,20 @@ struct SetJSON: Codable {
     }
 }
 
-/// Holds cards results
+/// Holds cards results. `totalCards`/`hasMore`/`nextPage` drive the search result
+/// count and "Load More" pagination (Scryfall returns 175 cards per page).
 struct ScryfallCardData: Decodable {
     var data: [CardJSON]
+    var totalCards: Int?
+    var hasMore: Bool?
+    var nextPage: String?
+
+    enum CodingKeys: String, CodingKey {
+        case data
+        case totalCards = "total_cards"
+        case hasMore = "has_more"
+        case nextPage = "next_page"
+    }
 }
 
 /// Holds the result of a /cards/collection POST (bulk lookup by identifier)

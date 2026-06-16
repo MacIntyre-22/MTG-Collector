@@ -1,4 +1,4 @@
-# MTG Collector — App Store Plan
+# Card Hoard — App Store Plan
 
 ## Project Overview
 
@@ -11,7 +11,7 @@ SwiftUI iOS app for browsing and organizing Magic: The Gathering cards. Uses the
 
 ## Goal
 
-Ship MTG Collector to the App Store with quality-of-life upgrades, polished presentation, and monetization via in-app purchases (IAP).
+Ship Card Hoard to the App Store with quality-of-life upgrades, polished presentation, and monetization via in-app purchases (IAP).
 
 ---
 
@@ -44,10 +44,10 @@ These are required or strongly recommended before submission.
 - [ ] Update disclaimer in-app (currently only in README) — add it to the Settings tab or an About screen
 
 ### App Identity
-- [ ] Set a proper Bundle ID (e.g. `com.benmacintyre.mtgcollector`)
+- [x] Bundle ID set: `net.benmacintyre.cardhoard`. Display name `Card Hoard` via `CFBundleDisplayName` (internal Xcode target/folder still named "MTG Collector" — not user-facing).
 - [ ] Configure signing with your personal Apple Developer account
 - [ ] Remove all "(School)" references from code comments and file headers
-- [ ] Review app name — confirm "MTG Collector" doesn't infringe on Wizards of the Coast trademarks (consider alternatives like "Card Hoard" or "Binder")
+- [x] App name chosen: **Card Hoard** — avoids Wizards of the Coast trademarks (no "Magic"/"MTG"/"Gathering" in the name). Keep "mtg"/"magic gathering" in keywords only.
 
 ### App Store Connect Metadata
 - [ ] Write App Store description (highlight: search, binders, decks, price data)
@@ -70,7 +70,7 @@ These are required or strongly recommended before submission.
 - [ ] Test onboarding reset path (Settings → Delete Data should reset `onBoarding` flag too)
 
 ### Scryfall Rate Limiting
-- [ ] Scryfall requests a max of 10 requests/second and a contact email in the `User-Agent` header — add `User-Agent: MTGCollector/1.0 (contact@benmacintyre.net)` to all `URLSession` requests
+- [ ] Scryfall requests a max of 10 requests/second and a contact email in the `User-Agent` header — add `User-Agent: CardHoard/1.0 (contact@benmacintyre.net)` to all `URLSession` requests
 - [ ] Home tab fires 6 simultaneous requests on load — stagger them with a small delay between each to stay well under the limit
 - [ ] Deck import batches up to 75 cards per `/cards/collection` request — ensure parallel batches don't exceed rate limit
 - [ ] Add a shared `SFAPIClient` that centralises all requests and can enforce rate limiting in one place rather than raw `URLSession` calls scattered across `SFAPI.swift`
@@ -283,24 +283,26 @@ Replace the current full-screen navigation push with a **sheet carousel**:
 
 ### Search Tab
 
+**Done in Phase 4:** Search migrated off the legacy `FilterSheet`/`CardFilters` onto the unified `FilterState` + `FilterSheetView` (`.scryfall` context) + `ScryfallFilterEngine` stack. Legacy `FilterSheet.swift`, `CardFilters.swift`, and the `fetchCardData`/`buildSearchURL`/`buildQuery` API path were deleted (one filter system now).
+
 **Empty state:**
-- [ ] Show a proper "start searching" empty state on first open (e.g. magnifying glass + "Search for any Magic card") — currently shows "No results found" before the user has searched anything
+- [x] Show a proper "start searching" empty state on first open (magnifying glass + "Search for any Magic card"), distinct from the "No results found" state after a search
 
 **Sets filter — fix lag:**
-- [ ] Replace the `Menu`-based sets picker with a dedicated searchable sheet — a `List` with a search bar so users can type a set name and find it instantly; `List` virtualises rows so all sets can be shown without lag
-- [ ] Support all set types (currently only core, expansion, masters, commander — missing draft_innovation, promo, funny, token, etc.)
-- [ ] Group sets by release year in the searchable sheet as an alternative to type grouping (more intuitive for MTG players)
+- [x] Replaced the `Menu`-based sets picker with a searchable sheet (`SetsFilterSheet`) — virtualised `List` + search bar, shows selected sets with a checkmark
+- [x] Supports all set types (groups by raw `set_type`, so draft_innovation/promo/funny/token/etc. all appear)
+- [x] Group sets by release year (default) or by type, toggled with a segmented control in the sheet
 
-**Filter refinements:**
-- [ ] Fix CMC sliders — add clear Min/Max labels and prevent min from exceeding max in the UI (currently only handled in the query builder, not the UI)
-- [ ] Add sort order filter (released, name, cmc, usd price, edhrec rank, colour)
-- [ ] Add format legality filter (standard, modern, legacy, vintage, commander, pauper)
-- [ ] Add `is:commander` filter option for Commander players
-- [ ] Add `produced_mana` filter for finding lands/mana producers of specific colours (now that we're fetching this field)
+**Filter refinements:** (all live in `FilterSheetView`, now wired into Search)
+- [x] CMC sliders have Min/Max labels and show a warning when min exceeds max; the query builder clamps an inverted range
+- [x] Sort order filter (name, mana value, release date, USD price, EDHREC rank, colour, rarity) + descending toggle
+- [x] Format legality filter (standard, modern, legacy, vintage, commander, pauper, pioneer)
+- [x] `is:commander` filter option ("Can be Commander" toggle)
+- [x] `produced_mana` filter (colour buttons → `produces:` query)
 
 **Results:**
-- [ ] Show result count (e.g. "174 cards found") in the navigation bar or above the grid
-- [ ] Add pagination — currently only first page of Scryfall results is shown; add a "Load More" button or infinite scroll for queries with thousands of results
+- [x] Result count shown above the grid ("N cards found")
+- [x] Pagination via "Load More" button using Scryfall's `next_page`/`has_more` (175/page)
 
 ### Settings Tab
 
@@ -522,10 +524,12 @@ This phase covers:
 - [ ] Any remaining screen-specific changes identified during planning (see Phase 4)
 
 ### Glass Rework (iOS 26+)
+
+**Minimum iOS target is 26.0** — set as the deployment floor because the Phase 2 data model relies on SwiftData `@Model` class inheritance (`Binder`/`Deck` inherit from `Collection`), which is iOS 26-only. This means glass is available everywhere with no fallback path needed.
+
 - [ ] System components (tab bar, navigation bar, sheets) automatically adopt Liquid Glass on iOS 26 — no code needed
-- [ ] Custom widgets opt in via `.glassEffect()` modifier (iOS 26+)
-- [ ] Update `widgetStyle()` ViewModifier to conditionally apply `.glassEffect()` on iOS 26+ and fall back to the shadow style on iOS 17–25 using `if #available(iOS 26, *)`
-- [ ] Decide minimum iOS target before implementing — iOS 26 minimum gets glass everywhere, iOS 17 minimum keeps glass as an enhancement only
+- [ ] Custom widgets opt in via `.glassEffect()` modifier — apply unconditionally, no `if #available` gate required since the app floor is iOS 26
+- [ ] Update `widgetStyle()` ViewModifier to apply `.glassEffect()` directly; the iOS 17–25 shadow fallback is no longer needed
 
 ---
 

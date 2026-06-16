@@ -1,12 +1,12 @@
 ﻿//
 //  SFAPI.swift
-//  MTG Collector
+//  Card Hoard
 //
 //  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
 //         Features various functions to make apis calls in different ways for certain data
 // External Types:
-//         CardFilters, CardJSON, SetJSON, ScryfallCardData, ScrydfallSetData, SetInfo, Card
+//         CardJSON, SetJSON, ScryfallCardData, ScryfallSetData, SetInfo, Card
 
 // MARK: Imports
 
@@ -27,27 +27,6 @@ struct SFAPI {
     }
 
     // MARK: API Functions
-
-    /// URL Builder
-    /// build url from filters struct
-    static func buildSearchURL(filters: CardFilters) -> URL? {
-        let query = buildQuery(from: filters)
-        let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        return URL(string: "https://api.scryfall.com/cards/search?q=\(encoded)")
-    }
-
-    /// Card Data
-    /// querys cards based on CardFilter values
-    static func fetchCardData(filters: CardFilters) async -> [CardJSON] {
-        guard let url = buildSearchURL(filters: filters) else { return [] }
-        do {
-            let (data, _) = try await URLSession.shared.data(for: request(from: url))
-            let fetchResults = try JSONDecoder().decode(ScryfallCardData.self, from: data)
-            return fetchResults.data
-        } catch {
-            return []
-        }
-    }
 
     /// Card Data by set query, for home suggestions
     /// for random collections
@@ -115,6 +94,49 @@ struct SFAPI {
             return fetchResults.data
         } catch {
             return []
+        }
+    }
+
+    /// One page of a Scryfall search: the cards plus paging metadata.
+    struct CardPage {
+        var cards: [CardJSON]
+        var totalCards: Int
+        var hasMore: Bool
+        var nextPage: String?
+    }
+
+    /// First page of a search, with total count + next-page link for pagination.
+    static func fetchCardsPage(query: String, order: String = "name", descending: Bool = false) async -> CardPage {
+        let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let dir = descending ? "desc" : "asc"
+        guard !encoded.isEmpty,
+              let url = URL(string: "https://api.scryfall.com/cards/search?q=\(encoded)&order=\(order)&dir=\(dir)") else {
+            return CardPage(cards: [], totalCards: 0, hasMore: false, nextPage: nil)
+        }
+        return await fetchPage(url: url)
+    }
+
+    /// Fetch a subsequent page from a Scryfall `next_page` URL.
+    static func fetchCardsPage(nextPage urlString: String) async -> CardPage {
+        guard let url = URL(string: urlString) else {
+            return CardPage(cards: [], totalCards: 0, hasMore: false, nextPage: nil)
+        }
+        return await fetchPage(url: url)
+    }
+
+    private static func fetchPage(url: URL) async -> CardPage {
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let result = try JSONDecoder().decode(ScryfallCardData.self, from: data)
+            return CardPage(
+                cards: result.data,
+                totalCards: result.totalCards ?? result.data.count,
+                hasMore: result.hasMore ?? false,
+                nextPage: result.nextPage
+            )
+        } catch {
+            // Scryfall returns 404 with an error object when nothing matches → empty page.
+            return CardPage(cards: [], totalCards: 0, hasMore: false, nextPage: nil)
         }
     }
 
