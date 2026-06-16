@@ -25,10 +25,17 @@ struct AllDecksView: View {
     // MARK: State Properties
     
     @Environment(\.modelContext) var modelContext
-    @Query(sort: \Deck.editedAt, order: .reverse) var decks: [Deck]
+    @Query var decks: [Deck]
     @State var selectedDeck: Deck?
     @State var showAlert: Bool = false
     @State var newDeck: Bool = false
+
+    /// Pinned decks first, then most recently edited — a single sort pass.
+    var sortedDecks: [Deck] {
+        decks.sorted { a, b in
+            a.pinned != b.pinned ? a.pinned : a.editedAt > b.editedAt
+        }
+    }
     
     // MARK: View
     
@@ -36,7 +43,7 @@ struct AllDecksView: View {
         NavigationStack {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(decks.sorted(by: {$0.pinned && !$1.pinned})) { deck in
+                    ForEach(sortedDecks) { deck in
                         NavigationLink(destination: DeckView(deck: deck)) {
                             DeckGridWidget(deck: deck)
                                 .contextMenu {

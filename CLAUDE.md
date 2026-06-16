@@ -268,16 +268,13 @@ Replace the current full-screen navigation push with a **sheet carousel**:
 ### My Collection Tab
 
 **Redesign the main screen layout:**
-- [ ] Remove the separate "All Decks" link widget — replace with two equal buttons side by side: **Binders** and **Decks**, each navigating to their respective list views
-- [ ] Add a whole-collection stats widget at the top showing aggregate stats across everything the user owns: total cards, total unique cards, total estimated value (USD), breakdown by colour or rarity
-- [ ] Add a **General Collection** section below the Binders/Decks buttons — a permanent unsorted catch-all where users can toss cards without needing to create a binder or deck
-  - General Collection is always present, can't be deleted, doesn't need a name/cover
-  - Cards listed directly on the My Collection tab (not behind another navigation link)
-  - Implementation: auto-created special `Binder` with an `isGeneral: Bool` flag, created on first launch if it doesn't exist
+- [x] Removed the "All Decks" link widget (`DecksLinkWidget`/`AllDecksLinkWidget` deleted) — replaced with two equal side-by-side buttons (**Binders** → new `AllBindersView`, **Decks** → `AllDecksView`)
+- [x] Whole-collection stats widget at top (`WholeCollectionStatsWidget`) — total value, total cards, unique cards, colour breakdown; aggregates each collection's stored `CollectionStats`
+- [x] **General Collection** section on the tab — a permanent catch-all `Binder` (`isGeneral == true`), auto-created on first launch, cards listed inline (not behind a link), excluded from `AllBindersView`
 
 **Other fixes:**
-- [ ] Fix crash risk — `unsafelyUnwrapped` in `deleteBinder()` can crash; replace with safe `if let` unwrap
-- [ ] Fix double sort on binders — currently sorted by `@Query` on `editedAt` then re-sorted in the `ForEach` for pinned; consolidate into a single sort
+- [x] Crash risk already resolved — `deleteBinder()` uses a safe `if let` (no `unsafelyUnwrapped` in the codebase)
+- [x] Fixed double sort — binders/decks now use a single combined sort (pinned first, then `editedAt`) instead of a `@Query` sort plus a `ForEach` re-sort
 
 ---
 

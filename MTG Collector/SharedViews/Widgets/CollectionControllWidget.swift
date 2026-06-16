@@ -27,13 +27,28 @@ struct CollectionControllWidget: View {
     @Query(sort: \Binder.editedAt, order: .reverse) var binders: [Binder]
     @Query(sort: \Deck.editedAt, order: .reverse) var decks: [Deck]
 
+    // MARK: Derived Data
+
+    /// The permanent "My Collection" catch-all binder.
+    private var generalBinder: Binder? { binders.first(where: { $0.isGeneral }) }
+    /// User-created binders (the catch-all is offered separately at the top level).
+    private var userBinders: [Binder] { binders.filter { !$0.isGeneral } }
+
     // MARK: View
-    
+
     var body: some View {
-        HStack() {
+        Group {
+            if let general = generalBinder {
+                Button {
+                    addCard(collection: &general.cards, owner: general)
+                } label: {
+                    Label("My Collection", systemImage: "square.stack")
+                }
+            }
+
             Menu("Binders") {
-                if !binders.isEmpty {
-                    ForEach(binders.sorted(by: {$0.pinned && !$1.pinned})) { binder in
+                if !userBinders.isEmpty {
+                    ForEach(userBinders.sorted(by: {$0.pinned && !$1.pinned})) { binder in
                         Button{
                             addCard(collection: &binder.cards, owner: binder)
                         } label: {
