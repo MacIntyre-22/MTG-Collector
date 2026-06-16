@@ -1,4 +1,4 @@
-﻿//
+//
 //  HeaderWidget.swift
 //  Card Hoard
 //
@@ -45,16 +45,12 @@ struct HeaderWidget: View {
                     .bold()
                 
                 HStack {
-                    Text(price, format: .currency(code: "CAD"))
-                        .padding(5)
-                        .foregroundColor(.green)
-                        .background(Color.green.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                    PricePill(price: price)
                     Image(systemName: "square.stack")
                         .foregroundColor(.primary)
                     Text("\(count)")
                 }
-                
+
                 Divider()
                 
             }
@@ -70,16 +66,12 @@ struct HeaderWidget: View {
                 }
                 
                 HStack {
-                    Text(price, format: .currency(code: "CAD"))
-                        .padding(5)
-                        .foregroundColor(.green)
-                        .background(Color.green.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                    PricePill(price: price)
                     Image(systemName: "square.stack")
                         .foregroundColor(.primary)
                     Text("\(count)")
                     Spacer()
-                    
+
                 }
                 .padding(.bottom)
             }

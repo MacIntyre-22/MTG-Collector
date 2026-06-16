@@ -66,11 +66,7 @@ struct BinderLinkWidget: View {
                         .foregroundColor(.primary)
                     Divider()
                     HStack {
-                        Text(binder.totalPrice, format: .currency(code: "CAD"))
-                            .padding(5)
-                            .foregroundColor(.green)
-                            .background(Color.green.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                        PricePill(price: binder.totalPrice)
                         Image(systemName: "square.stack")
                             .foregroundColor(.primary)
                         Text("\(binder.cardCount)")

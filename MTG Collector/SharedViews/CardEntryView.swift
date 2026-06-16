@@ -95,8 +95,6 @@ struct CardEntryView: View {
                 .padding(10)
             }
         }
-        .background(Color.gray.opacity(0.18))
-        .cornerRadius(10)
         .alert("Are you sure?", isPresented: $alertIsShowing) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {

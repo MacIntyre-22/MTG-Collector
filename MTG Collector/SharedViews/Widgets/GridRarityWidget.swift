@@ -17,47 +17,20 @@ struct GridRarityWidget: View {
     // MARK: Stored Properties
 
     var rarity: String
-    let common = LinearGradient(
-        colors: [Color.gray.opacity(0.8), Color.gray.opacity(0.5), Color.gray.opacity(0.8)],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    let uncommon = LinearGradient(
-        colors: [Color.blue, Color.blue.opacity(0.6), Color.blue],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    let rare = LinearGradient(
-        colors: [Color.yellow, Color.orange, Color.yellow],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    let mythic = LinearGradient(
-        colors: [Color.red, Color.orange, Color.red],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
+
     // MARK: Computed Properties
-    
-    var color: LinearGradient {
-        switch(rarity) {
-            case "common":
-                return common
-            case "uncommon":
-                return uncommon
-            case "rare":
-                return rare
-            case "mythic":
-                return mythic
-            default:
-                return LinearGradient(colors: [Color.black], startPoint: .topLeading, endPoint: .bottomTrailing)
+
+    /// Tint colour per rarity tier — used to tint the glass while keeping the colour meaning.
+    var tint: Color {
+        switch rarity {
+        case "common": return .gray
+        case "uncommon": return .blue
+        case "rare": return .yellow
+        case "mythic": return .red
+        default: return .gray
         }
     }
-    
+
     // MARK: View
 
     var body: some View {
@@ -66,8 +39,7 @@ struct GridRarityWidget: View {
             .bold()
             .padding(5)
             .foregroundColor(.white)
-            .background(content: {color})
-            .clipShape(RoundedRectangle(cornerRadius: 5))
+            .glassEffect(.regular.tint(tint), in: RoundedRectangle(cornerRadius: 5))
     }
 }
 

@@ -20,7 +20,19 @@ struct PriceWidget: View {
 
     var finish: String
     var price: String
-    
+
+    // MARK: Computed Properties
+
+    /// Tint colour per finish — keeps the finish meaning while adopting glass.
+    var tint: Color {
+        switch finish {
+        case "Base": return .gray
+        case "Foil": return .purple
+        case "Etched": return .gray
+        default: return .blue
+        }
+    }
+
     // MARK: View
 
     var body: some View {
@@ -30,11 +42,10 @@ struct PriceWidget: View {
                 .italic()
                 .foregroundColor(.white)
                 .padding(5)
-                .background(priceGradient(finish: finish))
-                .cornerRadius(5)
-            
+                .glassEffect(.regular.tint(tint), in: RoundedRectangle(cornerRadius: 5))
+
             Spacer()
-            
+
             Text("$\(price)")
                 .frame(width: 80, alignment: .trailing)
                 .bold()
@@ -42,40 +53,7 @@ struct PriceWidget: View {
         }
         .padding(10)
         .frame(width: 100, height: 100)
-        .background(Color.green.opacity(0.2))
-        .cornerRadius(10)
-    }
-    
-    // MARK: priceGradient
-    
-    /// return a gradient based on the finish type
-    func priceGradient(finish: String) -> LinearGradient {
-        switch finish {
-        case "Base":
-            return LinearGradient(
-                colors: [.gray.opacity(0.6), .gray.opacity(0.3), .gray.opacity(0.6)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case "Foil":
-            return LinearGradient(
-                colors: [.blue, .purple, .pink, .orange, .yellow],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        case "Etched":
-            return LinearGradient(
-                colors: [.black, .gray, .black],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        default:
-            return LinearGradient(
-                colors: [.blue, .blue.opacity(0.6), .blue],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        }
+        .widgetStyle()
     }
 }
 

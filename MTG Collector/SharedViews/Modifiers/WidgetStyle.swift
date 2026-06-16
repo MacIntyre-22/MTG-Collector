@@ -4,7 +4,9 @@
 //
 //  Created by Ben MacIntyre on 2026-06-15.
 //  Purpose:
-//      Shared ViewModifier for widget cards — consistent background, corner radius, and shadow.
+//      Shared ViewModifier for widget cards. Applies Liquid Glass (iOS 26) so widgets read
+//      well in both light and dark mode with no manual background/shadow/border styling.
+//      The app floor is iOS 26, so .glassEffect() is applied unconditionally (no fallback).
 
 // MARK: Imports
 
@@ -15,11 +17,7 @@ import SwiftUI
 private struct WidgetStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color(.secondarySystemBackground))
-                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
-            )
+            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 10))
     }
 }
 

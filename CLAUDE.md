@@ -57,11 +57,13 @@ These are required or strongly recommended before submission.
 - [ ] Create a short preview video (optional but helps conversion)
 
 ### Dark Mode & Widget Styling
-- [ ] Background is too dark in dark mode — use `Color(.systemBackground)` and `Color(.secondarySystemBackground)` from UIKit's semantic colours rather than SwiftUI's `.background` so the hierarchy has proper depth (background → slightly elevated widgets)
-- [ ] Shadow modifier is copy-pasted individually on every widget — consolidate into a single custom `ViewModifier` (e.g. `widgetStyle()`) applied in one place
-- [ ] Light mode shadow: keep the existing style (`.shadow(color: .gray.opacity(0.25), radius: 6)`) inside the modifier
-- [ ] Dark mode shadow: switch to a subtle gray glow/border (`.shadow(color: .gray.opacity(0.15), radius: 8)` or a thin `strokeBorder` overlay) — drop shadows don't read well on dark backgrounds
-- [ ] Widget fill in dark mode: use `Color(.secondarySystemBackground)` so widgets sit slightly lighter than the page background, giving them the same lifted feel the shadow provides in light mode
+- [x] Consolidated all widget styling into the single `widgetStyle()` `ViewModifier` (applied in ~19 places).
+- [x] **Went straight to Liquid Glass** instead of the manual shadow/border approach below — since the app floor is iOS 26, `widgetStyle()` applies `.glassEffect(.regular, in: RoundedRectangle(cornerRadius: 10))` unconditionally. Glass adapts to light/dark automatically, so the per-mode shadow/border/fill rules are no longer needed. (Completes the Phase 7 "Glass Rework" widget item too.)
+
+~~Superseded by glass — kept for reference:~~
+- ~~Background depth via `Color(.systemBackground)` / `Color(.secondarySystemBackground)`~~
+- ~~Light-mode shadow `.gray.opacity(0.25) r6`; dark-mode glow `.gray.opacity(0.15) r8` + `strokeBorder`~~
+- ~~Widget fill `Color(.secondarySystemBackground)`~~
 
 ### Code Cleanup
 - [ ] Audit all `print()` statements — remove or replace with proper logging before release
@@ -526,7 +528,7 @@ This phase covers:
 
 - [ ] System components (tab bar, navigation bar, sheets) automatically adopt Liquid Glass on iOS 26 — no code needed
 - [ ] Custom widgets opt in via `.glassEffect()` modifier — apply unconditionally, no `if #available` gate required since the app floor is iOS 26
-- [ ] Update `widgetStyle()` ViewModifier to apply `.glassEffect()` directly; the iOS 17–25 shadow fallback is no longer needed
+- [x] Update `widgetStyle()` ViewModifier to apply `.glassEffect()` directly; the iOS 17–25 shadow fallback is no longer needed — done early (Card Hoard widgets are all glass)
 
 ---
 
