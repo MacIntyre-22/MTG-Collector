@@ -16,6 +16,7 @@
 
 import SwiftUI
 import SwiftData
+import VisionKit
 
 // MARK: Types
 
@@ -35,6 +36,7 @@ struct SearchTabView: View {
     @State var showFilters = false
     @State var isSearching = false
     @State var isLoadingMore = false
+    @State var showScanner = false
     /// false until the first search runs, so we can show a "start searching" state.
     @State var hasSearched = false
 
@@ -68,6 +70,13 @@ struct SearchTabView: View {
                 Task { await search() }
             }
             .toolbar {
+                if DataScannerViewController.isSupported {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Scan", systemImage: "camera.viewfinder") {
+                            showScanner = true
+                        }
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Filters", systemImage: "slider.horizontal.3") {
                         showFilters.toggle()
@@ -78,6 +87,13 @@ struct SearchTabView: View {
                 FilterSheetView(context: .scryfall, onApply: {
                     Task { await search() }
                 }, filters: $filters)
+            }
+            .fullScreenCover(isPresented: $showScanner) {
+                CardScannerSheet { name in
+                    filters.text = name
+                    showScanner = false
+                    Task { await search() }
+                }
             }
         }
     }
