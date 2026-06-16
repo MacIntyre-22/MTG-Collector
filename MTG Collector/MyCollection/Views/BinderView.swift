@@ -22,6 +22,7 @@ struct BinderView: View {
 
     var binder: Binder
     var coverImage: UIImage
+    var hasCover: Bool
     let cardColumns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 15)]
 
     // MARK: State Properties
@@ -35,7 +36,9 @@ struct BinderView: View {
 
     init(binder: Binder) {
         self.binder = binder
-        self.coverImage = ImageManager.fetchImage(withIdentifier: binder.id) ?? UIImage(named: "MtgBinder")!
+        let custom = ImageManager.fetchImage(withIdentifier: binder.id)
+        self.coverImage = custom ?? UIImage(named: "MtgBinder")!
+        self.hasCover = custom != nil
     }
 
     // MARK: View
@@ -43,6 +46,7 @@ struct BinderView: View {
     var body: some View {
         CollectionScreen(
             coverImage: coverImage,
+            hasCover: hasCover,
             showCover: binder.showCover,
             name: binder.name,
             price: binder.totalPrice,

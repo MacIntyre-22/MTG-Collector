@@ -349,12 +349,12 @@ Replace the current full-screen navigation push with a **sheet carousel**:
 - [ ] Improve art/visuals — replace placeholder graphics with polished illustration or card mockups
 
 ### Card Scanner
-- [ ] Add a scan icon to the top-right toolbar (globally accessible, likely in the Search tab or as a persistent toolbar item)
-- [ ] Implement using **VisionKit `DataScannerViewController`** (iOS 16+) — native Apple framework, no third party needed, includes built-in live camera UI with real-time text highlighting
-- [ ] Flow: tap scan → live camera opens → user points at card name → name auto-captured → Scryfall search fires → results shown in a sheet
-- [ ] Allow user to confirm/edit the scanned name before searching — foil cards and bad angles can produce inaccurate OCR
-- [ ] `CameraPicker.swift` is for photo capture and is separate from this — the scanner is a new `DataScannerViewController` presentation
-- [ ] iOS 16+ only — check availability with `DataScannerViewController.isSupported` and hide the button gracefully on unsupported devices
+- [x] Scan button in the Search toolbar (`camera.viewfinder`)
+- [x] Implemented with **VisionKit `DataScannerViewController`** (`CardScanner.swift`: `DataScannerView` + `CardScannerSheet`)
+- [x] Flow: tap scan → live camera (`fullScreenCover`) → tap a highlighted name → fills the search bar → search fires
+- [x] Confirm/edit: the scanned name lands in the editable search bar, so the user can fix OCR before re-searching
+- [x] Separate from `CameraPicker.swift` (photo capture); added `NSCameraUsageDescription`
+- [x] Gated on `DataScannerViewController.isSupported` — button hidden on unsupported devices (and the Simulator, which has no camera)
 
 ---
 

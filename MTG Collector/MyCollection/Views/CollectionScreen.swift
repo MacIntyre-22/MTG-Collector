@@ -46,6 +46,8 @@ struct CollectionScreen<Content: View>: View {
     // MARK: Stored Properties
 
     let coverImage: UIImage
+    /// Whether the collection has a real cover image (vs the generic fallback icon).
+    var hasCover: Bool = true
     let showCover: Bool
     let name: String
     let price: Double
@@ -67,6 +69,15 @@ struct CollectionScreen<Content: View>: View {
                 content()
             }
         }
-        .background(CollectionBackground(image: coverImage))
+        // With a cover: blurred art background + clearer glass on the cards so it reads through.
+        // Without one: the plain system background + solid glass tiles, like the flat screens.
+        .environment(\.cardGlass, hasCover ? .translucent : .solid)
+        .background {
+            if hasCover {
+                CollectionBackground(image: coverImage)
+            } else {
+                Color(.systemBackground)
+            }
+        }
     }
 }

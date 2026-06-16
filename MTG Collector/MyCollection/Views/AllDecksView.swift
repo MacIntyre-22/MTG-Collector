@@ -19,8 +19,8 @@ struct AllDecksView: View {
     
     // MARK: Stored Properties
     
-    let columns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 20),
-                   GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 20)]
+    let columns = [GridItem(.flexible(), spacing: 15),
+                   GridItem(.flexible(), spacing: 15)]
     
     // MARK: State Properties
     
