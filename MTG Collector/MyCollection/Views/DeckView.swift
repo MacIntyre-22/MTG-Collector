@@ -23,6 +23,7 @@ struct DeckView: View {
 
     var deck: Deck
     var coverImage: UIImage
+    var hasCover: Bool
 
     // MARK: State Properties
 
@@ -30,13 +31,16 @@ struct DeckView: View {
     @State var showEdit: Bool = false
     @State var showNotes: Bool = false
     @State var showStats: Bool = false
+    @State var showSuggestions: Bool = false
     @State var selectedBoard: Int = 0
 
     // MARK: Initializer
 
     init(deck: Deck) {
         self.deck = deck
-        self.coverImage = ImageManager.fetchImage(withIdentifier: deck.id) ?? UIImage(named: "MtgDeck")!
+        let custom = ImageManager.fetchImage(withIdentifier: deck.id)
+        self.coverImage = custom ?? UIImage(named: "MtgDeck")!
+        self.hasCover = custom != nil
     }
 
     // MARK: View
@@ -44,12 +48,21 @@ struct DeckView: View {
     var body: some View {
         CollectionScreen(
             coverImage: coverImage,
+            hasCover: hasCover,
             showCover: deck.showCover,
             name: deck.name,
             price: deck.totalPrice,
             count: deck.cardCount
         ) {
             VStack {
+                Picker("Boards", selection: $selectedBoard) {
+                    Text("Main").tag(0)
+                    Text("Side").tag(1)
+                    Text("Maybe").tag(2)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+
                 if let commander = deck.commander {
                     CommanderWidget(entry: commander) {
                         deck.commander = nil
@@ -58,9 +71,9 @@ struct DeckView: View {
                 }
 
                 switch selectedBoard {
-                case 0: MainboardView(deck: deck)
-                case 1: SideboardView(deck: deck)
-                case 2: MaybeboardView(deck: deck)
+                case 0: DeckBoardView(deck: deck, board: .main)
+                case 1: DeckBoardView(deck: deck, board: .side)
+                case 2: DeckBoardView(deck: deck, board: .maybe)
                 default: EmptyView()
                 }
             }
@@ -70,14 +83,8 @@ struct DeckView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Picker("Boards", selection: $selectedBoard) {
-                    Text("Main").tag(0)
-                    Text("Side").tag(1)
-                    Text("Maybe").tag(2)
-                }
-            }
-            ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Button("Suggestions", systemImage: "wand.and.stars") { showSuggestions.toggle() }
                     Button("Stats", systemImage: "chart.bar") { showStats.toggle() }
                     Button("Notes", systemImage: "note.text") { showNotes.toggle() }
                     Button("Settings", systemImage: "gearshape") { showEdit.toggle() }
@@ -85,6 +92,9 @@ struct DeckView: View {
                     Image(systemName: "ellipsis")
                 }
             }
+        }
+        .sheet(isPresented: $showSuggestions) {
+            DeckSuggestionsView(deck: deck)
         }
         .sheet(isPresented: $showStats) {
             DeckStatsSheet(deck: deck)

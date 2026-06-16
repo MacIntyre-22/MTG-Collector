@@ -31,27 +31,10 @@ struct DeckCardView: View {
 
     // MARK: Computed Properties
 
-    /// comp the legal status for the card (needs resolved card data)
-    var legalStatus: Int {
-        guard let card else { return 0 }
-        var status = 0
-        for legality in card.legalities {
-            if legality.key == deck.ruleType {
-                switch legality.value {
-                case "legal":
-                    status = 1
-                case "not_legal":
-                    status = 2
-                case "banned":
-                    status = 3
-                case "restricted":
-                    status = 4
-                default:
-                    status = 0
-                }
-            }
-        }
-        return status
+    /// Legal status for this card in the deck's format (needs resolved card data).
+    var legality: LegalityStatus {
+        guard let card else { return .unknown }
+        return LegalityStatus.of(card, ruleType: deck.ruleType)
     }
 
     // MARK: View
@@ -107,14 +90,13 @@ struct DeckCardView: View {
                     }
                     .padding(5)
 
-                    /// Show legal status if not legal
-                    if legalStatus > 1 {
-                        Image(systemName: "exclamationmark.triangle.fill")
+                    /// Show legal status if there's a problem
+                    if legality.isProblem {
+                        Image(systemName: legality.icon)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 30, height: 30)
-                        /// different status diff colours
-                            .foregroundColor(((legalStatus % 4) == 0) ? .orange : .red )
+                            .foregroundColor(legality.color)
                             .bold()
                             .shadow(radius: 4)
                     }

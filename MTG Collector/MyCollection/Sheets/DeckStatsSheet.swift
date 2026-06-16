@@ -49,9 +49,12 @@ struct DeckStatsSheet: View {
                     }
                     .padding(.bottom, 10)
                     
+                    ManaCurveWidget(deck: deck)
+                        .padding(.bottom, 10)
+
                     ManaCountWidget(manaTypeCount: deck.manaTypeCount)
                         .padding(.bottom, 10)
-                    
+
                     TypeCountWidget(cardTypeCount: deck.cardTypeCount)
                         .padding(.bottom, 10)
                 }
