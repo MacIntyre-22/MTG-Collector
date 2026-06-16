@@ -89,11 +89,11 @@ struct SearchTabView: View {
                 }, filters: $filters)
             }
             .fullScreenCover(isPresented: $showScanner) {
-                CardScannerSheet { name in
+                CardScannerSheet(onSearch: { name in
                     filters.text = name
                     showScanner = false
                     Task { await search() }
-                }
+                })
             }
         }
     }

@@ -21,8 +21,10 @@ struct SFAPI {
     // MARK: Private Helpers
 
     private static func request(from url: URL) -> URLRequest {
+        // Single choke point for every Scryfall request — count it for rate-limit monitoring.
+        RateLimitMonitor.shared.record()
         var req = URLRequest(url: url)
-        req.setValue("MTGCollector/1.0 (benmacintyre09@gmail.com)", forHTTPHeaderField: "User-Agent")
+        req.setValue("CardHoard/1.0 (benmacintyre09@gmail.com)", forHTTPHeaderField: "User-Agent")
         return req
     }
 
@@ -39,6 +41,22 @@ struct SFAPI {
             return shuffle ? fetchResults.data.shuffled() : fetchResults.data
         } catch {
             return []
+        }
+    }
+
+    /// Resolve a (possibly mis-OCR'd) card name to a single card via Scryfall's fuzzy match.
+    /// Used by the live card scanner. Returns nil if no confident match.
+    static func fetchCardNamed(fuzzy name: String) async -> CardJSON? {
+        let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        guard !encoded.isEmpty,
+              let url = URL(string: "https://api.scryfall.com/cards/named?fuzzy=\(encoded)") else {
+            return nil
+        }
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            return try JSONDecoder().decode(CardJSON.self, from: data)
+        } catch {
+            return nil
         }
     }
 
