@@ -1,8 +1,8 @@
-//
+﻿//
 //  SuggestionWidget.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-10-18.
+//  Created by Ben MacIntyre on 2025-10-18.
 //  Purpose:
 //      Displays an array of cards based on hard coded filters
 //  External types:
@@ -54,20 +54,17 @@ struct SuggestionWidget: View {
                 .padding(.top, 20)
 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        Spacer()
+                    LazyHStack {
                         if collection.count >= 10 {
                             ForEach(0..<10) { i in
-                                /// take index from collectioin in
-                                /// dont want to show all the cards
-                                let cardJson = collection[i]
-                                let cardModel = SFAPI.JSONtoModel(json: cardJson)
-                                
+                                /// take index from collection — don't show all the cards.
+                                /// Lazy so only the visible cards build/decode and load art.
+                                let cardModel = SFAPI.JSONtoModel(json: collection[i])
+
                                 NavigationLink(destination: CardInfoView(card: cardModel)) {
                                     CardGridView(card: cardModel, showPreviews: true)
                                         .frame(width: 180)
-                                        .background(content: {Color.gray.opacity(0.18)})
-                                        .cornerRadius(10)
+                                        .widgetStyle(.solid)
                                 }
                             }
                         }
@@ -98,11 +95,7 @@ struct SuggestionWidget: View {
                 }
             }
             .cornerRadius(9)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background)
-                    .shadow(color: .gray.opacity(0.25), radius: 15, x: 0, y: 0)
-            )
+            .widgetStyle()
         }
     }
 }

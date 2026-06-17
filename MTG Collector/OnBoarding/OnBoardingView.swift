@@ -1,8 +1,8 @@
-//
+﻿//
 //  OnBoardingView.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-10-29.
+//  Created by Ben MacIntyre on 2025-10-29.
 //  Purpose:
 //      Displays pages for onboarding users on app startup
 //  External Types:

@@ -1,8 +1,8 @@
-//
+﻿//
 //  SetIconWidget.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-10-03.
+//  Created by Ben MacIntyre on 2025-10-03.
 //  Purpose:
 //      Displays a set icon and with the rarity as the background
 
@@ -26,45 +26,35 @@ struct SetIconWidget: View {
             return "MtgBinder"
         }
     }
-    var color: LinearGradient {
-        switch(rarity) {
-            case "common":
-                return common
-            case "uncommon":
-                return uncommon
-            case "rare":
-                return rare
-            case "mythic":
-                return mythic
-            default:
-                return LinearGradient(colors: [Color.black], startPoint: .topLeading, endPoint: .bottomTrailing)
+    /// Tint colour per rarity tier — tints the glass background while keeping the meaning.
+    var tint: Color {
+        switch rarity {
+        case "common": return .gray
+        case "uncommon": return .blue
+        case "rare": return .yellow
+        case "mythic": return .red
+        default: return .gray
         }
     }
-    
-    let common = LinearGradient(
-        colors: [Color.gray.opacity(0.8), Color.gray.opacity(0.5), Color.gray.opacity(0.8)],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-     let uncommon = LinearGradient(
-        colors: [Color.blue, Color.blue.opacity(0.6), Color.blue],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-     let rare = LinearGradient(
-        colors: [Color.yellow, Color.orange, Color.yellow],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-     let mythic = LinearGradient(
-        colors: [Color.red, Color.orange, Color.red],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
+
+    /// Only rare/mythic get the foil treatment.
+    var shine: ShineLevel {
+        switch rarity {
+        case "rare": return .holo
+        case "mythic": return .mythic
+        default: return .none
+        }
+    }
+
+    /// Holo gradient colours per tier (rare = gold, mythic = fiery).
+    var holoColors: [Color] {
+        switch rarity {
+        case "rare": return [.yellow, .orange, .white, .yellow, .orange]
+        case "mythic": return [.red, .orange, .yellow, .pink, .red]
+        default: return [tint]
+        }
+    }
+
     // MARK: View
 
     var body: some View {
@@ -91,8 +81,7 @@ struct SetIconWidget: View {
             }
         }
         .frame(width: maxWidth, height: maxWidth)
-        .background(color)
-        .cornerRadius(10)
+        .holoBox(level: shine, colors: holoColors, tint: tint)
         .foregroundColor(.primary)
     }
 }

@@ -1,8 +1,8 @@
-//
+﻿//
 //  GridRarityWidget.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-09-28.
+//  Created by Ben MacIntyre on 2025-09-28.
 //  Purpose:
 //      Displays the rarity based on whats passed to it
 
@@ -17,47 +17,38 @@ struct GridRarityWidget: View {
     // MARK: Stored Properties
 
     var rarity: String
-    let common = LinearGradient(
-        colors: [Color.gray.opacity(0.8), Color.gray.opacity(0.5), Color.gray.opacity(0.8)],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    let uncommon = LinearGradient(
-        colors: [Color.blue, Color.blue.opacity(0.6), Color.blue],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    let rare = LinearGradient(
-        colors: [Color.yellow, Color.orange, Color.yellow],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    let mythic = LinearGradient(
-        colors: [Color.red, Color.orange, Color.red],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
+
     // MARK: Computed Properties
-    
-    var color: LinearGradient {
-        switch(rarity) {
-            case "common":
-                return common
-            case "uncommon":
-                return uncommon
-            case "rare":
-                return rare
-            case "mythic":
-                return mythic
-            default:
-                return LinearGradient(colors: [Color.black], startPoint: .topLeading, endPoint: .bottomTrailing)
+
+    /// Tint colour per rarity tier — used to tint the glass while keeping the colour meaning.
+    var tint: Color {
+        switch rarity {
+        case "common": return .gray
+        case "uncommon": return .blue
+        case "rare": return .yellow
+        case "mythic": return .red
+        default: return .gray
         }
     }
-    
+
+    /// Only rare/mythic get the foil treatment, so they pop against the calmer lower tiers.
+    var shine: ShineLevel {
+        switch rarity {
+        case "rare": return .holo
+        case "mythic": return .mythic
+        default: return .none
+        }
+    }
+
+    /// Holo gradient colours per tier (rare = gold, mythic = fiery).
+    var holoColors: [Color] {
+        switch rarity {
+        case "rare": return [.yellow, .orange, .white, .yellow, .orange]
+        case "mythic": return [.red, .orange, .yellow, .pink, .red]
+        default: return [tint]
+        }
+    }
+
     // MARK: View
 
     var body: some View {
@@ -66,8 +57,7 @@ struct GridRarityWidget: View {
             .bold()
             .padding(5)
             .foregroundColor(.white)
-            .background(content: {color})
-            .clipShape(RoundedRectangle(cornerRadius: 5))
+            .holoPill(level: shine, colors: holoColors, tint: tint)
     }
 }
 

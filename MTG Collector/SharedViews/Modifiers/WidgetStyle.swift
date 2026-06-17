@@ -1,0 +1,95 @@
+//
+//  WidgetStyle.swift
+//  Cardhold
+//
+//  Created by Ben MacIntyre on 2026-06-15.
+//  Purpose:
+//      Central Liquid Glass palette + modifiers. Define each glass treatment once in `AppGlass`
+//      and apply it by name, so changing how a treatment looks is a one-line change here rather
+//      than across every call site.
+//        • widgetStyle(_:) — rounded-rectangle container (widgets, card tiles)
+//        • pillStyle(_:)    — capsule (small chips)
+//      The app floor is iOS 26, so glass is applied unconditionally (no fallback).
+
+// MARK: Imports
+
+import SwiftUI
+
+// MARK: Glass Palette
+
+/// The named glass treatments used across the app. Add a case to introduce a new look.
+enum AppGlass {
+    /// Frosted, for page widgets over solid backgrounds.
+    case solid
+    /// Clearer/translucent, for card tiles that sit over imagery (e.g. a blurred cover).
+    case translucent
+    /// Coloured glass for semantic chips (rarity, price finish, …).
+    case tinted(Color)
+
+    var glass: Glass {
+        switch self {
+        case .solid: return .regular
+        case .translucent: return .clear
+        case .tinted(let color): return .regular.tint(color)
+        }
+    }
+}
+
+// MARK: Modifiers
+
+extension View {
+
+    /// Rounded-rectangle glass container — widgets and card tiles.
+    /// When no style is passed, the treatment is taken from the `widgetGlass` environment
+    /// (default `.solid`), so a parent screen can make a whole subtree translucent — e.g. the
+    /// card detail view over its blurred art — without touching each widget.
+    func widgetStyle(_ style: AppGlass? = nil, cornerRadius: CGFloat = 10) -> some View {
+        modifier(WidgetGlassModifier(explicit: style, cornerRadius: cornerRadius))
+    }
+
+    /// Capsule glass — small chips/pills.
+    func pillStyle(_ style: AppGlass = .solid) -> some View {
+        glassEffect(style.glass, in: Capsule())
+    }
+}
+
+/// Applies the explicit glass style if given, otherwise the inherited `widgetGlass` environment.
+private struct WidgetGlassModifier: ViewModifier {
+    let explicit: AppGlass?
+    let cornerRadius: CGFloat
+    @Environment(\.widgetGlass) private var inherited
+
+    func body(content: Content) -> some View {
+        content.glassEffect((explicit ?? inherited).glass, in: RoundedRectangle(cornerRadius: cornerRadius))
+    }
+}
+
+// MARK: Widget Glass (environment)
+
+private struct WidgetGlassKey: EnvironmentKey {
+    static let defaultValue: AppGlass = .solid
+}
+
+extension EnvironmentValues {
+    /// Default glass treatment for `widgetStyle()` containers with no explicit style.
+    /// Screens over imagery set `.translucent` to soften their widgets.
+    var widgetGlass: AppGlass {
+        get { self[WidgetGlassKey.self] }
+        set { self[WidgetGlassKey.self] = newValue }
+    }
+}
+
+// MARK: Card Tile Glass (environment)
+
+private struct CardGlassKey: EnvironmentKey {
+    static let defaultValue: AppGlass = .solid
+}
+
+extension EnvironmentValues {
+    /// Glass treatment for card tiles. Defaults to `.solid` (flat backgrounds: search, Home,
+    /// General collection); screens over cover imagery (binder/deck) set `.translucent`.
+    var cardGlass: AppGlass {
+        get { self[CardGlassKey.self] }
+        set { self[CardGlassKey.self] = newValue }
+    }
+}

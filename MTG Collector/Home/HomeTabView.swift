@@ -1,8 +1,8 @@
-//
+﻿//
 //  HomeTabView.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-09-21.
+//  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
 //      The Home page for my app that displays multiple widgets with suggested cards pulled from the api
 //  External Types:
@@ -21,8 +21,9 @@ struct HomeTabView: View {
     
     @Environment(\.modelContext) var modelContext
     @Query var setList: [SetInfo]
-    @State var isLoaded: Bool = false
     @State var homeSuggestions: HomeSuggestions = HomeSuggestions()
+    /// Bumped by the Settings dev "Reload Home" option to force a refetch without relaunching.
+    @AppStorage("homeReloadToken") private var reloadToken = 0
     
     // MARK: View
     
@@ -37,7 +38,7 @@ struct HomeTabView: View {
                             .scaledToFit()
                             .frame(width: 60, height: 60)
                         
-                        Text("MTG Collector")
+                        Text("Cardhold")
                             .font(.title)
                             .bold()
                     }
@@ -62,27 +63,57 @@ struct HomeTabView: View {
                 .padding(.horizontal, 10)
             }
         }
-        .task {
-            /// grab set data and home suggestion cards
-            /// load once
-            if !isLoaded {
-                
-                homeSuggestions.newCards = await SFAPI.fetchCardQuery(query: "(is:rare+or+is:mythic)+game:paper+-t:token&order=released&dir=desc")
-                homeSuggestions.popularCards = await SFAPI.fetchCardQuery(query: "game:paper+-t:land+-t:token&order=edhrec&dir=asc")
-                homeSuggestions.fullArt = await SFAPI.fetchCardQuery(query: "(is:fullart+or+is:borderless+or+is:showcase)+game:paper&order=released&dir=desc")
-                homeSuggestions.oldSchool = await SFAPI.fetchCardQuery(query: "frame:1997+or+frame:1993&order=released&dir=asc")
-                homeSuggestions.expensive = await SFAPI.fetchCardQuery(query: "(is:mythic+or+is:promo)+game:paper&order=usd&dir=desc")
-                homeSuggestions.budget = await SFAPI.fetchCardQuery(query: "usd<=5+order:edhrec&dir=asc")
-                
-                let tempSets: [SetJSON] = await SFAPI.fetchSetData()
-                for set in tempSets {
-                    
-                    let tempSet: SetInfo = SFAPI.setToModel(json: set)
-                    if !setList.contains(where: { $0.code == tempSet.code }) {
-                        modelContext.insert(tempSet)
-                    }
-                }
-                isLoaded.toggle()
+        // Runs on appear and whenever the dev reload token changes.
+        .task(id: reloadToken) {
+            await loadSuggestions()
+            await loadSetsIfNeeded()
+        }
+    }
+
+    // MARK: Loading
+
+    /// Suggestions are a once-per-day discovery: reuse today's cached set if present, otherwise
+    /// fetch all six rows concurrently and persist them with today's date stamp.
+    private func loadSuggestions() async {
+        if HomeSuggestionsStore.isFreshForToday(),
+           let cached = await Task.detached(priority: .userInitiated, operation: {
+               HomeSuggestionsStore.load()
+           }).value {
+            homeSuggestions = cached
+            return
+        }
+
+        // Fire all six searches concurrently instead of one-after-another, so the whole row set
+        // arrives in roughly the time of the slowest request, not their sum.
+        async let new       = SFAPI.fetchCardQuery(query: "(is:rare+or+is:mythic)+game:paper+-t:token&order=released&dir=desc")
+        async let popular   = SFAPI.fetchCardQuery(query: "game:paper+-t:land+-t:token&order=edhrec&dir=asc")
+        async let fullArt   = SFAPI.fetchCardQuery(query: "(is:fullart+or+is:borderless+or+is:showcase)+game:paper&order=released&dir=desc")
+        async let oldSchool = SFAPI.fetchCardQuery(query: "frame:1997+or+frame:1993&order=released&dir=asc")
+        async let expensive = SFAPI.fetchCardQuery(query: "(is:mythic+or+is:promo)+game:paper&order=usd&dir=desc")
+        async let budget    = SFAPI.fetchCardQuery(query: "usd<=5+order:edhrec&dir=asc")
+
+        var fresh = HomeSuggestions()
+        fresh.newCards     = await new
+        fresh.popularCards = await popular
+        fresh.fullArt      = await fullArt
+        fresh.oldSchool    = await oldSchool
+        fresh.expensive    = await expensive
+        fresh.budget       = await budget
+        homeSuggestions = fresh
+
+        // Persist off the main thread — encoding ~1k cards shouldn't block the UI.
+        Task.detached(priority: .utility) { HomeSuggestionsStore.save(fresh) }
+    }
+
+    /// Set list is reference data that rarely changes — only fetch when we have none, and de-dupe
+    /// against a Set (O(n)) instead of a per-row linear scan (O(n²)).
+    private func loadSetsIfNeeded() async {
+        guard setList.isEmpty else { return }
+        let existing = Set(setList.map(\.code))
+        for set in await SFAPI.fetchSetData() {
+            let model = SFAPI.setToModel(json: set)
+            if !existing.contains(model.code) {
+                modelContext.insert(model)
             }
         }
     }

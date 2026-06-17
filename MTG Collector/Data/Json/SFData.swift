@@ -1,8 +1,8 @@
 //
 //  SFData.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //         This file stores all datatypes for creating json objects from the api
 
@@ -32,9 +32,46 @@ struct SetJSON: Codable {
     }
 }
 
-/// Holds cards results
+/// Holds cards results. `totalCards`/`hasMore`/`nextPage` drive the search result
+/// count and "Load More" pagination (Scryfall returns 175 cards per page).
 struct ScryfallCardData: Decodable {
     var data: [CardJSON]
+    var totalCards: Int?
+    var hasMore: Bool?
+    var nextPage: String?
+
+    enum CodingKeys: String, CodingKey {
+        case data
+        case totalCards = "total_cards"
+        case hasMore = "has_more"
+        case nextPage = "next_page"
+    }
+}
+
+/// Holds the result of a /cards/collection POST (bulk lookup by identifier)
+struct ScryfallCollectionData: Decodable {
+    var data: [CardJSON]
+    var notFound: [CardIdentifierJSON]?
+
+    enum CodingKeys: String, CodingKey {
+        case data
+        case notFound = "not_found"
+    }
+}
+
+/// A single card identifier used in /cards/collection requests
+struct CardIdentifierJSON: Codable {
+    var id: String?
+    var name: String?
+    var set: String?
+    var collectorNumber: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case set
+        case collectorNumber = "collector_number"
+    }
 }
 
 /// Holds a single card
@@ -52,6 +89,7 @@ struct CardJSON: Codable, Identifiable {
     var colors: [String]?
     var colorIdentity: [String]?
     var colorIndicator: [String]?
+    var producedMana: [String]?
 
     /// text
     var typeLine: String?
@@ -73,6 +111,15 @@ struct CardJSON: Codable, Identifiable {
     var flavorText: String?
     var finishes: [String]?
     var set: String?
+    var setName: String?
+    var artist: String?
+    var collectorNumber: String?
+    var edhrecRank: Int?
+
+    /// scryfall links (scryfallURI required by Scryfall ToS when displaying data)
+    var scryfallURI: String?
+    var rulingsURI: String?
+    var relatedURIs: RelatedURIsJSON?
 
     var prices: PricesJSON?
     var purchaseURIs: PurchaseURIsJSON?
@@ -93,6 +140,7 @@ struct CardJSON: Codable, Identifiable {
         case colors
         case colorIdentity = "color_identity"
         case colorIndicator = "color_indicator"
+        case producedMana = "produced_mana"
 
         case typeLine = "type_line"
         case oracleText = "oracle_text"
@@ -110,6 +158,14 @@ struct CardJSON: Codable, Identifiable {
         case flavorText = "flavor_text"
         case finishes
         case set
+        case setName = "set_name"
+        case artist
+        case collectorNumber = "collector_number"
+        case edhrecRank = "edhrec_rank"
+
+        case scryfallURI = "scryfall_uri"
+        case rulingsURI = "rulings_uri"
+        case relatedURIs = "related_uris"
 
         case prices
         case purchaseURIs = "purchase_uris"
@@ -140,11 +196,17 @@ struct PricesJSON: Codable {
     var usd: String?
     var usdFoil: String?
     var usdEtched: String?
+    var eur: String?
+    var eurFoil: String?
+    var tix: String?
 
     enum CodingKeys: String, CodingKey {
         case usd
         case usdFoil = "usd_foil"
         case usdEtched = "usd_etched"
+        case eur
+        case eurFoil = "eur_foil"
+        case tix
     }
 }
 
@@ -154,6 +216,21 @@ struct PurchaseURIsJSON: Codable {
     var cardhoarder: String?
 }
 
+/// Links to external resources surfaced by Scryfall (EDHREC, Gatherer, TCGPlayer Infinite)
+struct RelatedURIsJSON: Codable {
+    var edhrec: String?
+    var gatherer: String?
+    var tcgplayerInfiniteDecks: String?
+    var tcgplayerInfiniteArticles: String?
+
+    enum CodingKeys: String, CodingKey {
+        case edhrec
+        case gatherer
+        case tcgplayerInfiniteDecks = "tcgplayer_infinite_decks"
+        case tcgplayerInfiniteArticles = "tcgplayer_infinite_articles"
+    }
+}
+
 /// mini version of card object if a CardJSON is a multi-faced card
 struct CardFaceJSON: Codable, Identifiable {
     var id: String?
@@ -161,27 +238,29 @@ struct CardFaceJSON: Codable, Identifiable {
     var name: String
     var layout: String?
     var imageURIs: ImageURIsJSON?
-    
+
     /// text
     var typeLine: String?
     var oracleText: String?
+    var flavorText: String?
     var keywords: [String]?
-    
+
     /// stats
     var toughness: String?
     var power: String?
     var loyalty: String?
     var defense: String?
-    
+
     /// mana
     var manaCost: String?
-    
+
     /// mana value
     var cmc: Double?
-    
+
     /// colours
     var colors: [String]?
     var colorIndicator: [String]?
+    var producedMana: [String]?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -191,18 +270,19 @@ struct CardFaceJSON: Codable, Identifiable {
         case imageURIs = "image_uris"
         case typeLine = "type_line"
         case oracleText = "oracle_text"
+        case flavorText = "flavor_text"
         case keywords
-        
+
         case toughness
         case power
         case loyalty
         case defense
-        
+
         case manaCost = "mana_cost"
         case cmc
         case colors
         case colorIndicator = "color_indicator"
-        
+        case producedMana = "produced_mana"
     }
 }
 
@@ -210,4 +290,5 @@ struct RelatedCardObjectJSON: Codable {
     var id: String?
     var name: String?
     var uri: String?
+    var component: String?
 }

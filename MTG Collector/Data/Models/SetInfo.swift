@@ -1,8 +1,8 @@
-//
+﻿//
 //  Set.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //         Stores info about sets, mainly used for filtering
 

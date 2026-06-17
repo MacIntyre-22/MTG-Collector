@@ -1,8 +1,8 @@
-//
+﻿//
 //  CollectionControllWidget.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-09-27.
+//  Created by Ben MacIntyre on 2025-09-27.
 //  Purpose:
 //      Allows the user to add a card to one of their collections
 //  External Types:
@@ -27,17 +27,30 @@ struct CollectionControllWidget: View {
     @Query(sort: \Binder.editedAt, order: .reverse) var binders: [Binder]
     @Query(sort: \Deck.editedAt, order: .reverse) var decks: [Deck]
 
+    // MARK: Derived Data
+
+    /// The permanent "My Hold" catch-all binder.
+    private var generalBinder: Binder? { binders.first(where: { $0.isGeneral }) }
+    /// User-created binders (the catch-all is offered separately at the top level).
+    private var userBinders: [Binder] { binders.filter { !$0.isGeneral } }
+
     // MARK: View
-    
+
     var body: some View {
-        HStack() {
+        Group {
+            if let general = generalBinder {
+                Button {
+                    addCard(collection: &general.cards, owner: general)
+                } label: {
+                    Label("My Hold", systemImage: "square.stack")
+                }
+            }
+
             Menu("Binders") {
-                if !binders.isEmpty {
-                    ForEach(binders.sorted(by: {$0.pinned && !$1.pinned})) { binder in
+                if !userBinders.isEmpty {
+                    ForEach(userBinders.sorted(by: {$0.pinned && !$1.pinned})) { binder in
                         Button{
-                            addCard(collection: &binder.cards)
-                            binder.editedAt = Date()
-                            
+                            addCard(collection: &binder.cards, owner: binder)
                         } label: {
                             if binder.pinned {
                                 Label(binder.name, systemImage: "pin.fill")
@@ -57,16 +70,13 @@ struct CollectionControllWidget: View {
                     ForEach(decks.sorted(by: {$0.pinned && !$1.pinned})) { deck in
                         Menu {
                             Button("Mainboard") {
-                                addCard(collection: &deck.mainboard)
-                                deck.editedAt = Date()
+                                addCard(collection: &deck.mainboard, owner: deck)
                             }
                             Button("Sideboard") {
-                                addCard(collection: &deck.sideboard)
-                                deck.editedAt = Date()
+                                addCard(collection: &deck.sideboard, owner: deck)
                             }
                             Button("Maybeboard") {
-                                addCard(collection: &deck.maybeboard)
-                                deck.editedAt = Date()
+                                addCard(collection: &deck.maybeboard, owner: deck)
                             }
                         } label: {
                             if deck.pinned {
@@ -84,11 +94,14 @@ struct CollectionControllWidget: View {
     }
     
     // MARK: Add Card
-    
-    /// takes a collection to add to
-    func addCard(collection: inout [CardEntry]) {
-        /// create cardEntry and add to collection
-        let entry = CardEntry(card: card)
-        collection.append(entry)
+
+    /// Cache the full card locally (so it resolves later), add a lightweight entry, refresh stats.
+    func addCard(collection: inout [CardEntry], owner: Collection) {
+        CardStore.cache(card, context: modelContext)
+        collection.append(CardEntry(scryfallCardID: card.id))
+        owner.editedAt = Date()
+        owner.updatedAt = Date()
+        StatsUpdater.update(owner, context: modelContext)
+        HapticManager.light()
     }
 }

@@ -1,8 +1,8 @@
-//
+﻿//
 //  CardImageView.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //      Dsiplays the cards image and allows for a zoomed in view
 //  External Types:
@@ -55,55 +55,61 @@ struct CardImageView: View {
                 .padding(10)
             
             if let url = URL(string: imageUrl) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-
-                    case .success(let image):
-                        /// if success, display the image with a long press gesture
-                        /// this shows a full screen versioin of the card
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .cornerRadius(8)
-                            .onLongPressGesture {
-                                showFullScreen = true
-                            }
-                            .fullScreenCover(isPresented: $showFullScreen) {
-                                ZStack() {
-                                    Color.gray.opacity(0.3).ignoresSafeArea()
+                CachedAsyncImage(url: url) { image in
+                    /// if loaded, display the image with a long press gesture
+                    /// this shows a full screen version of the card
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .cornerRadius(8)
+                        .onLongPressGesture {
+                            showFullScreen = true
+                        }
+                        .fullScreenCover(isPresented: $showFullScreen) {
+                            ZStack() {
+                                /// blurred card art filling the background.
+                                /// Sized from the screen via GeometryReader so it fills and
+                                /// clips to the full bounds (incl. safe area) without inflating
+                                /// the ZStack — which keeps the foreground card its normal size.
+                                GeometryReader { geo in
                                     image
                                         .resizable()
-                                        .scaledToFit()
-                                        .cornerRadius(17)
-                                        .padding()
-                                        .frame(maxWidth: 600)
-                                    
-                                    VStack {
-                                        HStack {
-                                            Spacer()
-                                            Text("Tap to Exit")
-                                                .italic()
-                                                .bold()
-                                                .foregroundColor(.primary)
-                                        }
-                                        Spacer()
-                                    }
-                                    .padding(50)
+                                        .scaledToFill()
+                                        .frame(width: geo.size.width, height: geo.size.height)
+                                        .clipped()
+                                        .blur(radius: 35, opaque: true)
+                                        .overlay(Color.black.opacity(0.3))
                                 }
-                                .onTapGesture(count: 1, perform: {
-                                    showFullScreen = false
-                                })
-                                
+                                .ignoresSafeArea()
+
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(17)
+                                    .padding()
+                                    .frame(maxWidth: 600)
+                                    .shadow(radius: 12)
+
+                                VStack {
+                                    HStack {
+                                        Spacer()
+                                        Text("Tap to Exit")
+                                            .italic()
+                                            .bold()
+                                            .foregroundColor(.white)
+                                            .shadow(radius: 4)
+                                    }
+                                    Spacer()
+                                }
+                                .padding(50)
                             }
-                        /// All fail cases are just filled with a gray view
-                    case .failure:
-                        /// return empty view because of fall back color
-                        EmptyView()
-                    @unknown default:
-                        EmptyView()
-                    }
+                            .onTapGesture(count: 1, perform: {
+                                showFullScreen = false
+                            })
+                        }
+                } placeholder: {
+                    /// while loading, sit on the gray fallback + name underneath
+                    ProgressView()
                 }
             }
         }

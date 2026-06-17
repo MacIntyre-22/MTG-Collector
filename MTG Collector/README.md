@@ -1,4 +1,4 @@
-# MTG Collector
+# Cardhold
 ## Ben MacIntyre
 
 ## Description

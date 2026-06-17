@@ -1,8 +1,8 @@
-//
+﻿//
 //  DeckStatsSheet.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-10-10.
+//  Created by Ben MacIntyre on 2025-10-10.
 //  Purpose:
 //      Displays the stats for the respective deck
 //  External Types:
@@ -11,17 +11,22 @@
 // MARK: Imports
 
 import SwiftUI
+import SwiftData
 
 // MARK: Types
 
 struct DeckStatsSheet: View {
-    
+
     // MARK: Stored Properties
-    
+
     var deck: Deck
-    
+
+    // MARK: State Properties
+
+    @Environment(\.modelContext) private var modelContext
+
     // MARK: View
-    
+
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
@@ -40,19 +45,28 @@ struct DeckStatsSheet: View {
                     
                     HStack(spacing: 20) {
                         StatWidget(text: "\(deck.uniqueCount)", label: Label("Unique", systemImage: "sparkle"))
-                        PriceStatWidget(price: deck.totalPrice)
+                        PriceStatWidget(stats: deck.stats)
                     }
                     .padding(.bottom, 10)
                     
+                    ManaCurveWidget(deck: deck)
+                        .padding(.bottom, 10)
+
                     ManaCountWidget(manaTypeCount: deck.manaTypeCount)
                         .padding(.bottom, 10)
-                    
+
                     TypeCountWidget(cardTypeCount: deck.cardTypeCount)
+                        .padding(.bottom, 10)
+
+                    ExternalResourcesWidget(context: .deck(deck))
                         .padding(.bottom, 10)
                 }
                 .padding()
             }
             .navigationTitle("Statistics")
+            .task {
+                StatsUpdater.update(deck, context: modelContext)
+            }
         }
     }
 }

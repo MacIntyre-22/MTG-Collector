@@ -1,65 +1,74 @@
 //
 //  Card.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
-//         The Model for the Cards, converted from CardJSON to this Model to be saved locally
+//         Value-type model for a card, converted from CardJSON. Stored locally inside
+//         CardCache (keyed by Scryfall ID). As a Codable struct it is cheap to pass
+//         around views and never needs its own SwiftData identity.
 
 // MARK: Imports
 
 import Foundation
-import SwiftUI
-import SwiftData
 
 // MARK: Types
 
-@Model
-class Card {
-    
+struct Card: Codable, Identifiable, Hashable {
+
     // MARK: Stored Properties
-    
+
     var id: String
     var oracleID: String
     var name: String
     var releasedAt: String
     var imageStatus: String
     var imageURIs: ImageURIs
-    
+
     /// mana
     var manaCost: String
     var cmc: Double
     var colors: [String]
     var colorIdentity: [String]
     var colorIndicator: [String]
-    
+    var producedMana: [String]
+
     /// text
     var typeLine: String
     var oracleText: String
     var keywords: [String]
-    
+
     /// stats
     var toughness: String
     var power: String
     var loyalty: String
     var defense: String
-    
-    /// muli face cards
+
+    /// multi face cards
     var layout: String
     var cardFaces: [CardFace]
-    
+
     /// other
     var rarity: String
     var flavorText: String
     var finishes: [String]
     var set: String
-    
+    var setName: String
+    var artist: String
+    var collectorNumber: String
+    var edhrecRank: Int
+
+    /// scryfall links
+    var scryfallURI: String
+    var rulingsURI: String
+    var relatedURIs: RelatedURIs
+
     var prices: Prices
     var purchaseURIs: PurchaseURIs
     var allParts: [RelatedCardObject]
     var reserved: Bool
     var legalities: [String: String]
- 
+
     init(
         id: String = "",
         oracleID: String = "",
@@ -72,6 +81,7 @@ class Card {
         colors: [String] = [],
         colorIdentity: [String] = [],
         colorIndicator: [String] = [],
+        producedMana: [String] = [],
         typeLine: String = "",
         oracleText: String = "",
         keywords: [String] = [],
@@ -85,11 +95,18 @@ class Card {
         flavorText: String = "",
         finishes: [String] = [],
         set: String = "",
+        setName: String = "",
+        artist: String = "",
+        collectorNumber: String = "",
+        edhrecRank: Int = 0,
+        scryfallURI: String = "",
+        rulingsURI: String = "",
+        relatedURIs: RelatedURIs = RelatedURIs(),
         prices: Prices = Prices(),
         purchaseURIs: PurchaseURIs = PurchaseURIs(),
         allParts: [RelatedCardObject] = [],
         reserved: Bool = false,
-        legalities: [String : String] = [:]
+        legalities: [String: String] = [:]
     ) {
         self.id = id
         self.oracleID = oracleID
@@ -102,6 +119,7 @@ class Card {
         self.colors = colors
         self.colorIdentity = colorIdentity
         self.colorIndicator = colorIndicator
+        self.producedMana = producedMana
         self.typeLine = typeLine
         self.oracleText = oracleText
         self.keywords = keywords
@@ -115,6 +133,13 @@ class Card {
         self.flavorText = flavorText
         self.finishes = finishes
         self.set = set
+        self.setName = setName
+        self.artist = artist
+        self.collectorNumber = collectorNumber
+        self.edhrecRank = edhrecRank
+        self.scryfallURI = scryfallURI
+        self.rulingsURI = rulingsURI
+        self.relatedURIs = relatedURIs
         self.prices = prices
         self.purchaseURIs = purchaseURIs
         self.allParts = allParts
@@ -125,21 +150,22 @@ class Card {
 
 // MARK: Types used in Card
 
-@Model
-class RelatedCardObject {
+struct RelatedCardObject: Codable, Hashable, Identifiable {
     var id: String
     var name: String
     var uri: String
-    
-    init(id: String = "", name: String = "", uri: String) {
+    /// relationship type: "token", "meld_part", "meld_result", "combo_piece"
+    var component: String
+
+    init(id: String = "", name: String = "", uri: String = "", component: String = "") {
         self.id = id
         self.name = name
         self.uri = uri
+        self.component = component
     }
 }
 
-@Model
-class ImageURIs {
+struct ImageURIs: Codable, Hashable {
     var small: String
     var normal: String
     var large: String
@@ -157,57 +183,62 @@ class ImageURIs {
     }
 }
 
-@Model
-class CardFace {
-    var id: String = UUID().uuidString
+struct CardFace: Codable, Hashable, Identifiable {
+    var id: String
     var oracleID: String
     var name: String
     var layout: String
     var imageURIs: ImageURIs
-    
+
     /// text
     var typeLine: String
     var oracleText: String
+    var flavorText: String
     var keywords: [String]
-    
+
     /// stats
     var toughness: String
     var power: String
     var loyalty: String
     var defense: String
-    
+
     /// mana
     var manaCost: String
-    
-    /// mana value
     var cmc: Double
-    
+
     /// colours
     var colors: [String]
     var colorIndicator: [String]
-    
-    init(oracleID: String = "",
-         name: String = "",
-         layout: String = "",
-         imageURIs: ImageURIs = ImageURIs(),
-         typeLine: String = "",
-         oracleText: String = "",
-         keywords: [String] = [],
-         toughness: String = "",
-         power: String = "",
-         loyalty: String = "",
-         defense: String = "",
-         manaCost: String = "",
-         cmc: Double = 0.0,
-         colors: [String] = [],
-         colorIndicator: [String] = []
-     ) {
+    var producedMana: [String]
+
+    init(
+        id: String = UUID().uuidString,
+        oracleID: String = "",
+        name: String = "",
+        layout: String = "",
+        imageURIs: ImageURIs = ImageURIs(),
+        typeLine: String = "",
+        oracleText: String = "",
+        flavorText: String = "",
+        keywords: [String] = [],
+        toughness: String = "",
+        power: String = "",
+        loyalty: String = "",
+        defense: String = "",
+        manaCost: String = "",
+        cmc: Double = 0.0,
+        colors: [String] = [],
+        colorIndicator: [String] = [],
+        producedMana: [String] = []
+    ) {
+        self.id = id
         self.oracleID = oracleID
         self.name = name
         self.layout = layout
         self.imageURIs = imageURIs
         self.typeLine = typeLine
         self.oracleText = oracleText
+        self.flavorText = flavorText
         self.keywords = keywords
         self.toughness = toughness
         self.power = power
@@ -217,31 +248,50 @@ class CardFace {
         self.cmc = cmc
         self.colors = colors
         self.colorIndicator = colorIndicator
+        self.producedMana = producedMana
     }
 }
 
-@Model
-class Prices {
+struct Prices: Codable, Hashable {
     var usd: String
     var usdFoil: String
     var usdEtched: String
-    
-    init(usd: String = "", usdFoil: String = "", usdEtched: String = "") {
+    var eur: String
+    var eurFoil: String
+    var tix: String
+
+    init(usd: String = "", usdFoil: String = "", usdEtched: String = "", eur: String = "", eurFoil: String = "", tix: String = "") {
         self.usd = usd
         self.usdFoil = usdFoil
         self.usdEtched = usdEtched
+        self.eur = eur
+        self.eurFoil = eurFoil
+        self.tix = tix
     }
 }
 
-@Model
-class PurchaseURIs {
+struct PurchaseURIs: Codable, Hashable {
     var tcgplayer: String
     var cardmarket: String
     var cardhoarder: String
-    
+
     init(tcgplayer: String = "", cardmarket: String = "", cardhoarder: String = "") {
         self.tcgplayer = tcgplayer
         self.cardmarket = cardmarket
         self.cardhoarder = cardhoarder
+    }
+}
+
+struct RelatedURIs: Codable, Hashable {
+    var edhrec: String
+    var gatherer: String
+    var tcgplayerInfiniteDecks: String
+    var tcgplayerInfiniteArticles: String
+
+    init(edhrec: String = "", gatherer: String = "", tcgplayerInfiniteDecks: String = "", tcgplayerInfiniteArticles: String = "") {
+        self.edhrec = edhrec
+        self.gatherer = gatherer
+        self.tcgplayerInfiniteDecks = tcgplayerInfiniteDecks
+        self.tcgplayerInfiniteArticles = tcgplayerInfiniteArticles
     }
 }

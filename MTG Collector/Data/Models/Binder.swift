@@ -1,12 +1,16 @@
 //
 //  Binder.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
-//         Model for a card binder. Holds info about the binder and the actual card array. Computed properties calculate stats as changes are made.
+//         A card binder. Inherits shared fields from Collection. Card-data statistics
+//         (price, rarity, type, colour breakdowns) live in the linked CollectionStats and
+//         are kept current by StatsUpdater — they can no longer be computed here because a
+//         CardEntry holds only an ID, not card data. Quantity-based counts stay computed
+//         since they need no card data.
 //  External Types:
-//         CardEntry
+//         CardEntry, Collection, CollectionStats
 
 // MARK: Imports
 
@@ -15,108 +19,48 @@ import SwiftData
 
 // MARK: Types
 
+@available(iOS 26, *)
 @Model
-class Binder {
-    
+final class Binder: Collection {
+
     // MARK: Stored Properties
-    
-    /// Binder info
-    @Attribute(.unique) var id: String = UUID().uuidString
-    var name: String
-    var notes: String
-    var coverImage: String
-    var createdAt: Date
-    var editedAt: Date
-    
-    /// Some controls for the binders view
-    var showPreviews: Bool = true
-    var showControls: Bool = true
-    var pinned: Bool = false
-    var showCover = true
-    
+
+    var coverImage: String = ""
+
+    /// Permanent catch-all binder (My Hold tab). Created on first launch, never deleted.
+    var isGeneral: Bool = false
+
     /// Array of CardEntries to store all cards added to this binder
-    @Relationship var cards: [CardEntry] = []
+    @Relationship(deleteRule: .cascade) var cards: [CardEntry] = []
 
-    // MARK: Computed Properties
-    
-    /// Total card count
+    // MARK: Quantity-based Computed Properties (no card data needed)
+
+    /// Active (non-soft-deleted) entries
+    var activeCards: [CardEntry] {
+        cards.filter { !$0.isDeleted }
+    }
+
     var cardCount: Int {
-        cards.reduce(0) { $0 + $1.quantity }
+        activeCards.reduce(0) { $0 + $1.quantity }
     }
 
-    /// Unique card count
     var uniqueCardCount: Int {
-        cards.count
+        activeCards.count
     }
 
-    /// Total price of cards
-    /// Only checks the cards base price
-    var totalPrice: Double {
-        
-        ///for each entry and start at 0
-        cards.reduce(0) { total, entry in
-            let price = Double(entry.card.prices.usd) ?? 0
-            return total + price * Double(entry.quantity)
-        }
-    }
+    // MARK: Stats Convenience (read stored CollectionStats)
 
-    /// Find the highest priced card
-    var highestPricedCard: CardEntry? {
-        
-        /// use .max to return the CardEntry with the higher price of two CardEntries
-        cards.max(by: {
-            let price0 = Double($0.card.prices.usd)
-            let price1 = Double($1.card.prices.usd)
-            return price0 ?? 0 < price1 ?? 0
-        })
-    }
+    var totalPrice: Double { stats?.totalPriceUSD ?? 0 }
+    var rarities: [String: Int] { stats?.rarityBreakdown ?? [:] }
+    var manaTypeCount: [String: Int] { stats?.colourBreakdown ?? [:] }
+    var cardTypeCount: [String: Int] { stats?.typeBreakdown ?? [:] }
+    var highestPricedCardID: String { stats?.highestPricedCardID ?? "" }
 
-    /// Total amount of card rarities stored in a dictionary
-    /// Allows me to loop through the dict in a view and not set conditions for 0 values, because values only exists if there are at least 1
-    var rarities: [String: Int] {
-        var counts: [String: Int] = [:]
-        for entry in cards {
-            
-            /// Either creates a dict item or adds the quantity of the entry
-            counts[entry.card.rarity, default: 0] += entry.quantity
-        }
-        return counts
-    }
+    // MARK: Initializer
 
-    /// Total amount of cards per mana type
-    /// Using a dictionary for the same concept as the rarities dictionary
-    var manaTypeCount: [String: Int] {
-        var counts: [String: Int] = [:]
-        
-        /// Double loop as each card could have multiple mana types
-        for entry in cards {
-            for mana in entry.card.colorIdentity {
-                counts[mana, default: 0] += entry.quantity
-            }
-        }
-        return counts
-    }
-
-    /// Total amount of cards per their type
-    /// Using a dictionary for the same concept as the rarities dictionary
-    var cardTypeCount: [String: Int] {
-        var counts: [String: Int] = [:]
-        
-        for entry in cards {
-            /// get the main type by splitting the type line by "-"
-            let mainType = entry.card.typeLine.components(separatedBy: "—")[0].trimmingCharacters(in: .whitespaces)
-            counts[mainType, default: 0] += entry.quantity
-        }
-        return counts
-    }
-    
-    // MARK: Initalizer
-    
-    init(name: String, notes: String = "", coverImage: String = "") {
-        self.name = name
-        self.notes = notes
+    init(name: String, notes: String = "", coverImage: String = "", isGeneral: Bool = false) {
         self.coverImage = coverImage
-        self.createdAt = Date()
-        self.editedAt = Date()
+        self.isGeneral = isGeneral
+        super.init(name: name, notes: notes)
     }
 }

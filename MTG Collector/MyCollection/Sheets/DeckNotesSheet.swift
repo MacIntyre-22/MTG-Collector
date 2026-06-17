@@ -1,8 +1,8 @@
-//
+﻿//
 //  DeckNotesSheet.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-10-06.
+//  Created by Ben MacIntyre on 2025-10-06.
 //  Pourpose:
 //      Displays the notes saved in the deck
 //  External Types:
@@ -40,6 +40,16 @@ struct DeckNotesSheet: View {
                         .bold()
                     TextEditor(text: $notes)
                         .frame(height: 400)
+                        .scrollContentBackground(.hidden)
+                        .padding(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(.secondarySystemBackground))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .strokeBorder(.gray.opacity(0.25), lineWidth: 1)
+                        )
                 }
             }
             .padding()

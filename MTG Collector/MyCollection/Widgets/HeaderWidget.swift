@@ -1,8 +1,8 @@
 //
 //  HeaderWidget.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-10-23.
+//  Created by Ben MacIntyre on 2025-10-23.
 //  Purpose:
 //      Displays deck information link name, price, and image
 
@@ -19,7 +19,7 @@ struct HeaderWidget: View {
     var showCover: Bool
     var coverImage: UIImage
     var name: String
-    var price: Double
+    var stats: CollectionStats?
     var count: Int
     
     // MARK: View
@@ -45,16 +45,12 @@ struct HeaderWidget: View {
                     .bold()
                 
                 HStack {
-                    Text(price, format: .currency(code: "CAD"))
-                        .padding(5)
-                        .foregroundColor(.green)
-                        .background(Color.green.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                    PricePill(stats: stats)
                     Image(systemName: "square.stack")
                         .foregroundColor(.primary)
                     Text("\(count)")
                 }
-                
+
                 Divider()
                 
             }
@@ -70,16 +66,12 @@ struct HeaderWidget: View {
                 }
                 
                 HStack {
-                    Text(price, format: .currency(code: "CAD"))
-                        .padding(5)
-                        .foregroundColor(.green)
-                        .background(Color.green.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                    PricePill(stats: stats)
                     Image(systemName: "square.stack")
                         .foregroundColor(.primary)
                     Text("\(count)")
                     Spacer()
-                    
+
                 }
                 .padding(.bottom)
             }

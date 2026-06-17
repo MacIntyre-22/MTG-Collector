@@ -1,8 +1,8 @@
-//
+﻿//
 //  SearchCardView.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-10-10.
+//  Created by Ben MacIntyre on 2025-10-10.
 //  Purpose:
 //      Displays a card from the search results and enables collection controlls
 //  External Types:
@@ -33,8 +33,7 @@ struct SearchCardView: View {
         ZStack(alignment: .topLeading) {
             NavigationLink(destination: CardInfoView(card: card)){
                 CardGridView(card: card, showPreviews: true)
-                    .background(content: {Color.gray.opacity(0.18)})
-                    .cornerRadius(10)
+                    .widgetStyle(.solid)
             }
             /// controls
             HStack {

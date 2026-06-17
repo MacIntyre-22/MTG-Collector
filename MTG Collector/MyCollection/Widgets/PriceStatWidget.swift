@@ -1,8 +1,8 @@
-//
+﻿//
 //  PriceStatWidget.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-10-23.
+//  Created by Ben MacIntyre on 2025-10-23.
 //  Purpose:
 //      Displays the price of a collection in a widget style
 
@@ -16,8 +16,10 @@ struct PriceStatWidget: View {
     
     // MARK: Stored Properties
 
-    var price: Double
-    
+    var stats: CollectionStats?
+
+    @Environment(\.appCurrency) private var currency
+
     // MARK: View
 
     var body: some View {
@@ -26,7 +28,7 @@ struct PriceStatWidget: View {
                 Label("Cost", systemImage: "chart.line.uptrend.xyaxis")
                     .foregroundColor(.gray)
                     .italic()
-                Text(price, format: .currency(code: "CAD"))
+                Text(currency.format(currency.total(stats)))
                     .lineLimit(1)
                     .font(.title)
                     .bold()
@@ -34,11 +36,7 @@ struct PriceStatWidget: View {
             .frame(maxWidth: 270, maxHeight: 100)
             .aspectRatio(1, contentMode: .fill)
             .padding(20)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background)
-                    .shadow(color: .gray.opacity(0.18), radius: 6, x: 0, y: 0)
-            )
+            .widgetStyle()
         }
     }
 }

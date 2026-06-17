@@ -1,8 +1,8 @@
-//
+﻿//
 //  BinderLinkWidget.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-09-25.
+//  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
 //      Used as a list item view to link to the respective deck
 //  External Types:
@@ -47,8 +47,8 @@ struct BinderLinkWidget: View {
                     
                     VStack(alignment: .leading) {
                         Button {
-                            // set pinned
                             binder.pinned.toggle()
+                            HapticManager.medium()
                         } label: {
                             Image(systemName: binder.pinned ? "pin.fill"
                                   : "pin")
@@ -66,11 +66,7 @@ struct BinderLinkWidget: View {
                         .foregroundColor(.primary)
                     Divider()
                     HStack {
-                        Text(binder.totalPrice, format: .currency(code: "CAD"))
-                            .padding(5)
-                            .foregroundColor(.green)
-                            .background(Color.green.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                        PricePill(stats: binder.stats)
                         Image(systemName: "square.stack")
                             .foregroundColor(.primary)
                         Text("\(binder.cardCount)")
@@ -84,11 +80,7 @@ struct BinderLinkWidget: View {
             .padding()
             .frame(maxWidth: 600)
             .frame(minHeight: 100)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.background)
-                    .shadow(color: .gray.opacity(0.25), radius: 6, x: 0, y: 0)
-            )
+            .widgetStyle()
         }
     }
 }

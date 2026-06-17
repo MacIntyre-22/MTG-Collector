@@ -1,8 +1,8 @@
-//
+﻿//
 //  MTGTab_View.swift
-//  MTG Collector
+//  Cardhold
 //
-//  Created by Ben MacIntyre (School) on 2025-10-19.
+//  Created by Ben MacIntyre on 2025-10-19.
 //  Purpose:
 //      Contains all the tabs for the app, also controls the settings and onboarding
 //  External Types:
@@ -21,6 +21,7 @@ struct MTG_TabView: View {
     
     @Environment(\.modelContext) var modelContext
     @Query var settingsQuery: [Settings]
+    @State private var pro = ProAccessManager()
     
     // MARK: Computed Properties
     
@@ -58,7 +59,7 @@ struct MTG_TabView: View {
                         Image("MtgBinderIcon")
                             .renderingMode(.template)
                             .scaledToFit()
-                        Text("My Collection")
+                        Text("My Hold")
                     })
                 
                 SettingsTabView(settings: settings)
@@ -67,8 +68,8 @@ struct MTG_TabView: View {
                         Text("Settings")
                     })
             }
-            .tint(Color(settings.theme))
-            
+            .tint(Color(hex: settings.theme) ?? .orange)
+
             if settings.onBoarding {
                 OnBoardingView() {
                     settings.onBoarding = false
@@ -76,7 +77,12 @@ struct MTG_TabView: View {
                 .ignoresSafeArea()
             }
         }
-        
+        .environment(pro)
+        .environment(\.appCurrency, settings.appCurrency)
+        .onChange(of: pro.isPro) { _, isPro in
+            // mirror the verified entitlement into the persisted Settings flag for offline gating
+            settings.isPro = isPro
+        }
     }
 }
 
