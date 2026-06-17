@@ -1,6 +1,6 @@
 //
 //  SettingsTabView.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
@@ -125,12 +125,12 @@ struct SettingsTabView: View {
     }
 
     private var proSection: some View {
-        Section("Card Hoard Pro") {
+        Section("Cardhold Pro") {
             if pro.isPro {
                 Label("Pro unlocked", systemImage: "checkmark.seal.fill")
                     .foregroundStyle(.green)
             } else {
-                Button("Unlock Pro — \(pro.priceText)") { showPaywall = true }
+                Button("Unlock Pro") { showPaywall = true }
             }
             Button("Restore Purchases") { Task { await pro.restore() } }
         }
@@ -151,7 +151,7 @@ struct SettingsTabView: View {
 
     private var legalSection: some View {
         Section("Legal") {
-            Text("Card Hoard is an independent app and is not affiliated with Wizards of the Coast. All Magic: The Gathering content belongs to Wizards of the Coast LLC. Card data and images are provided by Scryfall.")
+            Text("Cardhold is an independent app and is not affiliated with Wizards of the Coast. All Magic: The Gathering content belongs to Wizards of the Coast LLC. Card data and images are provided by Scryfall.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Link("Privacy Policy", destination: privacyURL)

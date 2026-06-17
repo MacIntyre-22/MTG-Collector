@@ -1,6 +1,6 @@
 ﻿//
 //  SFAPI.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
@@ -24,7 +24,7 @@ struct SFAPI {
         // Single choke point for every Scryfall request — count it for rate-limit monitoring.
         RateLimitMonitor.shared.record()
         var req = URLRequest(url: url)
-        req.setValue("CardHoard/1.0 (benmacintyre09@gmail.com)", forHTTPHeaderField: "User-Agent")
+        req.setValue("Cardhold/1.0 (benmacintyre09@gmail.com)", forHTTPHeaderField: "User-Agent")
         return req
     }
 

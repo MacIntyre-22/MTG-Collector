@@ -1,6 +1,6 @@
 ﻿//
 //  MTGTab_View.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-10-19.
 //  Purpose:
@@ -59,7 +59,7 @@ struct MTG_TabView: View {
                         Image("MtgBinderIcon")
                             .renderingMode(.template)
                             .scaledToFit()
-                        Text("My Collection")
+                        Text("My Hold")
                     })
                 
                 SettingsTabView(settings: settings)

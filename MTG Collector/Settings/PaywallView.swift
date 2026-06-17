@@ -1,18 +1,19 @@
 //
 //  PaywallView.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2026-06-16.
 //  Purpose:
-//      The Pro upsell sheet. Lists the Pro features and drives purchase / restore via
-//      ProAccessManager (StoreKit 2). Presented from Settings and from feature gates.
+//      The Pro upsell sheet. Lists the Pro features and offers the monthly / annual subscriptions
+//      via ProAccessManager (StoreKit 2). Presented from Settings and from feature gates.
 //  External Types:
-//      ProAccessManager
+//      ProAccessManager, Product
 //
 
 // MARK: Imports
 
 import SwiftUI
+import StoreKit
 
 // MARK: Types
 
@@ -40,12 +41,8 @@ struct PaywallView: View {
                         .foregroundStyle(.yellow)
                         .padding(.top, 10)
 
-                    Text("Card Hoard Pro")
+                    Text("Cardhold Pro")
                         .font(.largeTitle.bold())
-
-                    Text("A one-time unlock for everything below.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
 
                     VStack(alignment: .leading, spacing: 12) {
                         ForEach(features, id: \.text) { feature in
@@ -62,27 +59,18 @@ struct PaywallView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .widgetStyle()
 
-                    Button {
-                        Task {
-                            await pro.purchase()
-                            if pro.isPro { dismiss() }
-                        }
-                    } label: {
-                        Group {
-                            if pro.purchaseInProgress {
-                                ProgressView()
-                            } else {
-                                Text("Unlock Pro — \(pro.priceText)").bold()
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
+                    // Subscription options
+                    if let annual = pro.annual {
+                        purchaseButton(annual, caption: "Best value")
+                            .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(pro.purchaseInProgress || pro.product == nil)
+                    if let monthly = pro.monthly {
+                        purchaseButton(monthly, caption: nil)
+                            .buttonStyle(.bordered)
+                    }
 
-                    if pro.product == nil {
-                        Text("The store isn't available right now. Add Products.storekit to the run scheme (for testing), or register the product in App Store Connect.")
+                    if pro.products.isEmpty {
+                        Text("The store isn't available right now. Add Products.storekit to the run scheme (for testing), or register the subscriptions in App Store Connect.")
                             .font(.caption)
                             .foregroundStyle(.orange)
                             .multilineTextAlignment(.center)
@@ -102,8 +90,8 @@ struct PaywallView: View {
                     }
                     .font(.subheadline)
 
-                    Text("One-time purchase. Restores on all devices signed in to your Apple ID.")
-                        .font(.caption)
+                    Text("Auto-renewing subscription. Cancel anytime in Settings. Restores on all devices signed in to your Apple ID.")
+                        .font(.caption2)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
@@ -117,5 +105,30 @@ struct PaywallView: View {
                 }
             }
         }
+    }
+
+    // MARK: Subviews
+
+    private func purchaseButton(_ product: Product, caption: String?) -> some View {
+        Button {
+            Task {
+                await pro.purchase(product)
+                if pro.isPro { dismiss() }
+            }
+        } label: {
+            VStack(spacing: 2) {
+                if pro.purchaseInProgress {
+                    ProgressView()
+                } else {
+                    Text("\(product.displayName) — \(product.displayPrice)").bold()
+                    if let caption {
+                        Text(caption).font(.caption2).foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
+        }
+        .disabled(pro.purchaseInProgress)
     }
 }

@@ -1,6 +1,6 @@
 ﻿//
 //  PriceWidget.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-29.
 //  Purpose:

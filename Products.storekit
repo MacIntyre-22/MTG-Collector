@@ -1,31 +1,65 @@
 {
-  "identifier" : "CARDHOARD-STOREKIT",
+  "identifier" : "CARDHOLD-STOREKIT",
   "nonRenewingSubscriptions" : [],
-  "products" : [
-    {
-      "displayPrice" : "3.99",
-      "familyShareable" : false,
-      "internalID" : "1001",
-      "localizations" : [
-        {
-          "description" : "Unlock unlimited binders & decks, detailed stats, iCloud sync, deck import, unlimited scanning, and CSV export.",
-          "displayName" : "Card Hoard Pro",
-          "locale" : "en_US"
-        }
-      ],
-      "productID" : "net.benmacintyre.cardhoard.pro",
-      "referenceName" : "Card Hoard Pro",
-      "type" : "NonConsumable"
-    }
-  ],
+  "products" : [],
   "settings" : {
     "_failTransactionsEnabled" : false,
     "_storefront" : "USA",
     "_storeKitErrors" : []
   },
-  "subscriptionGroups" : [],
+  "subscriptionGroups" : [
+    {
+      "id" : "21500001",
+      "localizations" : [],
+      "name" : "Cardhold Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "21510001",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlock all Pro features, billed monthly.",
+              "displayName" : "Cardhold Pro (Monthly)",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "pro_monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Cardhold Pro Monthly",
+          "subscriptionGroupID" : "21500001",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "29.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "21510002",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Unlock all Pro features, billed yearly.",
+              "displayName" : "Cardhold Pro (Annual)",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "pro_annually",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Cardhold Pro Annual",
+          "subscriptionGroupID" : "21500001",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
   "version" : {
-    "major" : 3,
+    "major" : 4,
     "minor" : 0
   }
 }

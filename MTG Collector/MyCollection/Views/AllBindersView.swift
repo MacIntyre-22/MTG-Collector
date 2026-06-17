@@ -1,11 +1,11 @@
 //
 //  AllBindersView.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2026-06-16.
 //  Purpose:
 //      Displays all of the user's binders (excluding the permanent General Collection).
-//      Reached from the "Binders" button on the My Collection tab. Pinned binders sort first,
+//      Reached from the "Binders" button on the My Hold tab. Pinned binders sort first,
 //      then most recently edited — done in a single sort pass.
 //  External Types:
 //      Binder, BinderView, BinderLinkWidget, EditBinderSheet, NewBinderSheet

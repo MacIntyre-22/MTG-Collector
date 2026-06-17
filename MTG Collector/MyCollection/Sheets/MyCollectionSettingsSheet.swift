@@ -1,10 +1,10 @@
 //
 //  MyCollectionSettingsSheet.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2026-06-16.
 //  Purpose:
-//      Settings for the permanent "My Collection" catch-all binder. Mirrors the binder controls
+//      Settings for the permanent "My Hold" catch-all binder. Mirrors the binder controls
 //      (minus the cover image, since the catch-all has no cover). This is the home for any
 //      future My-Collection-specific settings — add new Sections here.
 //  External Types:
@@ -47,9 +47,9 @@ struct MyCollectionSettingsSheet: View {
                     Toggle("Controls", isOn: $showControls)
                 }
 
-                // Future My Collection settings go here as additional Sections.
+                // Future My Hold settings go here as additional Sections.
             }
-            .navigationTitle("My Collection Settings")
+            .navigationTitle("My Hold Settings")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") { dismiss() }

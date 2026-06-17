@@ -1,6 +1,6 @@
 ﻿//
 //  CollectionControllWidget.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-27.
 //  Purpose:
@@ -29,7 +29,7 @@ struct CollectionControllWidget: View {
 
     // MARK: Derived Data
 
-    /// The permanent "My Collection" catch-all binder.
+    /// The permanent "My Hold" catch-all binder.
     private var generalBinder: Binder? { binders.first(where: { $0.isGeneral }) }
     /// User-created binders (the catch-all is offered separately at the top level).
     private var userBinders: [Binder] { binders.filter { !$0.isGeneral } }
@@ -42,7 +42,7 @@ struct CollectionControllWidget: View {
                 Button {
                     addCard(collection: &general.cards, owner: general)
                 } label: {
-                    Label("My Collection", systemImage: "square.stack")
+                    Label("My Hold", systemImage: "square.stack")
                 }
             }
 

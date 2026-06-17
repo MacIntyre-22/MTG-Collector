@@ -1,11 +1,11 @@
 //
 //  MyCollectionTabView.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
 //      The tab view for a user's collection. Shows a whole-collection summary, buttons through
-//      to the Binders and Decks lists, and the permanent "My Collection" catch-all inline (a
+//      to the Binders and Decks lists, and the permanent "My Hold" catch-all inline (a
 //      Binder with isGeneral == true, auto-created on first launch). The catch-all's cards can
 //      be filtered (CollectionFilterEngine) and configured via the settings sheet.
 //  External Types:
@@ -68,7 +68,7 @@ struct MyCollectionTabView: View {
                 }
                 .padding(.top, 10)
             }
-            .navigationTitle("My Collection")
+            .navigationTitle("My Hold")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     filterButton
@@ -210,15 +210,15 @@ struct MyCollectionTabView: View {
 
     // MARK: Helpers
 
-    /// Create the permanent "My Collection" catch-all binder on first launch if it's missing,
+    /// Create the permanent "My Hold" catch-all binder on first launch if it's missing,
     /// and normalise the name of any binder created under the old "General Collection" label.
     private func ensureGeneralCollection() {
         if let general = binders.first(where: { $0.isGeneral }) {
             if general.name == "General Collection" {
-                general.name = "My Collection"
+                general.name = "My Hold"
             }
         } else {
-            let general = Binder(name: "My Collection", isGeneral: true)
+            let general = Binder(name: "My Hold", isGeneral: true)
             modelContext.insert(general)
         }
     }

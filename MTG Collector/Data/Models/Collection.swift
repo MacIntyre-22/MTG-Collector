@@ -1,11 +1,11 @@
 //
 //  Collection.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2026-06-15.
 //  Purpose:
 //         Base @Model for anything that holds cards. Binder and Deck inherit the shared
-//         identity / presentation / sync fields from here, which lets the My Collection tab
+//         identity / presentation / sync fields from here, which lets the My Hold tab
 //         query Collection for a unified list and lets shared stats live in one place
 //         (CollectionStats, linked one-to-one).
 //  External Types:

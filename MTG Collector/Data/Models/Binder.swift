@@ -1,6 +1,6 @@
 //
 //  Binder.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-25.
 //  Purpose:
@@ -27,7 +27,7 @@ final class Binder: Collection {
 
     var coverImage: String = ""
 
-    /// Permanent catch-all binder (My Collection tab). Created on first launch, never deleted.
+    /// Permanent catch-all binder (My Hold tab). Created on first launch, never deleted.
     var isGeneral: Bool = false
 
     /// Array of CardEntries to store all cards added to this binder

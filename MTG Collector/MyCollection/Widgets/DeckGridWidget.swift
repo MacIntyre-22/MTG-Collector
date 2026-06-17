@@ -1,6 +1,6 @@
 //
 //  DeckGridWidget.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-26.
 //  Purpose:

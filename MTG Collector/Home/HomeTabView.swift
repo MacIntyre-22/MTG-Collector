@@ -1,6 +1,6 @@
 ﻿//
 //  HomeTabView.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-21.
 //  Purpose:
@@ -37,7 +37,7 @@ struct HomeTabView: View {
                             .scaledToFit()
                             .frame(width: 60, height: 60)
                         
-                        Text("Card Hoard")
+                        Text("Cardhold")
                             .font(.title)
                             .bold()
                     }

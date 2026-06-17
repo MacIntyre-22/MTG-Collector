@@ -1,6 +1,6 @@
 ﻿//
 //  ThemePickerWidget.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-10-19.
 //  Purpose:

@@ -1,6 +1,6 @@
 //
 //  HeaderWidget.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-10-23.
 //  Purpose:

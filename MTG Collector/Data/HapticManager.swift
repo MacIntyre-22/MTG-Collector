@@ -1,6 +1,6 @@
 //
 //  HapticManager.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2026-06-16.
 //  Purpose:

@@ -1,6 +1,6 @@
 ﻿//
 //  GridPriceWidget.swift
-//  Card Hoard
+//  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-28.
 //  Purpose:

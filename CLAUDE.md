@@ -1,4 +1,4 @@
-# Card Hoard — App Store Plan
+# Cardhold — App Store Plan
 
 ## Project Overview
 
@@ -11,7 +11,7 @@ SwiftUI iOS app for browsing and organizing Magic: The Gathering cards. Uses the
 
 ## Goal
 
-Ship Card Hoard to the App Store with quality-of-life upgrades, polished presentation, and monetization via in-app purchases (IAP).
+Ship Cardhold to the App Store with quality-of-life upgrades, polished presentation, and monetization via in-app purchases (IAP).
 
 ---
 
@@ -44,10 +44,10 @@ These are required or strongly recommended before submission.
 - [ ] Update disclaimer in-app (currently only in README) — add it to the Settings tab or an About screen
 
 ### App Identity
-- [x] Bundle ID set: `net.benmacintyre.cardhoard`. Display name `Card Hoard` via `CFBundleDisplayName` (internal Xcode target/folder still named "MTG Collector" — not user-facing).
+- [x] Bundle ID set: `net.benmacintyre.cardhoard`. Display name `Cardhold` via `CFBundleDisplayName` (internal Xcode target/folder still named "MTG Collector" — not user-facing).
 - [ ] Configure signing with your personal Apple Developer account
 - [ ] Remove all "(School)" references from code comments and file headers
-- [x] App name chosen: **Card Hoard** — avoids Wizards of the Coast trademarks (no "Magic"/"MTG"/"Gathering" in the name). Keep "mtg"/"magic gathering" in keywords only.
+- [x] App name chosen: **Cardhold** — avoids Wizards of the Coast trademarks (no "Magic"/"MTG"/"Gathering" in the name). Keep "mtg"/"magic gathering" in keywords only.
 
 ### App Store Connect Metadata
 - [ ] Write App Store description (highlight: search, binders, decks, price data)
@@ -528,7 +528,7 @@ This phase covers:
 
 - [ ] System components (tab bar, navigation bar, sheets) automatically adopt Liquid Glass on iOS 26 — no code needed
 - [ ] Custom widgets opt in via `.glassEffect()` modifier — apply unconditionally, no `if #available` gate required since the app floor is iOS 26
-- [x] Update `widgetStyle()` ViewModifier to apply `.glassEffect()` directly; the iOS 17–25 shadow fallback is no longer needed — done early (Card Hoard widgets are all glass)
+- [x] Update `widgetStyle()` ViewModifier to apply `.glassEffect()` directly; the iOS 17–25 shadow fallback is no longer needed — done early (Cardhold widgets are all glass)
 
 ---
 

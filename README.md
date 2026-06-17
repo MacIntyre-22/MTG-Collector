@@ -1,11 +1,11 @@
-# Card Hoard
+# Cardhold
 [Ben MacIntyre](https://benmacintyre.net)
 
 ## Description
 
 This is a Magic: The Gathering collection app created as a final project for the iOS Fundamentals course at St. Clair College. The app provides the ability for browsing, viewing, and organizing MTG cards using data from the Scryfall API.
 
-Card Hoard uses [Swift Data](https://developer.apple.com/documentation/swiftdata) to persist user data locally on their device. There is currently no implementation of user accounts.
+Cardhold uses [Swift Data](https://developer.apple.com/documentation/swiftdata) to persist user data locally on their device. There is currently no implementation of user accounts.
 
 ## Disclaimer
 
