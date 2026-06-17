@@ -1,0 +1,40 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/MyCollection/Widgets/ManaCurveWidget.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Mana Curve",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 39
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 45
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld+",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 51
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 63,
+          "startingLine": 51
+        }
+      }
+    ]
+  },
+  "version": 1
+}

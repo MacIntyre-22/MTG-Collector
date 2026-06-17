@@ -1,0 +1,48 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/MyCollection/Sheets/MyCollectionSettingsSheet.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "My Collection Settings",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 52
+        }
+      },
+      {
+        "comment": "",
+        "key": "Display",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 45
+        }
+      },
+      {
+        "comment": "",
+        "key": "Previews",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "Controls",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 47
+        }
+      },
+      {
+        "comment": "",
+        "key": "Save",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 55
+        }
+      }
+    ]
+  },
+  "version": 1
+}

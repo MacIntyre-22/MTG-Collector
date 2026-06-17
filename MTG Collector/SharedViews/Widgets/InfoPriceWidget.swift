@@ -19,23 +19,17 @@ struct InfoPriceWidget: View {
     // MARK: Stored Properties
 
     var prices: Prices
-    
+
+    @Environment(\.appCurrency) private var currency
+
     // MARK: View
 
     var body: some View {
         ZStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    if !prices.usd.isEmpty {
-                        PriceWidget(finish: "Base", price: prices.usd)
-                    }
-                    
-                    if !prices.usdFoil.isEmpty {
-                        PriceWidget(finish: "Foil", price: prices.usdFoil)
-                    }
-                    
-                    if !prices.usdEtched.isEmpty {
-                        PriceWidget(finish: "Etched", price: prices.usdEtched)
+                    ForEach(currency.cardPrices(prices), id: \.finish) { item in
+                        PriceWidget(finish: item.finish, price: item.price)
                     }
                 }
             }

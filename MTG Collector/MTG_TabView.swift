@@ -68,7 +68,7 @@ struct MTG_TabView: View {
                         Text("Settings")
                     })
             }
-            .tint(Color(settings.theme))
+            .tint(Color(hex: settings.theme) ?? .orange)
 
             if settings.onBoarding {
                 OnBoardingView() {

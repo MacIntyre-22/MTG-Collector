@@ -1,0 +1,72 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/MyCollection/Views/AllBindersView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "My Binders",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 71
+        }
+      },
+      {
+        "comment": "",
+        "key": "Confirm",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 85
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 60
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 58
+        }
+      },
+      {
+        "comment": "",
+        "key": "New",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 74
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 86
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 87
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete this Binder?",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 91
+        }
+      }
+    ]
+  },
+  "version": 1
+}

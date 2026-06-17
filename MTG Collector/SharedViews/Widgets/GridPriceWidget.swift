@@ -19,6 +19,8 @@ struct GridPriceWidget: View {
     var finish: String
     var price: String
 
+    @Environment(\.appCurrency) private var currency
+
     // MARK: Computed Properties
 
     /// Tint colour per finish — keeps the finish meaning while adopting glass.
@@ -51,7 +53,7 @@ struct GridPriceWidget: View {
     // MARK: View
 
     var body: some View {
-        Text("$\(price)")
+        Text(currency.format(price))
             .bold()
             .padding(5)
             .foregroundColor(.white)

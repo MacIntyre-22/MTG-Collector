@@ -1,0 +1,48 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/Settings/Widgets/DeleteDataWidget.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Continue?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 50
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete Data",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 37
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 54
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 75
+        }
+      },
+      {
+        "comment": "",
+        "key": "This will erase your collection",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 79
+        }
+      }
+    ]
+  },
+  "version": 1
+}

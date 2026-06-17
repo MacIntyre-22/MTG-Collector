@@ -1,0 +1,24 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/MyCollection/Widgets/TypeCountWidget.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Card Types",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 28
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 38
+        }
+      }
+    ]
+  },
+  "version": 1
+}

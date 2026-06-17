@@ -1,0 +1,32 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/MyCollection/Widgets/ManaCountWidget.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Mana Counts",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 26
+        }
+      },
+      {
+        "comment": "",
+        "key": "Total not equal to Cards",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 29
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 41
+        }
+      }
+    ]
+  },
+  "version": 1
+}

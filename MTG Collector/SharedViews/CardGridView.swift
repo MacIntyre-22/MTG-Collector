@@ -30,6 +30,7 @@ struct CardGridView: View {
     
     // MARK: State Properties
 
+    @Environment(\.appCurrency) private var currency
     @State private var isFlipped: Bool = false
     
     // MARK: Computed Properties
@@ -106,16 +107,8 @@ struct CardGridView: View {
                         if !card.rarity.isEmpty {
                             GridRarityWidget(rarity: card.rarity)
                         }
-                        if !card.prices.usd.isEmpty {
-                            GridPriceWidget(finish: "Base", price: card.prices.usd)
-                        }
-
-                        if !card.prices.usdFoil.isEmpty {
-                            GridPriceWidget(finish: "Foil", price: card.prices.usdFoil)
-                        }
-
-                        if !card.prices.usdEtched.isEmpty {
-                            GridPriceWidget(finish: "Etched", price: card.prices.usdEtched)
+                        ForEach(currency.cardPrices(card.prices), id: \.finish) { item in
+                            GridPriceWidget(finish: item.finish, price: item.price)
                         }
                     }
                     // small vertical room for the pill shadows; horizontal inset so the row

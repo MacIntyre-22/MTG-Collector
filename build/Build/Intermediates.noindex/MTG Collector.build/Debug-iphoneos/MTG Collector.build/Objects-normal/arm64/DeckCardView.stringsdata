@@ -1,0 +1,56 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/MyCollection/Views/DeckCardView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Toggle Foil",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 62
+        }
+      },
+      {
+        "comment": "",
+        "key": "Make Commander",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 66
+        }
+      },
+      {
+        "comment": "",
+        "key": "Mainboard",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 69
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sideboard",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 72
+        }
+      },
+      {
+        "comment": "",
+        "key": "Maybeboard",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 75
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 78
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,16 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/PriceWidget.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "$%@",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 66
+        }
+      }
+    ]
+  },
+  "version": 1
+}

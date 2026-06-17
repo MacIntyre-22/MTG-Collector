@@ -34,7 +34,6 @@ struct SettingsTabView: View {
     @State private var showDeleteAlert = false
     @State private var showClearCacheAlert = false
 
-    private let themes = ["Orange Theme", "Blue Theme", "Green Theme", "Red Theme"]
     private let privacyURL = URL(string: "https://benmacintyre.net/cardhoard/privacy")!
 
     private var iCloudAvailable: Bool { FileManager.default.ubiquityIdentityToken != nil }
@@ -84,9 +83,10 @@ struct SettingsTabView: View {
 
     private var appearanceSection: some View {
         Section("Appearance") {
-            Picker("Theme", selection: $settings.theme) {
-                ForEach(themes, id: \.self) { Text($0) }
-            }
+            ColorPicker("Accent Colour", selection: Binding(
+                get: { Color(hex: settings.theme) ?? .orange },
+                set: { settings.theme = $0.hex }
+            ))
             Picker("Card Image Quality", selection: $settings.cardImageQuality) {
                 Text("Normal").tag("normal")
                 Text("Large").tag("large")

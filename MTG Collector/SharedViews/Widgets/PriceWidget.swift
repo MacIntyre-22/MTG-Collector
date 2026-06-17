@@ -21,6 +21,8 @@ struct PriceWidget: View {
     var finish: String
     var price: String
 
+    @Environment(\.appCurrency) private var currency
+
     // MARK: Computed Properties
 
     /// Tint colour per finish — keeps the finish meaning while adopting glass.
@@ -63,10 +65,12 @@ struct PriceWidget: View {
 
             Spacer()
 
-            Text("$\(price)")
+            Text(currency.format(price))
                 .frame(width: 80, alignment: .trailing)
                 .bold()
                 .foregroundColor(.green)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
         }
         .padding(10)
         .frame(width: 100, height: 100)

@@ -63,6 +63,31 @@ enum AppCurrency: String, CaseIterable, Identifiable {
         case .eur: return value.formatted(.currency(code: "EUR"))
         }
     }
+
+    /// Format a string price (e.g. a Scryfall "1.23") in this currency.
+    func format(_ string: String) -> String {
+        format(Double(string) ?? 0)
+    }
+
+    /// Card finish prices available for this currency (CAD/USD: base/foil/etched; EUR: base/foil;
+    /// Tix: a single base price). Used to build the card price pills.
+    func cardPrices(_ p: Prices) -> [(finish: String, price: String)] {
+        switch self {
+        case .cad, .usd:
+            var r: [(String, String)] = []
+            if !p.usd.isEmpty { r.append(("Base", p.usd)) }
+            if !p.usdFoil.isEmpty { r.append(("Foil", p.usdFoil)) }
+            if !p.usdEtched.isEmpty { r.append(("Etched", p.usdEtched)) }
+            return r
+        case .eur:
+            var r: [(String, String)] = []
+            if !p.eur.isEmpty { r.append(("Base", p.eur)) }
+            if !p.eurFoil.isEmpty { r.append(("Foil", p.eurFoil)) }
+            return r
+        case .tix:
+            return p.tix.isEmpty ? [] : [("Base", p.tix)]
+        }
+    }
 }
 
 // MARK: Environment

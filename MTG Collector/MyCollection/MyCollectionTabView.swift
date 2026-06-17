@@ -71,9 +71,7 @@ struct MyCollectionTabView: View {
             .navigationTitle("My Collection")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Filter", systemImage: "slider.horizontal.3") {
-                        showFilters = true
-                    }
+                    filterButton
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Settings", systemImage: "gearshape") {
@@ -127,13 +125,6 @@ struct MyCollectionTabView: View {
                 Text("Cards")
                     .font(.title2)
                     .bold()
-                if isFiltering {
-                    Button("Clear") {
-                        isFiltering = false
-                        filteredEntries = []
-                    }
-                    .font(.subheadline)
-                }
                 Spacer()
                 Image(systemName: "square.stack")
                     .foregroundStyle(.secondary)
@@ -177,6 +168,26 @@ struct MyCollectionTabView: View {
     }
 
     // MARK: Filtering
+
+    /// Filter toolbar button — filled with an Edit/Clear menu while a filter is active.
+    @ViewBuilder
+    private var filterButton: some View {
+        if isFiltering {
+            Menu {
+                Button("Edit Filter", systemImage: "slider.horizontal.3") { showFilters = true }
+                Button("Clear Filter", systemImage: "xmark") {
+                    isFiltering = false
+                    filteredEntries = []
+                }
+            } label: {
+                Image(systemName: "line.3.horizontal.decrease.circle.fill")
+            }
+        } else {
+            Button("Filter", systemImage: "line.3.horizontal.decrease.circle") {
+                showFilters = true
+            }
+        }
+    }
 
     /// Entries to display: filtered (engine output) when a filter is active, else newest first.
     private func displayedEntries(_ general: Binder) -> [CardEntry] {

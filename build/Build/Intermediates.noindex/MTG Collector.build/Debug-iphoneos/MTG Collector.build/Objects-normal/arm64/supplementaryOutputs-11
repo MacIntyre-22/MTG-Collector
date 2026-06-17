@@ -1,0 +1,58 @@
+{
+  "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/InfoLegalWidget.swift" : {
+    "const-values" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoLegalWidget.swiftconstvalues",
+    "dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoLegalWidget.d",
+    "diagnostics" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoLegalWidget.dia",
+    "object" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoLegalWidget.o",
+    "swift-dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoLegalWidget.swiftdeps"
+  },
+  "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/InfoOtherWidget.swift" : {
+    "const-values" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoOtherWidget.swiftconstvalues",
+    "dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoOtherWidget.d",
+    "diagnostics" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoOtherWidget.dia",
+    "object" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoOtherWidget.o",
+    "swift-dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoOtherWidget.swiftdeps"
+  },
+  "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/InfoPriceWidget.swift" : {
+    "const-values" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPriceWidget.swiftconstvalues",
+    "dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPriceWidget.d",
+    "diagnostics" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPriceWidget.dia",
+    "object" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPriceWidget.o",
+    "swift-dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPriceWidget.swiftdeps"
+  },
+  "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/InfoPurchaseWidget.swift" : {
+    "const-values" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPurchaseWidget.swiftconstvalues",
+    "dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPurchaseWidget.d",
+    "diagnostics" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPurchaseWidget.dia",
+    "object" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPurchaseWidget.o",
+    "swift-dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoPurchaseWidget.swiftdeps"
+  },
+  "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/InfoRelatedWidget.swift" : {
+    "const-values" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoRelatedWidget.swiftconstvalues",
+    "dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoRelatedWidget.d",
+    "diagnostics" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoRelatedWidget.dia",
+    "object" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoRelatedWidget.o",
+    "swift-dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/InfoRelatedWidget.swiftdeps"
+  },
+  "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/PricePill.swift" : {
+    "const-values" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PricePill.swiftconstvalues",
+    "dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PricePill.d",
+    "diagnostics" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PricePill.dia",
+    "object" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PricePill.o",
+    "swift-dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PricePill.swiftdeps"
+  },
+  "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/PriceWidget.swift" : {
+    "const-values" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PriceWidget.swiftconstvalues",
+    "dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PriceWidget.d",
+    "diagnostics" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PriceWidget.dia",
+    "object" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PriceWidget.o",
+    "swift-dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/PriceWidget.swiftdeps"
+  },
+  "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/SetIconWidget.swift" : {
+    "const-values" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/SetIconWidget.swiftconstvalues",
+    "dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/SetIconWidget.d",
+    "diagnostics" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/SetIconWidget.dia",
+    "object" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/SetIconWidget.o",
+    "swift-dependencies" : "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/build/Build/Intermediates.noindex/MTG Collector.build/Debug-iphoneos/MTG Collector.build/Objects-normal/arm64/SetIconWidget.swiftdeps"
+  }
+}

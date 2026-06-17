@@ -1,0 +1,32 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/Settings/Widgets/AppInfoWidget.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Information",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 36
+        }
+      },
+      {
+        "comment": "",
+        "key": "Developed by ",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 43
+        }
+      },
+      {
+        "comment": "",
+        "key": "benmacintyre.net",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 48
+        }
+      }
+    ]
+  },
+  "version": 1
+}

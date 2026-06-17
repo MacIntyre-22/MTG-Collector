@@ -18,7 +18,8 @@ import SwiftData
 @Model
 class Settings {
 
-    var theme: String = "Orange Theme"
+    /// Accent colour as a hex string (free ColorPicker selection).
+    var theme: String = "#FF9500"
     var onBoarding = true
 
     /// Display currency: "cad" / "usd" / "eur" / "tix".

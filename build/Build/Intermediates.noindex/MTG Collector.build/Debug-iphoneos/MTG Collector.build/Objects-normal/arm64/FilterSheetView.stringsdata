@@ -1,0 +1,248 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/Search/Sheets/FilterSheetView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Filters",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 73
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sort",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 101
+        }
+      },
+      {
+        "comment": "",
+        "key": "Colours",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 115
+        }
+      },
+      {
+        "comment": "",
+        "key": "Types",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 137
+        }
+      },
+      {
+        "comment": "",
+        "key": "Rarities",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 144
+        }
+      },
+      {
+        "comment": "",
+        "key": "Mana Value",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 151
+        }
+      },
+      {
+        "comment": "",
+        "key": "Format & Commander",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 172
+        }
+      },
+      {
+        "comment": "",
+        "key": "Produces Mana",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 182
+        }
+      },
+      {
+        "comment": "",
+        "key": "Collection",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 204
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sets",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 211
+        }
+      },
+      {
+        "comment": "",
+        "key": "Apply",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 76
+        }
+      },
+      {
+        "comment": "",
+        "key": "Close",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 82
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reset",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 94
+        }
+      },
+      {
+        "comment": "",
+        "key": "Sort By",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 102
+        }
+      },
+      {
+        "comment": "",
+        "key": "Descending",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 110
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 132
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 139
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 146
+        }
+      },
+      {
+        "comment": "",
+        "key": "Min can't exceed Max",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 160
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 164
+        }
+      },
+      {
+        "comment": "",
+        "key": "Min: %lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 153
+        }
+      },
+      {
+        "comment": "",
+        "key": "Max: %lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 154
+        }
+      },
+      {
+        "comment": "",
+        "key": "Legal in",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 173
+        }
+      },
+      {
+        "comment": "",
+        "key": "Can be Commander",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 177
+        }
+      },
+      {
+        "comment": "",
+        "key": "Any",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 174
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 199
+        }
+      },
+      {
+        "comment": "",
+        "key": "Foil only",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "Favourites only",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 206
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 225
+        }
+      },
+      {
+        "comment": "",
+        "key": "Added Sets",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 216
+        }
+      }
+    ]
+  },
+  "version": 1
+}

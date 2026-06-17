@@ -1,0 +1,16 @@
+{
+  "source": "/Users/benmacintyreschool/Desktop/iOS Project Assets/MTG Collector/MTG Collector/SharedViews/Widgets/InfoLegalWidget.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "%@",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 32
+        }
+      }
+    ]
+  },
+  "version": 1
+}
