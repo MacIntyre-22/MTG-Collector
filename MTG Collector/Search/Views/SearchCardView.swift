@@ -24,6 +24,7 @@ struct SearchCardView: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) var modelContext
+    @Environment(\.appTint) private var tint
     @Query var binders: [Binder]
     @Query var decks: [Deck]
     
@@ -43,7 +44,7 @@ struct SearchCardView: View {
                     Image(systemName: "plus")
                         .foregroundColor(.white)
                         .padding(5)
-                        .background(Color.accentColor)
+                        .background(tint)
                         .cornerRadius(5)
                         .bold()
                         .shadow(radius: 4)

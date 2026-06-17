@@ -52,15 +52,15 @@ struct InfoLegalWidget: View {
     func color(for status: String) -> Color {
         switch status {
         case "legal":
-            return .green
+            return .statusGreen
         case "not_legal":
-            return .red
+            return .statusRed
         case "banned":
-            return .red
+            return .statusRed
         case "restricted":
-            return .orange
+            return .statusOrange
         default:
-            return .blue
+            return .gray
         }
     }
 }

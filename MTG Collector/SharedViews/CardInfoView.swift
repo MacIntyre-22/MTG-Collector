@@ -27,6 +27,7 @@ struct CardInfoView: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) var modelContext
+    @Environment(\.appCurrency) private var currency
     /// Whether a double-faced card is currently showing its back face.
     @State private var isFlipped: Bool = false
     /// Vertical scroll offset, used to shrink the card as the user scrolls down.
@@ -152,8 +153,8 @@ struct CardInfoView: View {
                             }
                         }
 
-                        /// pricing info
-                        if !(card.prices.usd.isEmpty && card.prices.usdFoil.isEmpty && card.prices.usdEtched.isEmpty) {
+                        /// pricing info — only when the selected currency has any price for this card
+                        if !currency.cardPrices(card.prices).isEmpty {
                             section("Prices") {
                                 InfoPriceWidget(prices: card.prices)
                             }

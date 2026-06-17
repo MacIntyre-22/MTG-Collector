@@ -84,10 +84,20 @@ enum CardStore {
     }
 
     /// Queue the normal-size art for a set of cards into the image cache.
+    /// For transform/modal DFCs the art lives on the faces, not the top-level imageURIs.
     private static func prefetchImages(_ cards: [Card]) {
-        let urls = cards.compactMap { card -> URL? in
-            let s = card.imageURIs.normal.isEmpty ? card.imageURIs.large : card.imageURIs.normal
-            return URL(string: s)
+        var urls: [URL] = []
+        for card in cards {
+            let facesWithArt = card.cardFaces.filter { !$0.imageURIs.normal.isEmpty || !$0.imageURIs.png.isEmpty }
+            if facesWithArt.count > 1 {
+                for face in facesWithArt {
+                    let s = face.imageURIs.normal.isEmpty ? face.imageURIs.large : face.imageURIs.normal
+                    if let url = URL(string: s) { urls.append(url) }
+                }
+            } else {
+                let s = card.imageURIs.normal.isEmpty ? card.imageURIs.large : card.imageURIs.normal
+                if let url = URL(string: s) { urls.append(url) }
+            }
         }
         ImageCache.shared.prefetch(urls)
     }

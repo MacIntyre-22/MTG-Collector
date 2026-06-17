@@ -143,6 +143,7 @@ struct CardScannerSheet: View {
     var onSearch: (String) -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.appTint) private var tint
 
     @State private var detected: CardJSON?
     @State private var candidate = ""
@@ -282,7 +283,7 @@ struct CardScannerSheet: View {
                                 Image(systemName: "plus")
                                     .foregroundColor(.white)
                                     .padding(5)
-                                    .background(Color.accentColor)
+                                    .background(tint)
                                     .cornerRadius(5)
                                     .bold()
                                     .shadow(radius: 4)

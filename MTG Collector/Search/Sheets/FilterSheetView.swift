@@ -46,6 +46,7 @@ struct FilterSheetView: View {
 
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
+    @Environment(\.appTint) private var tint
     @Query var sets: [SetInfo]
     @Binding var filters: FilterState
 
@@ -83,6 +84,7 @@ struct FilterSheetView: View {
                 }
             }
         }
+        .tint(tint)
     }
 
     // MARK: Sections
@@ -118,10 +120,7 @@ struct FilterSheetView: View {
                     Button {
                         toggle(array: &filters.colors, value: color)
                     } label: {
-                        Image(color)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: 50, maxHeight: 50)
+                        OracleSymbolImage(symbol: "{\(color)}", size: 44)
                             .padding(5)
                             .background(filters.colors.contains(color) ? .gray.opacity(0.18) : .clear)
                             .cornerRadius(5)
@@ -185,10 +184,7 @@ struct FilterSheetView: View {
                     Button {
                         toggle(array: &filters.producedMana, value: color)
                     } label: {
-                        Image(color)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: 50, maxHeight: 50)
+                        OracleSymbolImage(symbol: "{\(color)}", size: 44)
                             .padding(5)
                             .background(filters.producedMana.contains(color) ? .gray.opacity(0.18) : .clear)
                             .cornerRadius(5)
@@ -237,11 +233,11 @@ struct FilterSheetView: View {
                     toggle(value)
                 } label: {
                     Text(label(value))
-                        .foregroundColor(contains ? .white : Color.accentColor)
+                        .foregroundColor(contains ? .white : tint)
                         .lineLimit(1)
                         .frame(maxWidth: 300, maxHeight: 30)
                         .padding(5)
-                        .background(contains ? Color.accentColor : .clear)
+                        .background(contains ? tint : .clear)
                         .cornerRadius(5)
                 }
                 .buttonStyle(.plain)

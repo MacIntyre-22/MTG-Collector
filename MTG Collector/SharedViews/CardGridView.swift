@@ -35,8 +35,14 @@ struct CardGridView: View {
     
     // MARK: Computed Properties
     
+    /// Only cards where each face carries its own art (transform / modal DFCs) are treated as
+    /// multi-image. Adventure, split, and flip cards have two face objects but share one top-level
+    /// image — their faces have empty imageURIs, so we fall through to card.imageURIs instead.
     var multiFaced: [CardFace]? {
-        card.cardFaces
+        let faces = card.cardFaces
+        guard faces.count > 1 else { return nil }
+        let withArt = faces.filter { !$0.imageURIs.normal.isEmpty || !$0.imageURIs.png.isEmpty }
+        return withArt.count > 1 ? faces : nil
     }
     
     // MARK: View

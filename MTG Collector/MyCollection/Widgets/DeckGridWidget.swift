@@ -26,6 +26,7 @@ struct DeckGridWidget: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.appTint) private var tint
     @State private var commanderColors: [String] = []
 
     // MARK: View
@@ -97,15 +98,13 @@ struct DeckGridWidget: View {
                     .resizable()
                     .frame(width: 15, height: 20)
                     .shadow(radius: 4)
-                    .foregroundColor(Color.accentColor)
+                    .foregroundColor(tint)
             }
             Spacer()
             HStack {
                 // Commander colour identity (resolved from cache)
                 ForEach(commanderColors, id: \.self) { color in
-                    Image(color)
-                        .resizable()
-                        .frame(width: 20, height: 20)
+                    OracleSymbolImage(symbol: "{\(color)}", size: 20)
                         .shadow(radius: 4)
                 }
             }

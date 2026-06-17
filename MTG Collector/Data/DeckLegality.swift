@@ -35,10 +35,11 @@ enum LegalityStatus: Hashable {
     var icon: String { "exclamationmark.triangle.fill" }
 
     /// Restricted reads as a caution (orange); not-legal/banned as an error (red).
+    /// Uses the shared fixed status palette so the cell icons match the legality widget.
     var color: Color {
         switch self {
-        case .restricted: return .orange
-        case .notLegal, .banned: return .red
+        case .restricted: return .statusOrange
+        case .notLegal, .banned: return .statusRed
         default: return .clear
         }
     }

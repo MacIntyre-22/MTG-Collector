@@ -1,10 +1,11 @@
-﻿//
+//
 //  InfoPriceWidget.swift
 //  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-09-28.
 //  Purpose:
-//      Displays different prices from a prices object
+//      Displays a card's available prices in the user's selected currency. Prices are filtered to
+//      whatever finishes actually have a value for that currency (handled by Currency.cardPrices).
 //  External Types:
 //      Prices, PriceWidget
 
@@ -25,18 +26,15 @@ struct InfoPriceWidget: View {
     // MARK: View
 
     var body: some View {
-        ZStack {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(currency.cardPrices(prices), id: \.finish) { item in
-                        PriceWidget(finish: item.finish, price: item.price)
-                    }
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(currency.cardPrices(prices), id: \.finish) { item in
+                    PriceWidget(finish: item.finish, price: item.price)
                 }
             }
-            .padding(15)
-            .cornerRadius(9)
-            .widgetStyle()
         }
+        .padding(15)
+        .cornerRadius(9)
+        .widgetStyle()
     }
 }
-

@@ -25,6 +25,7 @@ struct CommanderWidget: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.appTint) private var tint
     @State private var card: Card?
 
     // MARK: View
@@ -45,9 +46,7 @@ struct CommanderWidget: View {
                     HStack {
                         // Multi-face card
                         ForEach(card?.colors ?? [], id: \.self) { color in
-                            Image(color)
-                                .resizable()
-                                .frame(width: 24, height: 24)
+                            OracleSymbolImage(symbol: "{\(color)}", size: 24)
                         }
                         Spacer()
                     }
@@ -60,7 +59,7 @@ struct CommanderWidget: View {
                         Image(systemName: "pencil.line")
                             .foregroundColor(.white)
                             .padding(5)
-                            .background(Color.accentColor)
+                            .background(tint)
                             .cornerRadius(5)
                             .bold()
                             .shadow(radius: 4)

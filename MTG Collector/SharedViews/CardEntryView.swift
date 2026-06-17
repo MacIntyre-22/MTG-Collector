@@ -29,6 +29,7 @@ struct CardEntryView: View {
     // MARK: State Properties
 
     @Environment(\.cardGlass) private var cardGlass
+    @Environment(\.appTint) private var tint
     @State var alertIsShowing: Bool = false
 
     /// taking closures allows for functionality with different models like binders and decks
@@ -71,7 +72,7 @@ struct CardEntryView: View {
 
                             .foregroundColor(.white)
                             .padding(5)
-                            .background(Color.accentColor)
+                            .background(tint)
                             .cornerRadius(5)
                             .bold()
                     }
@@ -87,7 +88,7 @@ struct CardEntryView: View {
                             .frame(width: 20, height: 20)
                             .foregroundColor(.white)
                             .padding(5)
-                            .background(Color.accentColor)
+                            .background(tint)
                             .cornerRadius(5)
                             .bold()
                     }

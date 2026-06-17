@@ -28,6 +28,7 @@ struct ManaCurveWidget: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.appTint) private var tint
     @State private var buckets: [Int] = Array(repeating: 0, count: 8)
 
     private var maxCount: Int { max(buckets.max() ?? 0, 1) }
@@ -46,7 +47,7 @@ struct ManaCurveWidget: View {
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                         RoundedRectangle(cornerRadius: 4)
-                            .fill(Color.accentColor.opacity(0.85))
+                            .fill(tint.opacity(0.85))
                             .frame(height: barHeight(buckets[i]))
                         Text(i == bucketCount - 1 ? "\(i)+" : "\(i)")
                             .font(.caption2)

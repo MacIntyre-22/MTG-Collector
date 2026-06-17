@@ -32,7 +32,6 @@ struct DeckView: View {
     @State var showEdit: Bool = false
     @State var showNotes: Bool = false
     @State var showStats: Bool = false
-    @State var showSuggestions: Bool = false
     @State var showPaywall: Bool = false
     @State var selectedBoard: Int = 0
 
@@ -95,9 +94,6 @@ struct DeckView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button("Suggestions", systemImage: "wand.and.stars") {
-                        pro.isPro ? showSuggestions.toggle() : (showPaywall = true)
-                    }
                     Button("Stats", systemImage: "chart.bar") {
                         pro.isPro ? showStats.toggle() : (showPaywall = true)
                     }
@@ -107,9 +103,6 @@ struct DeckView: View {
                     Image(systemName: "ellipsis")
                 }
             }
-        }
-        .sheet(isPresented: $showSuggestions) {
-            DeckSuggestionsView(deck: deck)
         }
         .sheet(isPresented: $showStats) {
             DeckStatsSheet(deck: deck)

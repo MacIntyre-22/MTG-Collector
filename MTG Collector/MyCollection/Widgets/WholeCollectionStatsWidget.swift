@@ -73,10 +73,7 @@ struct WholeCollectionStatsWidget: View {
                     ForEach(allColors, id: \.self) { colour in
                         if let count = colourBreakdown[colour], count > 0 {
                             HStack(spacing: 4) {
-                                Image(colour)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 20, height: 20)
+                                OracleSymbolImage(symbol: "{\(colour)}", size: 20)
                                 Text("\(count)")
                                     .font(.subheadline)
                             }

@@ -15,6 +15,7 @@
 // MARK: Imports
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 // MARK: Types
 
@@ -57,6 +58,8 @@ struct NewDeckSheet: View {
 
     @StateObject private var importVM = DeckImportViewModel()
     @State private var isCreating = false
+    @State private var showReview = false
+    @State private var showFileImporter = false
 
     // MARK: Derived Data
 
@@ -129,6 +132,12 @@ struct NewDeckSheet: View {
                             }
                     }
 
+                    Button {
+                        showFileImporter = true
+                    } label: {
+                        Label("Import .txt File", systemImage: "doc.text")
+                    }
+
                     if !boardSummary.isEmpty {
                         ForEach(boardSummary, id: \.board) { item in
                             HStack {
@@ -152,12 +161,24 @@ struct NewDeckSheet: View {
                     if isCreating {
                         ProgressView()
                     } else {
-                        Button("Create") {
-                            Task { await saveDeck() }
+                        Button(hasImport ? "Review" : "Create") {
+                            Task { await startCreate() }
                         }
                         .disabled(name.isEmpty)
                     }
                 }
+            }
+            .sheet(isPresented: $showReview) {
+                DeckImportReviewView(importVM: importVM) {
+                    Task { await commitImport() }
+                }
+            }
+            .fileImporter(
+                isPresented: $showFileImporter,
+                allowedContentTypes: [.plainText, .text],
+                allowsMultipleSelection: false
+            ) { result in
+                loadImportFile(result)
             }
             .confirmationDialog("Select Source",isPresented: $showSourceSelection, actions:{
                 Button("Camera"){
@@ -181,9 +202,38 @@ struct NewDeckSheet: View {
         }
     }
 
-    // MARK: saveDeck
+    // MARK: Derived
 
-    private func saveDeck() async {
+    /// Whether the user has entered any deck-list text to import.
+    private var hasImport: Bool {
+        !importVM.rawText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    // MARK: Create flow
+
+    /// Create immediately when there's no import; otherwise resolve and open the review screen.
+    private func startCreate() async {
+        guard hasImport else {
+            buildDeck(resolved: [])
+            dismiss()
+            return
+        }
+
+        isCreating = true
+        await importVM.resolve()
+        isCreating = false
+        showReview = true
+    }
+
+    /// Called from the review screen's confirm — build the deck with whatever is resolved (incl.
+    /// any cards the user matched manually).
+    private func commitImport() async {
+        buildDeck(resolved: importVM.result.resolved)
+        dismiss()
+    }
+
+    /// Create the Deck record and fill its boards from the resolved import cards.
+    private func buildDeck(resolved: [ResolvedDeckCard]) {
         let deck = Deck(name: name, notes: "", ruleType: ruleType)
 
         if let image = selectedImage {
@@ -193,38 +243,38 @@ struct NewDeckSheet: View {
         Spotlight.indexData(id: deck.id, name: deck.name, image: ImageManager.fetchImage(withIdentifier: deck.id), description: "Deck in your collection.")
         modelContext.insert(deck)
 
-        // Optional deck-list import: resolve against Scryfall and fill the boards.
-        if !importVM.rawText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            isCreating = true
-            await importVM.resolve()
+        guard !resolved.isEmpty else { return }
 
-            // Cache resolved card data so entries resolve later.
-            let cards = importVM.result.resolved.map { SFAPI.JSONtoModel(json: $0.card) }
-            CardStore.cache(cards, context: modelContext)
+        // Cache resolved card data so entries resolve later without another fetch.
+        CardStore.cache(resolved.map { SFAPI.JSONtoModel(json: $0.card) }, context: modelContext)
 
-            for resolved in importVM.result.resolved {
-                guard let cardID = resolved.card.id else { continue }
-                let entry = CardEntry(scryfallCardID: cardID, quantity: resolved.line.quantity)
-                switch resolved.line.board {
-                case .mainboard: deck.mainboard.append(entry)
-                case .sideboard: deck.sideboard.append(entry)
-                case .maybeboard: deck.maybeboard.append(entry)
-                case .commander: deck.commander = entry
-                }
-            }
-
-            StatsUpdater.update(deck, context: modelContext)
-            isCreating = false
-
-            // heavy + success when cards came through; error if nothing resolved
-            if importVM.result.resolved.isEmpty {
-                HapticManager.error()
-            } else {
-                HapticManager.heavy()
-                HapticManager.success()
+        for card in resolved {
+            guard let cardID = card.card.id else { continue }
+            let entry = CardEntry(scryfallCardID: cardID, quantity: card.line.quantity)
+            switch card.line.board {
+            case .mainboard: deck.mainboard.append(entry)
+            case .sideboard: deck.sideboard.append(entry)
+            case .maybeboard: deck.maybeboard.append(entry)
+            case .commander: deck.commander = entry
             }
         }
 
-        dismiss()
+        StatsUpdater.update(deck, context: modelContext)
+        HapticManager.heavy()
+        HapticManager.success()
+    }
+
+    // MARK: File import
+
+    /// Read a picked .txt deck list into the import field and parse it for the live preview.
+    private func loadImportFile(_ result: Result<[URL], Error>) {
+        guard case .success(let urls) = result, let url = urls.first else { return }
+        guard url.startAccessingSecurityScopedResource() else { return }
+        defer { url.stopAccessingSecurityScopedResource() }
+
+        if let text = try? String(contentsOf: url, encoding: .utf8) {
+            importVM.rawText = text
+            importVM.parse()
+        }
     }
 }

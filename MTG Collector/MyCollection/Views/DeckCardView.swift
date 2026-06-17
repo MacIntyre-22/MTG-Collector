@@ -27,6 +27,7 @@ struct DeckCardView: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.appTint) private var tint
     @State private var card: Card?
 
     // MARK: Computed Properties
@@ -83,7 +84,7 @@ struct DeckCardView: View {
                         Image(systemName: "pencil.line")
                             .foregroundColor(.white)
                             .padding(5)
-                            .background(Color.accentColor)
+                            .background(tint)
                             .cornerRadius(5)
                             .bold()
                             .shadow(radius: 4)

@@ -6,6 +6,10 @@
 //  Purpose:
 //      Displays the core printed info for a card or card face: name, mana cost, type line,
 //      colour identity, stats, keywords, produced mana, oracle text and flavour text.
+//      All mana/game symbols are rendered from cached Scryfall SVGs via OracleTextView / ManaCostView.
+//  External Types:
+//      ManaCostView, SymbolRowView, OracleTextView
+//
 
 // MARK: Imports
 
@@ -33,7 +37,6 @@ struct InfoDisplayWidget: View {
 
     // MARK: Computed
 
-    /// Power/toughness, loyalty or defense — whichever the card actually has.
     private var statLine: String? {
         if let p = power, let t = toughness, !p.isEmpty, !t.isEmpty { return "\(p)/\(t)" }
         if let l = loyalty, !l.isEmpty { return "Loyalty \(l)" }
@@ -45,70 +48,60 @@ struct InfoDisplayWidget: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            /// Name + mana cost, left-aligned together.
-            HStack(alignment: .firstTextBaseline) {
-                if let name = name {
+
+            // Name + mana cost
+            HStack(alignment: .center, spacing: 8) {
+                if let name {
                     Text(name).bold()
                 }
-                if let manaCost = manaCost, !manaCost.isEmpty {
-                    Text(manaCost)
-                        .font(.custom("ManaMTG", size: 18))
+                if let manaCost, !manaCost.isEmpty {
+                    ManaCostView(cost: manaCost, symbolSize: 20)
                 }
                 Spacer()
             }
 
-            if let typeLine = typeLine {
+            if let typeLine {
                 Text(typeLine).italic()
             }
 
+            // Colour identity pips
             if let colors = colorIdentity, !colors.isEmpty {
-                HStack {
-                    ForEach(colors, id: \.self) { color in
-                        Image(color)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                    }
-                    Spacer()
-                }
-                .padding(.vertical, 5)
+                SymbolRowView(colorLetters: colors, symbolSize: 22)
+                    .padding(.vertical, 3)
             }
 
-            /// Stats + mana value.
+            // Power/toughness, loyalty, mana value
             HStack(spacing: 14) {
-                if let statLine = statLine {
+                if let statLine {
                     Text(statLine).bold()
                 }
-                if let cmc = cmc {
+                if let cmc {
                     Text("Mana Value \(Int(cmc))")
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
             }
 
-            if let keywords = keywords, !keywords.isEmpty {
+            if let keywords, !keywords.isEmpty {
                 Text(keywords.joined(separator: " · "))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
 
+            // Produced mana
             if let produced = producedMana, !produced.isEmpty {
-                HStack(spacing: 4) {
+                HStack(spacing: 6) {
                     Text("Produces:")
                         .foregroundStyle(.secondary)
-                    ForEach(produced, id: \.self) { symbol in
-                        Image(symbol)
-                            .resizable()
-                            .frame(width: 18, height: 18)
-                    }
+                    SymbolRowView(colorLetters: produced, symbolSize: 20)
                     Spacer()
                 }
                 .padding(.top, 2)
             }
 
+            // Oracle text with inline symbols, reminder text, loyalty costs
             if let text = oracleText, !text.isEmpty {
-                Text(text)
-                    .font(.custom("ManaMTG", size: 18))
-                    .lineSpacing(1.3)
+                OracleTextView(text: text, fontSize: 14)
                     .padding(.top, 6)
             }
 

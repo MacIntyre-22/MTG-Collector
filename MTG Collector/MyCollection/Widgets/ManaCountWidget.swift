@@ -35,9 +35,7 @@ struct ManaCountWidget: View {
                     Spacer()
                     ForEach(Array(manaTypeCount), id: \.key) { color, value in
                         VStack {
-                            Image(color)
-                                .resizable()
-                                .frame(width: 30, height: 30)
+                            OracleSymbolImage(symbol: "{\(color)}", size: 30)
                             Text("\(value)")
                                 .bold()
                         }

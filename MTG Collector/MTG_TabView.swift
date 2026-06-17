@@ -41,6 +41,9 @@ struct MTG_TabView: View {
     
     // MARK: View
 
+    /// Resolved accent colour from the user's theme, with a safe fallback.
+    private var tint: Color { Color(hex: settings.theme) ?? .orange }
+
     var body: some View {
         ZStack {
             TabView {
@@ -68,7 +71,7 @@ struct MTG_TabView: View {
                         Text("Settings")
                     })
             }
-            .tint(Color(hex: settings.theme) ?? .orange)
+            .tint(tint)
 
             if settings.onBoarding {
                 OnBoardingView() {
@@ -77,7 +80,9 @@ struct MTG_TabView: View {
                 .ignoresSafeArea()
             }
         }
+        .tint(tint)
         .environment(pro)
+        .environment(\.appTint, tint)
         .environment(\.appCurrency, settings.appCurrency)
         .onChange(of: pro.isPro) { _, isPro in
             // mirror the verified entitlement into the persisted Settings flag for offline gating

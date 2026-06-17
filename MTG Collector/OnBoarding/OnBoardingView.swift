@@ -38,6 +38,7 @@ struct OnBoardingView: View {
 
     @State private var currentPage = 0
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.appTint) private var tint
     
     // MARK: View
 
@@ -60,7 +61,7 @@ struct OnBoardingView: View {
                                 .frame(maxWidth: 100)
                                 .fontWeight(.semibold)
                                 .padding(10)
-                                .background(Color.accentColor)
+                                .background(tint)
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
