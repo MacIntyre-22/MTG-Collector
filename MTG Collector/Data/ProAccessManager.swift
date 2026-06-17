@@ -27,13 +27,29 @@ final class ProAccessManager {
     static let productID = "net.benmacintyre.cardhoard.pro"
 
     private(set) var product: Product?
-    private(set) var isPro = false
+    /// True once a verified StoreKit entitlement is found.
+    private(set) var entitled = false
     private(set) var purchaseInProgress = false
     var lastError: String?
 
     private var updatesTask: Task<Void, Never>?
 
+#if DEBUG
+    /// Developer override (DEBUG only) so the app is fully usable before IAP/CloudKit are live.
+    /// Compiled out of release builds — Apple never sees it.
+    var devUnlock = true {
+        didSet { UserDefaults.standard.set(devUnlock, forKey: "devUnlockPro") }
+    }
+    /// Pro is unlocked by a real purchase OR the developer override.
+    var isPro: Bool { entitled || devUnlock }
+#else
+    var isPro: Bool { entitled }
+#endif
+
     init() {
+#if DEBUG
+        devUnlock = UserDefaults.standard.object(forKey: "devUnlockPro") as? Bool ?? true
+#endif
         updatesTask = observeTransactionUpdates()
         Task {
             await loadProduct()
@@ -64,7 +80,7 @@ final class ProAccessManager {
             switch try await product.purchase() {
             case .success(let verification):
                 if case .verified(let transaction) = verification {
-                    isPro = true
+                    entitled = true
                     await transaction.finish()
                 }
             case .userCancelled, .pending:
@@ -97,7 +113,7 @@ final class ProAccessManager {
                 owned = true
             }
         }
-        isPro = owned
+        entitled = owned
     }
 
     private func observeTransactionUpdates() -> Task<Void, Never> {

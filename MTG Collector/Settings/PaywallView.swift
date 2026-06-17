@@ -81,6 +81,19 @@ struct PaywallView: View {
                     .buttonStyle(.borderedProminent)
                     .disabled(pro.purchaseInProgress || pro.product == nil)
 
+                    if pro.product == nil {
+                        Text("The store isn't available right now. Add Products.storekit to the run scheme (for testing), or register the product in App Store Connect.")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                            .multilineTextAlignment(.center)
+                    }
+                    if let error = pro.lastError {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                            .multilineTextAlignment(.center)
+                    }
+
                     Button("Restore Purchases") {
                         Task {
                             await pro.restore()

@@ -54,6 +54,14 @@ struct SettingsTabView: View {
                 dataSection
                 legalSection
                 developerSection
+#if DEBUG
+                Section("Developer") {
+                    Toggle("Unlock Pro (Dev)", isOn: Binding(
+                        get: { pro.devUnlock },
+                        set: { pro.devUnlock = $0 }
+                    ))
+                }
+#endif
             }
             .navigationTitle("Settings")
             .sheet(isPresented: $showPaywall) { PaywallView() }
