@@ -36,6 +36,12 @@ struct DeckView: View {
     @State var showPaywall: Bool = false
     @State var selectedBoard: Int = 0
 
+    @State private var filters = FilterState()
+    @State private var showFilters = false
+    @State private var isFiltering = false
+    /// Bumped on each Apply so each board re-runs the filter.
+    @State private var filterToken = 0
+
     // MARK: Initializer
 
     init(deck: Deck) {
@@ -73,9 +79,9 @@ struct DeckView: View {
                 }
 
                 switch selectedBoard {
-                case 0: DeckBoardView(deck: deck, board: .main)
-                case 1: DeckBoardView(deck: deck, board: .side)
-                case 2: DeckBoardView(deck: deck, board: .maybe)
+                case 0: DeckBoardView(deck: deck, board: .main, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
+                case 1: DeckBoardView(deck: deck, board: .side, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
+                case 2: DeckBoardView(deck: deck, board: .maybe, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
                 default: EmptyView()
                 }
             }
@@ -84,6 +90,9 @@ struct DeckView: View {
             StatsUpdater.update(deck, context: modelContext)
         }
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                filterButton
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button("Suggestions", systemImage: "wand.and.stars") {
@@ -115,5 +124,35 @@ struct DeckView: View {
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }
+        .sheet(isPresented: $showFilters) {
+            FilterSheetView(context: .collection, onApply: { applyFilter() }, filters: $filters)
+        }
+    }
+
+    // MARK: Filtering
+
+    /// Filter toolbar button — applies to every board; filled with an Edit/Clear menu when active.
+    @ViewBuilder
+    private var filterButton: some View {
+        if isFiltering {
+            Menu {
+                Button("Edit Filter", systemImage: "slider.horizontal.3") { showFilters = true }
+                Button("Clear Filter", systemImage: "xmark") {
+                    isFiltering = false
+                    filterToken += 1
+                }
+            } label: {
+                Image(systemName: "line.3.horizontal.decrease.circle.fill")
+            }
+        } else {
+            Button("Filter", systemImage: "line.3.horizontal.decrease.circle") {
+                showFilters = true
+            }
+        }
+    }
+
+    private func applyFilter() {
+        isFiltering = true
+        filterToken += 1
     }
 }

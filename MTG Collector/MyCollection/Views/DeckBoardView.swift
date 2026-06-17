@@ -54,6 +54,10 @@ struct DeckBoardView: View {
 
     var deck: Deck
     var board: DeckBoardKind
+    /// Shared collection filter applied to every board (from DeckView).
+    var filters: FilterState = FilterState()
+    var isFiltering: Bool = false
+    var filterToken: Int = 0
     let cardColumns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 15)]
 
     // MARK: State Properties
@@ -61,6 +65,8 @@ struct DeckBoardView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var lookup: [String: Card] = [:]
     @State private var legalFilter: LegalityFilter = .all
+    /// This board's cards after the shared collection filter (engine output).
+    @State private var stateFiltered: [CardEntry] = []
 
     // MARK: Derived Data
 
@@ -70,13 +76,18 @@ struct DeckBoardView: View {
             .sorted { $0.dateAdded > $1.dateAdded }
     }
 
+    /// Base list: the collection-filtered entries when filtering, else all active entries.
+    private var baseEntries: [CardEntry] {
+        isFiltering ? stateFiltered.filter { !$0.isDeleted } : activeEntries
+    }
+
     private func status(_ entry: CardEntry) -> LegalityStatus {
         guard let card = lookup[entry.scryfallCardID] else { return .unknown }
         return LegalityStatus.of(card, ruleType: deck.ruleType)
     }
 
     private var filteredEntries: [CardEntry] {
-        activeEntries.filter { legalFilter.matches(status($0)) }
+        baseEntries.filter { legalFilter.matches(status($0)) }
     }
 
     private var totalCount: Int {
@@ -115,8 +126,14 @@ struct DeckBoardView: View {
                 }
             }
         }
-        .task(id: activeEntries.map { $0.scryfallCardID }) {
+        .task(id: "\(filterToken)-\(isFiltering)-" + activeEntries.map { $0.scryfallCardID }.joined()) {
             await resolveLookup()
+            if isFiltering {
+                stateFiltered = await CollectionFilterEngine(entries: activeEntries, context: modelContext)
+                    .apply(filters: filters)
+            } else {
+                stateFiltered = []
+            }
         }
     }
 

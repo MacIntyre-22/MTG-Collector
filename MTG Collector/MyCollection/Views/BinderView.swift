@@ -34,6 +34,11 @@ struct BinderView: View {
     @State var showStats: Bool = false
     @State var showPaywall: Bool = false
 
+    @State private var filters = FilterState()
+    @State private var showFilters = false
+    @State private var isFiltering = false
+    @State private var filteredEntries: [CardEntry] = []
+
     // MARK: Initializer
 
     init(binder: Binder) {
@@ -55,12 +60,13 @@ struct BinderView: View {
             count: binder.cardCount
         ) {
             LazyVGrid(columns: cardColumns) {
-                ForEach(binder.cards.sorted(by: { $0.dateAdded > $1.dateAdded })) { entry in
+                ForEach(displayedEntries) { entry in
                     BinderCardView(
                         entry: entry,
                         deleteEntry: {
                             binder.cards.removeAll(where: { $0.id == entry.id })
                             StatsUpdater.update(binder, context: modelContext)
+                            if isFiltering { applyFilter() }
                         },
                         showPreviews: binder.showPreviews,
                         showControls: binder.showControls
@@ -72,6 +78,9 @@ struct BinderView: View {
             StatsUpdater.update(binder, context: modelContext)
         }
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                filterButton
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button("Stats", systemImage: "chart.bar") {
@@ -96,6 +105,47 @@ struct BinderView: View {
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
+        }
+        .sheet(isPresented: $showFilters) {
+            FilterSheetView(context: .collection, onApply: { applyFilter() }, filters: $filters)
+        }
+    }
+
+    // MARK: Filtering
+
+    /// Filter toolbar button — filled with an Edit/Clear menu while a filter is active.
+    @ViewBuilder
+    private var filterButton: some View {
+        if isFiltering {
+            Menu {
+                Button("Edit Filter", systemImage: "slider.horizontal.3") { showFilters = true }
+                Button("Clear Filter", systemImage: "xmark") {
+                    isFiltering = false
+                    filteredEntries = []
+                }
+            } label: {
+                Image(systemName: "line.3.horizontal.decrease.circle.fill")
+            }
+        } else {
+            Button("Filter", systemImage: "line.3.horizontal.decrease.circle") {
+                showFilters = true
+            }
+        }
+    }
+
+    private var displayedEntries: [CardEntry] {
+        if isFiltering {
+            return filteredEntries.filter { !$0.isDeleted }
+        }
+        return binder.cards.filter { !$0.isDeleted }.sorted { $0.dateAdded > $1.dateAdded }
+    }
+
+    private func applyFilter() {
+        isFiltering = true
+        let entries = binder.cards.filter { !$0.isDeleted }
+        Task {
+            filteredEntries = await CollectionFilterEngine(entries: entries, context: modelContext)
+                .apply(filters: filters)
         }
     }
 }
