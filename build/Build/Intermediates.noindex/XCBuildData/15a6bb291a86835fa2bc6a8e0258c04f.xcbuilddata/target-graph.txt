@@ -1,2 +1,0 @@
-Target dependency graph (1 target)
-Target 'MTG Collector' in project 'MTG Collector' (no dependencies)
