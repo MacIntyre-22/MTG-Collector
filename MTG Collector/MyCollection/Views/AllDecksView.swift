@@ -25,10 +25,15 @@ struct AllDecksView: View {
     // MARK: State Properties
     
     @Environment(\.modelContext) var modelContext
+    @Environment(ProAccessManager.self) private var pro
     @Query var decks: [Deck]
     @State var selectedDeck: Deck?
     @State var showAlert: Bool = false
     @State var newDeck: Bool = false
+    @State var showPaywall: Bool = false
+
+    /// Free tier allows up to 3 decks.
+    private var canCreate: Bool { pro.isPro || decks.count < 3 }
 
     /// Pinned decks first, then most recently edited — a single sort pass.
     var sortedDecks: [Deck] {
@@ -65,12 +70,15 @@ struct AllDecksView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("New", systemImage: "plus"){
-                        newDeck.toggle()
+                        if canCreate { newDeck.toggle() } else { showPaywall = true }
                     }
                 }
             })
             .sheet(isPresented: $newDeck) {
                 NewDeckSheet()
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
             .alert("Confirm", isPresented: $showAlert) {
                 Button("Cancel", role: .cancel) {}

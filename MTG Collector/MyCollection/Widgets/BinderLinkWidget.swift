@@ -47,8 +47,8 @@ struct BinderLinkWidget: View {
                     
                     VStack(alignment: .leading) {
                         Button {
-                            // set pinned
                             binder.pinned.toggle()
+                            HapticManager.medium()
                         } label: {
                             Image(systemName: binder.pinned ? "pin.fill"
                                   : "pin")
@@ -66,7 +66,7 @@ struct BinderLinkWidget: View {
                         .foregroundColor(.primary)
                     Divider()
                     HStack {
-                        PricePill(price: binder.totalPrice)
+                        PricePill(stats: binder.stats)
                         Image(systemName: "square.stack")
                             .foregroundColor(.primary)
                         Text("\(binder.cardCount)")

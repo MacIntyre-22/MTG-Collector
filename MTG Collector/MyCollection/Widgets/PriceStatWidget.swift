@@ -16,8 +16,10 @@ struct PriceStatWidget: View {
     
     // MARK: Stored Properties
 
-    var price: Double
-    
+    var stats: CollectionStats?
+
+    @Environment(\.appCurrency) private var currency
+
     // MARK: View
 
     var body: some View {
@@ -26,7 +28,7 @@ struct PriceStatWidget: View {
                 Label("Cost", systemImage: "chart.line.uptrend.xyaxis")
                     .foregroundColor(.gray)
                     .italic()
-                Text(price, format: .currency(code: "CAD"))
+                Text(currency.format(currency.total(stats)))
                     .lineLimit(1)
                     .font(.title)
                     .bold()

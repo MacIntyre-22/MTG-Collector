@@ -23,10 +23,15 @@ struct AllBindersView: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) var modelContext
+    @Environment(ProAccessManager.self) private var pro
     @Query var binders: [Binder]
     @State var newBinder: Bool = false
     @State var showAlert: Bool = false
+    @State var showPaywall: Bool = false
     @State var selectedBinder: Binder?
+
+    /// Free tier allows up to 3 user binders.
+    private var canCreate: Bool { pro.isPro || sortedBinders.count < 3 }
 
     // MARK: Derived Data
 
@@ -67,12 +72,15 @@ struct AllBindersView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("New", systemImage: "plus") {
-                        newBinder.toggle()
+                        if canCreate { newBinder.toggle() } else { showPaywall = true }
                     }
                 }
             })
             .sheet(isPresented: $newBinder) {
                 NewBinderSheet()
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
             .alert("Confirm", isPresented: $showAlert) {
                 Button("Cancel", role: .cancel) {}

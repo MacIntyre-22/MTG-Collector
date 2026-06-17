@@ -49,7 +49,7 @@ struct DeckGridWidget: View {
                     .bold()
                     .lineLimit(1)
                 HStack {
-                    PricePill(price: deck.totalPrice)
+                    PricePill(stats: deck.stats)
                         .lineLimit(1)
 
                     Image(systemName: "square.stack")
@@ -91,6 +91,7 @@ struct DeckGridWidget: View {
         VStack(alignment: .leading) {
             Button {
                 deck.pinned.toggle()
+                HapticManager.medium()
             } label: {
                 Image(systemName: deck.pinned ? "pin.fill" : "pin")
                     .resizable()

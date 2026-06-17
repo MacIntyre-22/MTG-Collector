@@ -28,9 +28,11 @@ struct BinderView: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) var modelContext
+    @Environment(ProAccessManager.self) private var pro
     @State var showNotes: Bool = false
     @State var showEdit: Bool = false
     @State var showStats: Bool = false
+    @State var showPaywall: Bool = false
 
     // MARK: Initializer
 
@@ -49,7 +51,7 @@ struct BinderView: View {
             hasCover: hasCover,
             showCover: binder.showCover,
             name: binder.name,
-            price: binder.totalPrice,
+            stats: binder.stats,
             count: binder.cardCount
         ) {
             LazyVGrid(columns: cardColumns) {
@@ -72,7 +74,9 @@ struct BinderView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button("Stats", systemImage: "chart.bar") { showStats.toggle() }
+                    Button("Stats", systemImage: "chart.bar") {
+                        pro.isPro ? showStats.toggle() : (showPaywall = true)
+                    }
                     Button("Notes", systemImage: "note.text") { showNotes.toggle() }
                     Button("Settings", systemImage: "gearshape") { showEdit.toggle() }
                 } label: {
@@ -89,6 +93,9 @@ struct BinderView: View {
         .sheet(isPresented: $showNotes) {
             BinderNotesSheet(binder: binder)
                 .presentationDetents([.medium, .large])
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
         }
     }
 }

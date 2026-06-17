@@ -24,6 +24,7 @@ struct WholeCollectionStatsWidget: View {
     var binders: [Binder]
     var decks: [Deck]
 
+    @Environment(\.appCurrency) private var currency
     private let allColors = ["W", "U", "B", "R", "G"]
 
     // MARK: Aggregates
@@ -40,8 +41,8 @@ struct WholeCollectionStatsWidget: View {
         collections.reduce(0) { $0 + ($1.stats?.uniqueCards ?? 0) }
     }
 
-    private var totalUSD: Double {
-        collections.reduce(0) { $0 + ($1.stats?.totalPriceUSD ?? 0) }
+    private var totalValue: Double {
+        collections.reduce(0) { $0 + currency.total($1.stats) }
     }
 
     private var colourBreakdown: [String: Int] {
@@ -59,7 +60,7 @@ struct WholeCollectionStatsWidget: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                statBlock(value: totalUSD.formatted(.currency(code: "CAD")), label: "Value")
+                statBlock(value: currency.format(totalValue), label: "Value")
                 Spacer()
                 statBlock(value: "\(totalCards)", label: "Cards")
                 Spacer()

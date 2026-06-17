@@ -19,7 +19,7 @@ struct HeaderWidget: View {
     var showCover: Bool
     var coverImage: UIImage
     var name: String
-    var price: Double
+    var stats: CollectionStats?
     var count: Int
     
     // MARK: View
@@ -45,7 +45,7 @@ struct HeaderWidget: View {
                     .bold()
                 
                 HStack {
-                    PricePill(price: price)
+                    PricePill(stats: stats)
                     Image(systemName: "square.stack")
                         .foregroundColor(.primary)
                     Text("\(count)")
@@ -66,7 +66,7 @@ struct HeaderWidget: View {
                 }
                 
                 HStack {
-                    PricePill(price: price)
+                    PricePill(stats: stats)
                     Image(systemName: "square.stack")
                         .foregroundColor(.primary)
                     Text("\(count)")

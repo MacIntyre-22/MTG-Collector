@@ -33,7 +33,7 @@ struct BinderStatsSheet: View {
                 VStack {
                     HStack(spacing: 20) {
                         StatWidget(text: "\(binder.cardCount)", label: Label("Cards", systemImage: "square.stack"))
-                        PriceStatWidget(price: binder.totalPrice)
+                        PriceStatWidget(stats: binder.stats)
                     }
                     .padding(.bottom, 20)
 

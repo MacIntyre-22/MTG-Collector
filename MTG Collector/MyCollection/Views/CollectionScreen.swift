@@ -50,7 +50,7 @@ struct CollectionScreen<Content: View>: View {
     var hasCover: Bool = true
     let showCover: Bool
     let name: String
-    let price: Double
+    let stats: CollectionStats?
     let count: Int
     @ViewBuilder var content: () -> Content
 
@@ -63,7 +63,7 @@ struct CollectionScreen<Content: View>: View {
                     showCover: showCover,
                     coverImage: coverImage,
                     name: name,
-                    price: price,
+                    stats: stats,
                     count: count
                 )
                 content()

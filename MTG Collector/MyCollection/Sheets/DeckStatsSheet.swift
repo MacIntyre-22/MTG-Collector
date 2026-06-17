@@ -45,7 +45,7 @@ struct DeckStatsSheet: View {
                     
                     HStack(spacing: 20) {
                         StatWidget(text: "\(deck.uniqueCount)", label: Label("Unique", systemImage: "sparkle"))
-                        PriceStatWidget(price: deck.totalPrice)
+                        PriceStatWidget(stats: deck.stats)
                     }
                     .padding(.bottom, 10)
                     

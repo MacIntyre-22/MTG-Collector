@@ -102,5 +102,6 @@ struct CollectionControllWidget: View {
         owner.editedAt = Date()
         owner.updatedAt = Date()
         StatsUpdater.update(owner, context: modelContext)
+        HapticManager.light()
     }
 }

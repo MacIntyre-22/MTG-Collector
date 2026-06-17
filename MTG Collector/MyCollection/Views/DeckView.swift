@@ -28,10 +28,12 @@ struct DeckView: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) var modelContext
+    @Environment(ProAccessManager.self) private var pro
     @State var showEdit: Bool = false
     @State var showNotes: Bool = false
     @State var showStats: Bool = false
     @State var showSuggestions: Bool = false
+    @State var showPaywall: Bool = false
     @State var selectedBoard: Int = 0
 
     // MARK: Initializer
@@ -51,7 +53,7 @@ struct DeckView: View {
             hasCover: hasCover,
             showCover: deck.showCover,
             name: deck.name,
-            price: deck.totalPrice,
+            stats: deck.stats,
             count: deck.cardCount
         ) {
             VStack {
@@ -84,8 +86,12 @@ struct DeckView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button("Suggestions", systemImage: "wand.and.stars") { showSuggestions.toggle() }
-                    Button("Stats", systemImage: "chart.bar") { showStats.toggle() }
+                    Button("Suggestions", systemImage: "wand.and.stars") {
+                        pro.isPro ? showSuggestions.toggle() : (showPaywall = true)
+                    }
+                    Button("Stats", systemImage: "chart.bar") {
+                        pro.isPro ? showStats.toggle() : (showPaywall = true)
+                    }
                     Button("Notes", systemImage: "note.text") { showNotes.toggle() }
                     Button("Settings", systemImage: "gearshape") { showEdit.toggle() }
                 } label: {
@@ -105,6 +111,9 @@ struct DeckView: View {
         .sheet(isPresented: $showNotes) {
             DeckNotesSheet(deck: deck)
                 .presentationDetents([.medium, .large])
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
         }
     }
 }

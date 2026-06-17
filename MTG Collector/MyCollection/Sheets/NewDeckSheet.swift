@@ -215,6 +215,14 @@ struct NewDeckSheet: View {
 
             StatsUpdater.update(deck, context: modelContext)
             isCreating = false
+
+            // heavy + success when cards came through; error if nothing resolved
+            if importVM.result.resolved.isEmpty {
+                HapticManager.error()
+            } else {
+                HapticManager.heavy()
+                HapticManager.success()
+            }
         }
 
         dismiss()
