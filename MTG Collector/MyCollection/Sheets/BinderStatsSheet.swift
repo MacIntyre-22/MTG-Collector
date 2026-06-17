@@ -47,6 +47,9 @@ struct BinderStatsSheet: View {
 
                     TypeCountWidget(cardTypeCount: binder.cardTypeCount)
                         .padding(.bottom, 10)
+
+                    ExternalResourcesWidget(context: .binder(binder))
+                        .padding(.bottom, 10)
                 }
                 .padding()
             }

@@ -92,6 +92,9 @@ struct MyCollectionTabView: View {
             .task {
                 ensureGeneralCollection()
                 refreshStats()
+                if let general = generalBinder {
+                    await CardStore.prime(general.activeCards.map(\.scryfallCardID), context: modelContext)
+                }
             }
         }
     }

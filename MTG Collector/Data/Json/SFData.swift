@@ -61,11 +61,13 @@ struct ScryfallCollectionData: Decodable {
 
 /// A single card identifier used in /cards/collection requests
 struct CardIdentifierJSON: Codable {
+    var id: String?
     var name: String?
     var set: String?
     var collectorNumber: String?
 
     enum CodingKeys: String, CodingKey {
+        case id
         case name
         case set
         case collectorNumber = "collector_number"

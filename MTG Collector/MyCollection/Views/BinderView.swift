@@ -75,6 +75,7 @@ struct BinderView: View {
             }
         }
         .task {
+            await CardStore.prime(binder.cards.map(\.scryfallCardID), context: modelContext)
             StatsUpdater.update(binder, context: modelContext)
         }
         .toolbar {

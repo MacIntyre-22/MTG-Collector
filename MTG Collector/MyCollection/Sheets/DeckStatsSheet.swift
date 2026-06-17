@@ -57,6 +57,9 @@ struct DeckStatsSheet: View {
 
                     TypeCountWidget(cardTypeCount: deck.cardTypeCount)
                         .padding(.bottom, 10)
+
+                    ExternalResourcesWidget(context: .deck(deck))
+                        .padding(.bottom, 10)
                 }
                 .padding()
             }

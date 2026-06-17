@@ -33,6 +33,9 @@ struct SettingsTabView: View {
     @State private var showPaywall = false
     @State private var showDeleteAlert = false
     @State private var showClearCacheAlert = false
+#if DEBUG
+    @AppStorage("homeReloadToken") private var homeReloadToken = 0
+#endif
 
     private let privacyURL = URL(string: "https://benmacintyre.net/cardhoard/privacy")!
 
@@ -59,6 +62,10 @@ struct SettingsTabView: View {
                         get: { pro.devUnlock },
                         set: { pro.devUnlock = $0 }
                     ))
+                    Button("Reload Home Suggestions") {
+                        HomeSuggestionsStore.invalidate()
+                        homeReloadToken += 1
+                    }
                 }
 #endif
             }

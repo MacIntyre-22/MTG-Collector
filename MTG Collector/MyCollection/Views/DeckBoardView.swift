@@ -185,16 +185,11 @@ struct DeckBoardView: View {
 
     // MARK: Resolve
 
-    /// Resolve all board cards (cache first, then network) so the counts/filter are accurate.
+    /// Resolve all board cards so the counts/filter are accurate. Primes the cache in batches of 75
+    /// (one /cards/collection request instead of one /cards/{id} per miss), then reads it back.
     private func resolveLookup() async {
-        var result = lookup
-        for entry in activeEntries where result[entry.scryfallCardID] == nil {
-            if let cached = CardStore.cached(entry.scryfallCardID, context: modelContext) {
-                result[entry.scryfallCardID] = cached
-            } else if let fetched = await CardStore.resolve(entry.scryfallCardID, context: modelContext) {
-                result[entry.scryfallCardID] = fetched
-            }
-        }
-        lookup = result
+        let ids = activeEntries.map(\.scryfallCardID)
+        await CardStore.prime(ids, context: modelContext)
+        lookup = CardStore.lookup(for: ids, context: modelContext)
     }
 }

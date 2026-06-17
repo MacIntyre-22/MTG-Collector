@@ -59,6 +59,39 @@ enum CardStore {
         return card
     }
 
+    /// Prime the cache for a whole collection in one pass: look up what's cached, then resolve the
+    /// misses in batches of 75 via /cards/collection (instead of one /cards/{id} request per cell).
+    /// Also warms the image cache for everything found, so art is ready before cells appear.
+    static func prime(_ ids: [String], context: ModelContext) async {
+        let unique = Array(Set(ids.filter { !$0.isEmpty }))
+        guard !unique.isEmpty else { return }
+
+        let have = lookup(for: unique, context: context)
+        let missing = unique.filter { have[$0] == nil }
+
+        // Warm images for already-cached cards immediately.
+        prefetchImages(Array(have.values))
+
+        guard !missing.isEmpty else { return }
+
+        for chunk in stride(from: 0, to: missing.count, by: 75).map({ Array(missing[$0..<min($0 + 75, missing.count)]) }) {
+            let identifiers = chunk.map { CardIdentifierJSON(id: $0) }
+            let (found, _) = await SFAPI.fetchCardCollection(identifiers: identifiers)
+            let cards = found.map(SFAPI.JSONtoModel)
+            cache(cards, context: context)
+            prefetchImages(cards)
+        }
+    }
+
+    /// Queue the normal-size art for a set of cards into the image cache.
+    private static func prefetchImages(_ cards: [Card]) {
+        let urls = cards.compactMap { card -> URL? in
+            let s = card.imageURIs.normal.isEmpty ? card.imageURIs.large : card.imageURIs.normal
+            return URL(string: s)
+        }
+        ImageCache.shared.prefetch(urls)
+    }
+
     // MARK: Caching
 
     /// Insert a new cache entry or refresh an existing one (updating fetchedAt).

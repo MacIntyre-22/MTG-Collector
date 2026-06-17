@@ -30,6 +30,11 @@ struct MTG_CollectorApp: App {
     // MARK: Initializer
 
     init() {
+        // Generous shared URL cache so card art and API JSON persist on disk between launches —
+        // backs ImageCache and cuts repeat network work (a major source of UI lag).
+        URLCache.shared = URLCache(memoryCapacity: 64 * 1024 * 1024,   // 64 MB RAM
+                                   diskCapacity: 512 * 1024 * 1024)     // 512 MB disk
+
         do {
             // Synced store: only lightweight records travel to iCloud once sync is enabled.
             // No @Attribute(.unique) here — CloudKit-backed stores reject unique constraints.

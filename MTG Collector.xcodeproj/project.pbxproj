@@ -260,7 +260,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MTG-Collector-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Cardhold";
+				INFOPLIST_KEY_CFBundleDisplayName = Cardhold;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Card Hoard uses the camera to scan card names and search for them.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -294,7 +294,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MTG-Collector-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Cardhold";
+				INFOPLIST_KEY_CFBundleDisplayName = Cardhold;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Card Hoard uses the camera to scan card names and search for them.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

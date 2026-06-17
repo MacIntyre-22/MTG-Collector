@@ -40,13 +40,42 @@ enum AppGlass {
 extension View {
 
     /// Rounded-rectangle glass container — widgets and card tiles.
-    func widgetStyle(_ style: AppGlass = .solid, cornerRadius: CGFloat = 10) -> some View {
-        glassEffect(style.glass, in: RoundedRectangle(cornerRadius: cornerRadius))
+    /// When no style is passed, the treatment is taken from the `widgetGlass` environment
+    /// (default `.solid`), so a parent screen can make a whole subtree translucent — e.g. the
+    /// card detail view over its blurred art — without touching each widget.
+    func widgetStyle(_ style: AppGlass? = nil, cornerRadius: CGFloat = 10) -> some View {
+        modifier(WidgetGlassModifier(explicit: style, cornerRadius: cornerRadius))
     }
 
     /// Capsule glass — small chips/pills.
     func pillStyle(_ style: AppGlass = .solid) -> some View {
         glassEffect(style.glass, in: Capsule())
+    }
+}
+
+/// Applies the explicit glass style if given, otherwise the inherited `widgetGlass` environment.
+private struct WidgetGlassModifier: ViewModifier {
+    let explicit: AppGlass?
+    let cornerRadius: CGFloat
+    @Environment(\.widgetGlass) private var inherited
+
+    func body(content: Content) -> some View {
+        content.glassEffect((explicit ?? inherited).glass, in: RoundedRectangle(cornerRadius: cornerRadius))
+    }
+}
+
+// MARK: Widget Glass (environment)
+
+private struct WidgetGlassKey: EnvironmentKey {
+    static let defaultValue: AppGlass = .solid
+}
+
+extension EnvironmentValues {
+    /// Default glass treatment for `widgetStyle()` containers with no explicit style.
+    /// Screens over imagery set `.translucent` to soften their widgets.
+    var widgetGlass: AppGlass {
+        get { self[WidgetGlassKey.self] }
+        set { self[WidgetGlassKey.self] = newValue }
     }
 }
 

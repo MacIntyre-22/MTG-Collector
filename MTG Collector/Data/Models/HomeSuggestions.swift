@@ -14,7 +14,7 @@ import Foundation
 
 // MARK: Types
 
-struct HomeSuggestions {
+struct HomeSuggestions: Codable {
     
     // MARK: Stored Properties
     
