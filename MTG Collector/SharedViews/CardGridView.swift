@@ -23,6 +23,11 @@ struct CardGridView: View {
     /// The owned finish — drives the iridescent border (foil/etched). Nonfoil shows no border.
     var finish: CardFinish = .nonfoil
     var showNames: Bool = false
+    /// Status badges drawn in the top-right column inside the art (collection contexts pass these).
+    /// Favourite + legality follow `showPreviews`; other callers leave them at their defaults.
+    var isFavourite: Bool = false
+    var legalityIcon: String? = nil
+    var legalityColor: Color = .red
 
     // MARK: State Properties
 
@@ -63,26 +68,30 @@ struct CardGridView: View {
                     CardImageView(maxWidth: 220, name: card.name, imageURIs: card.imageURIs)
                 }
                 
-                /// set flip button over both faces if it is multifaced
-                if let faces = multiFaced, faces.count > 1 {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Button {
-                                withAnimation(.easeInOut(duration: 0.6)) {
-                                    isFlipped.toggle()
-                                }
-                            } label: {
-                                Image(systemName: "arrow.left.arrow.right.circle.fill")
-                                    .font(.title)
-                                    .foregroundColor(.white)
-                                    .shadow(radius: 7)
+                /// Status / control column inside the art: flip (multi-faced), favourite and
+                /// legality — same size and aligned. Flip is always available when present;
+                /// favourite + legality follow the preview toggle.
+                VStack(spacing: 8) {
+                    if let faces = multiFaced, faces.count > 1 {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.6)) {
+                                isFlipped.toggle()
                             }
+                        } label: {
+                            statusIcon("arrow.left.arrow.right.circle.fill", color: .white)
                         }
-                        Spacer()
                     }
-                    .padding(4)
+                    if showPreviews {
+                        if isFavourite {
+                            statusIcon("star.fill", color: .yellow)
+                        }
+                        if let legalityIcon {
+                            statusIcon(legalityIcon, color: legalityColor)
+                        }
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                .padding(8)
             }
             .aspectRatio(0.714, contentMode: .fit)
             .cornerRadius(8)
@@ -108,6 +117,21 @@ struct CardGridView: View {
         }
         .padding(.bottom, 10)
     }
-    
+
+    // MARK: Status badge
+
+    /// One status badge — uniform size with a layered shadow so flip / favourite / legality line up
+    /// and stay solid (non-transparent) and distinct over bright card art.
+    private func statusIcon(_ systemName: String, color: Color) -> some View {
+        Image(systemName: systemName)
+            .symbolRenderingMode(.monochrome)   // one flat layer — no hierarchical opacity
+            .resizable()
+            .scaledToFit()
+            .frame(width: 26, height: 26)
+            .foregroundStyle(color)             // fully opaque fill
+            .shadow(color: .black.opacity(0.6), radius: 4)
+            .shadow(color: .black.opacity(0.45), radius: 1)
+    }
+
 }
 

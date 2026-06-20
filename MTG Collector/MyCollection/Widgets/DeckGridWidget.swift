@@ -97,11 +97,24 @@ struct DeckGridWidget: View {
                     .foregroundColor(tint)
             }
             Spacer()
-            HStack {
-                // Deck colour identity (stored on the deck, auto-set from its leaders)
-                ForEach(deck.colorIdentity, id: \.self) { color in
-                    OracleSymbolImage(symbol: "{\(color)}", size: 20)
+            VStack(alignment: .leading, spacing: 3) {
+                // Game mode (Commander, Standard, …) sits just above the colour identity row.
+                if !deck.ruleType.isEmpty {
+                    Text(deck.ruleType.capitalized)
+                        .font(.caption2)
+                        .bold()
+                        .foregroundColor(.white)
+                        .lineLimit(1)
                         .shadow(radius: 4)
+                }
+
+                // Deck colour identity (stored on the deck, auto-set from its leaders). Tight,
+                // left-aligned spacing so a full five-colour identity still fits the tile.
+                HStack(spacing: 2) {
+                    ForEach(deck.colorIdentity, id: \.self) { color in
+                        OracleSymbolImage(symbol: "{\(color)}", size: 20)
+                            .shadow(radius: 4)
+                    }
                 }
             }
         }

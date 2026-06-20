@@ -30,6 +30,9 @@ struct MTG_TabView: View {
     @Query var settingsQuery: [Settings]
     @State private var pro = ProAccessManager()
     @State private var sync = CloudSyncMonitor.shared
+#if DEBUG
+    @AppStorage("devHideStatusBar") private var devHideStatusBar = false
+#endif
     @State private var importingShare = false
     @State private var shareError: String?
     /// A .txt / .csv opened from Files: hold its text while the user picks deck or binder, then route
@@ -39,6 +42,7 @@ struct MTG_TabView: View {
     @State private var showImportPaywall = false
     @State private var deckImport: ImportText?
     @State private var binderImport: ImportText?
+    @State private var holdImport: ImportText?
     /// The per-tab feature intro currently being shown (once per tab, after onboarding).
     @State private var activeGuide: TabGuide?
     
@@ -114,6 +118,9 @@ struct MTG_TabView: View {
             }
         }
         .tint(tint)
+#if DEBUG
+        .statusBarHidden(devHideStatusBar)
+#endif
         .environment(pro)
         .environment(\.appTint, tint)
         .environment(\.appCurrency, settings.appCurrency)
@@ -186,6 +193,10 @@ struct MTG_TabView: View {
         // A card-list file was opened from Files — ask which kind of collection to build, then open
         // the matching create sheet pre-filled with the list.
         .confirmationDialog("Import Card List", isPresented: $showImportChooser, titleVisibility: .visible) {
+            Button("My Hold") {
+                if let text = pendingImportText { holdImport = ImportText(text: text) }
+                pendingImportText = nil
+            }
             Button("New Deck") {
                 if let text = pendingImportText { deckImport = ImportText(text: text) }
                 pendingImportText = nil
@@ -196,13 +207,19 @@ struct MTG_TabView: View {
             }
             Button("Cancel", role: .cancel) { pendingImportText = nil }
         } message: {
-            Text("Create a new deck or binder from this file.")
+            Text("Add to My Hold, or create a new deck or binder from this file.")
         }
         .sheet(item: $deckImport) { item in
             NewDeckSheet(initialImportText: item.text)
         }
         .sheet(item: $binderImport) { item in
             NewBinderSheet(initialImportText: item.text)
+        }
+        .sheet(item: $holdImport) { item in
+            // Append into the permanent "My Hold" catch-all rather than creating a new collection.
+            if let general = GeneralCollection.current(context: modelContext) {
+                ImportCardsSheet(target: .binder(general), initialText: item.text)
+            }
         }
         .sheet(isPresented: $showImportPaywall) { PaywallView() }
     }

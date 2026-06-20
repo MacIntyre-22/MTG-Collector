@@ -47,4 +47,10 @@ enum GeneralCollection {
             keeper.name = "My Hold"
         }
     }
+
+    /// The current catch-all binder, if one exists. Call `ensure` first to guarantee it.
+    static func current(context: ModelContext) -> Binder? {
+        let allBinders = (try? context.fetch(FetchDescriptor<Binder>())) ?? []
+        return allBinders.first { $0.isGeneral && !$0.isDeleted }
+    }
 }

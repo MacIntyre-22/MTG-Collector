@@ -25,6 +25,10 @@ struct CardEntryView: View {
     var card: Card?
     var showPreviews: Bool = true
     var showControls: Bool = false
+    /// Optional legality warning, shown beside the favourite star when previews are on (decks pass
+    /// this; binders leave it nil). Kept here so both status badges share one corner stack.
+    var legalityIcon: String? = nil
+    var legalityColor: Color = .red
 
     // MARK: State Properties
 
@@ -42,7 +46,14 @@ struct CardEntryView: View {
 
             ZStack(alignment: .topLeading) {
                 if let card {
-                    CardGridView(card: card, showPreviews: showPreviews, finish: entry.finish)
+                    CardGridView(
+                        card: card,
+                        showPreviews: showPreviews,
+                        finish: entry.finish,
+                        isFavourite: entry.favourite,
+                        legalityIcon: legalityIcon,
+                        legalityColor: legalityColor
+                    )
                 } else {
                     cardPlaceholder
                 }

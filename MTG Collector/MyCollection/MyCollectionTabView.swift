@@ -106,7 +106,7 @@ struct MyCollectionTabView: View {
                 }
             }
             .sheet(isPresented: $showFilters) {
-                FilterSheetView(context: .collection, onApply: {
+                FilterSheetView(context: .collection, collectionTitle: "My Hold", onApply: {
                     applyFilter()
                 }, filters: $filters)
             }

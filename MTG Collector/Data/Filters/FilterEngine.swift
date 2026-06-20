@@ -52,7 +52,7 @@ struct CollectionFilterEngine: FilterEngine {
         // Start from active, entry-level-filtered entries
         var working = entries.filter { entry in
             if entry.isDeleted { return false }
-            if filters.foilOnly && !entry.isFoil { return false }
+            if !filters.finishes.isEmpty && !filters.finishes.contains(entry.finish.rawValue) { return false }
             if filters.favouritesOnly && !entry.favourite { return false }
             return true
         }
@@ -74,32 +74,124 @@ struct CollectionFilterEngine: FilterEngine {
 
     // MARK: Matching
 
+    /// Mirrors the Scryfall query the search engine builds, evaluated locally against cached card
+    /// data. Every clause is an AND, matching `scryfallQuery()`. Filters with no local backing
+    /// data aren't offered by the sheet, so they never reach here.
     private func matches(card: Card, filters: FilterState) -> Bool {
+        // Name (Search's free-text field; collection contexts leave this empty)
         if !filters.text.isEmpty,
            !card.name.localizedCaseInsensitiveContains(filters.text) {
             return false
         }
+        // Colours (Scryfall c:) — card is/contains all selected colours
         if !filters.colors.isEmpty,
-           !filters.colors.allSatisfy({ card.colorIdentity.contains($0) }) {
+           !filters.colors.allSatisfy({ card.colors.contains($0) }) {
             return false
         }
+        // Colour identity (Scryfall id:) — card identity fits within the selected colours
+        if !filters.colorIdentity.isEmpty,
+           !card.colorIdentity.allSatisfy({ filters.colorIdentity.contains($0) }) {
+            return false
+        }
+        // Produces (Scryfall produces:) — card produces all selected colours
+        if !filters.producedMana.isEmpty,
+           !filters.producedMana.allSatisfy({ card.producedMana.contains($0) }) {
+            return false
+        }
+        // Types — type line mentions one of the selected types
         if !filters.types.isEmpty,
            !filters.types.contains(where: { card.typeLine.localizedCaseInsensitiveContains($0) }) {
             return false
         }
+        // Rarities
         if !filters.rarities.isEmpty,
            !filters.rarities.contains(card.rarity) {
             return false
         }
+        // Sets
         if !filters.sets.isEmpty,
            !filters.sets.contains(card.set) {
             return false
         }
+        // Mana value range (guard an inverted slider, as the query builder does)
         let upper = filters.cmcUpper >= filters.cmcLower ? filters.cmcUpper : 20
         if card.cmc < filters.cmcLower || card.cmc > upper {
             return false
         }
+        // Power / toughness (string stats — "*"/absent fail an active range)
+        if !passesStat(card.power, lower: filters.powerLower, upper: filters.powerUpper, cap: 15) {
+            return false
+        }
+        if !passesStat(card.toughness, lower: filters.toughnessLower, upper: filters.toughnessUpper, cap: 15) {
+            return false
+        }
+        // Format legality (Scryfall f:) — legal or restricted counts as playable
+        if !filters.formatLegality.isEmpty {
+            let status = card.legalities[filters.formatLegality]
+            if status != "legal" && status != "restricted" { return false }
+        }
+        // Can be commander (Scryfall is:commander) — local heuristic
+        if filters.isCommander, !canBeCommander(card) {
+            return false
+        }
+        // Printing flags (Scryfall is:…) — every selected flag must hold
+        for flag in filters.printFlags where !hasPrintFlag(card, flag) {
+            return false
+        }
+        // Oracle text contains (Scryfall o:)
+        if !filters.oracleText.isEmpty, !oracleTextContains(card, filters.oracleText) {
+            return false
+        }
+        // Keyword (Scryfall keyword:)
+        if !filters.keyword.isEmpty,
+           !card.keywords.contains(where: { $0.localizedCaseInsensitiveContains(filters.keyword) }) {
+            return false
+        }
+        // Artist (Scryfall a:)
+        if !filters.artist.isEmpty,
+           !card.artist.localizedCaseInsensitiveContains(filters.artist) {
+            return false
+        }
+        // Max price (Scryfall usd<=) — active only above 0; card needs a parseable price at/under it
+        if filters.priceMaxUSD > 0 {
+            guard let usd = Double(card.prices.usd), usd <= filters.priceMaxUSD else { return false }
+        }
         return true
+    }
+
+    // MARK: Match helpers
+
+    /// A string stat (power/toughness) passes when its range is inactive, or it parses to a number
+    /// inside [lower, upper]. Non-numeric ("*", "1+*") or absent stats fail an *active* range —
+    /// matching Scryfall, where `pow>=0` only returns cards that actually have power.
+    private func passesStat(_ raw: String, lower: Double, upper: Double, cap: Double) -> Bool {
+        if lower <= 0 && upper >= cap { return true }       // full range = filter off
+        guard let value = Double(raw) else { return false }
+        return value >= lower && value <= upper
+    }
+
+    /// Approximates Scryfall `is:commander`: a legendary creature, or any card whose rules text
+    /// explicitly says it can be a commander (planeswalker commanders, backgrounds, etc.).
+    private func canBeCommander(_ card: Card) -> Bool {
+        let type = card.typeLine.lowercased()
+        if type.contains("legendary") && type.contains("creature") { return true }
+        return card.oracleText.localizedCaseInsensitiveContains("can be your commander")
+    }
+
+    /// Whether a printing flag holds, for the flags we cache locally. Collection contexts only ever
+    /// offer `reserved`; any unsupported flag never matches (so it can't silently pass).
+    private func hasPrintFlag(_ card: Card, _ flag: String) -> Bool {
+        switch flag {
+        case "reserved": return card.reserved
+        case "foil":     return card.finishes.contains("foil")
+        default:         return false
+        }
+    }
+
+    /// Oracle-text search across the card and any of its faces (DFCs carry text per face).
+    private func oracleTextContains(_ card: Card, _ needle: String) -> Bool {
+        if card.oracleText.localizedCaseInsensitiveContains(needle) { return true }
+        return card.cardFaces.contains { $0.oracleText.localizedCaseInsensitiveContains(needle) }
     }
 
     // MARK: Sorting

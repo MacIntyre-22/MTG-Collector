@@ -72,6 +72,11 @@ struct BinderCardView: View {
                             ForEach(CardFinish.allCases, id: \.self) { Text($0.label).tag($0) }
                         }
 
+                        Button(entry.favourite ? "Unfavourite" : "Favourite") {
+                            entry.favourite.toggle()
+                            entry.updatedAt = Date()
+                        }
+
                         Button("Delete", role: .destructive) {
                             deleteEntry()
                         }

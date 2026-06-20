@@ -133,7 +133,7 @@ struct BinderView: View {
             PaywallView()
         }
         .sheet(isPresented: $showFilters) {
-            FilterSheetView(context: .collection, onApply: { applyFilter() }, filters: $filters)
+            FilterSheetView(context: .collection, collectionTitle: "Binder", onApply: { applyFilter() }, filters: $filters)
         }
     }
 

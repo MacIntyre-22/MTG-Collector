@@ -60,6 +60,8 @@ struct DeckCardView: View {
                     card: card,
                     showPreviews: deck.showPreviews,
                     showControls: deck.showControls,
+                    legalityIcon: legality.isProblem ? legality.icon : nil,
+                    legalityColor: legality.color,
                     deleteEntry: { deleteEntry() }
                 )
             }
@@ -90,6 +92,11 @@ struct DeckCardView: View {
                         Button("Maybeboard") {
                             mvtoMaybeboard(entry: entry)
                         }
+                        Button(entry.favourite ? "Unfavourite" : "Favourite") {
+                            entry.favourite.toggle()
+                            entry.updatedAt = Date()
+                        }
+
                         Button("Delete", role: .destructive) {
                             deleteEntry()
                         }
@@ -104,17 +111,6 @@ struct DeckCardView: View {
                             .shadow(radius: 4)
                     }
                     .padding(5)
-
-                    /// Show legal status if there's a problem
-                    if legality.isProblem {
-                        Image(systemName: legality.icon)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(legality.color)
-                            .bold()
-                            .shadow(radius: 4)
-                    }
                 }
                 .padding(.top, 30)
             }

@@ -137,7 +137,7 @@ struct DeckView: View {
             PaywallView()
         }
         .sheet(isPresented: $showFilters) {
-            FilterSheetView(context: .deck, onApply: { applyFilter() }, filters: $filters)
+            FilterSheetView(context: .deck, collectionTitle: "Deck", onApply: { applyFilter() }, filters: $filters)
         }
     }
 

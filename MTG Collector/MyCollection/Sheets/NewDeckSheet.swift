@@ -110,7 +110,7 @@ struct NewDeckSheet: View {
                             .multilineTextAlignment(.center)
 
                         Picker("Rule Type", selection: $ruleType) {
-                            ForEach(legalities, id: \.self) { legality in
+                            ForEach(legalities.sorted(), id: \.self) { legality in
                                 Text(legality.capitalized)
                                     .tag(legality)
                             }

@@ -53,6 +53,7 @@ struct SettingsTabView: View {
     /// When on, every collection screen force-refreshes prices on open (so the flow is testable
     /// without waiting 24h). Read by PriceRefresher via the same UserDefaults key.
     @AppStorage("devForcePriceRefresh") private var devForcePriceRefresh = false
+    @AppStorage("devHideStatusBar") private var devHideStatusBar = false
     @State private var showPriceRefreshAlert = false
     @State private var priceRefreshCount = 0
 #endif
@@ -99,6 +100,7 @@ struct SettingsTabView: View {
                         TabGuide.resetAll()
                         settings.onBoarding = true
                     }
+                    Toggle("Hide Status Bar", isOn: $devHideStatusBar)
                 }
 #endif
             }

@@ -32,6 +32,8 @@ enum ImportTarget {
 struct ImportCardsSheet: View {
 
     let target: ImportTarget
+    /// Optional list to seed the editor with (e.g. a .txt / .csv opened from Files routed to My Hold).
+    var initialText: String = ""
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -88,6 +90,13 @@ struct ImportCardsSheet: View {
                 }
             }
             .navigationTitle("Import Cards")
+            .onAppear {
+                // Seed a list routed in from Files (parse fires here; resolve stays user-driven).
+                if importVM.rawText.isEmpty, !initialText.isEmpty {
+                    importVM.rawText = initialText
+                    importVM.parse()
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }

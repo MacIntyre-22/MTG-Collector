@@ -62,15 +62,28 @@ struct FilterState {
     var sortBy: FilterSort = .name
     var sortDescending: Bool = false
 
-    // MARK: Scryfall only
+    // MARK: Card attributes
+    // Build the Scryfall query for Search and are mirrored locally by CollectionFilterEngine, so
+    // a binder/deck filters on the same fields (only ones with no cached data are hidden by the UI).
 
     var formatLegality: String = ""      // e.g. "standard", "modern", "commander"
     var isCommander: Bool = false        // is:commander
     var producedMana: [String] = []      // produces:{colours}
+    var colorIdentity: [String] = []     // id:{colours} — Commander colour identity
+    var oracleText: String = ""          // o:"…"      — rules-text contains
+    var keyword: String = ""             // keyword:…  — ability keyword (flying, deathtouch…)
+    var artist: String = ""              // a:"…"
+    var powerLower: Double = 0           // pow>=
+    var powerUpper: Double = 15          // pow<=  (15 = no upper bound)
+    var toughnessLower: Double = 0       // tou>=
+    var toughnessUpper: Double = 15      // tou<=  (15 = no upper bound)
+    var priceMaxUSD: Double = 0          // usd<=  (0 = no cap)
+    var printFlags: [String] = []        // is:foil, is:fullart, is:reprint, is:reserved, is:promo, is:textless
 
     // MARK: Collection only
 
-    var foilOnly: Bool = false
+    /// Raw `CardFinish` values to show. Empty = all finishes. e.g. ["foil", "etched"].
+    var finishes: [String] = []
     var favouritesOnly: Bool = false
 
     // MARK: Deck only
@@ -107,6 +120,16 @@ struct FilterState {
             || sortDescending
             || !formatLegality.isEmpty
             || isCommander
+            || !colorIdentity.isEmpty
+            || !oracleText.isEmpty
+            || !keyword.isEmpty
+            || !artist.isEmpty
+            || powerLower != 0
+            || powerUpper != 15
+            || toughnessLower != 0
+            || toughnessUpper != 15
+            || priceMaxUSD != 0
+            || !printFlags.isEmpty
     }
 
     // MARK: Scryfall Query
@@ -140,6 +163,26 @@ struct FilterState {
         if isCommander {
             parts.append("is:commander")
         }
+        if !colorIdentity.isEmpty {
+            parts.append("id:\(colorIdentity.joined())")
+        }
+        if !oracleText.isEmpty {
+            parts.append("o:\"\(oracleText)\"")
+        }
+        if !keyword.isEmpty {
+            parts.append("keyword:\(keyword.replacingOccurrences(of: " ", with: ""))")
+        }
+        if !artist.isEmpty {
+            parts.append("a:\"\(artist)\"")
+        }
+        for flag in printFlags {
+            parts.append("is:\(flag)")
+        }
+        if powerLower > 0 { parts.append("pow>=\(Int(powerLower))") }
+        if powerUpper < 15 { parts.append("pow<=\(Int(powerUpper))") }
+        if toughnessLower > 0 { parts.append("tou>=\(Int(toughnessLower))") }
+        if toughnessUpper < 15 { parts.append("tou<=\(Int(toughnessUpper))") }
+        if priceMaxUSD > 0 { parts.append("usd<=\(Int(priceMaxUSD))") }
 
         // CMC range — guard against an inverted slider
         let upper = cmcUpper >= cmcLower ? cmcUpper : 20
