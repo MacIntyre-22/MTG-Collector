@@ -20,14 +20,10 @@ struct CardGridView: View {
 
     var card: Card
     var showPreviews: Bool = false
-    var isFoil: Bool = false
+    /// The owned finish — drives the iridescent border (foil/etched). Nonfoil shows no border.
+    var finish: CardFinish = .nonfoil
     var showNames: Bool = false
-    var gradFoil: LinearGradient = LinearGradient(
-                                        colors: [.blue, .purple, .pink, .orange, .yellow],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-    
+
     // MARK: State Properties
 
     @Environment(\.appCurrency) private var currency
@@ -53,33 +49,18 @@ struct CardGridView: View {
                 /// if multifaced
                 if let faces = multiFaced, faces.count > 1 {
                     /// Front face
-                    ZStack {
-                        CardImageView(maxWidth: 220, name: faces.first!.name, imageURIs: faces.first!.imageURIs)
-                        if isFoil {
-                            gradFoil.opacity(0.3)
-                        }
-                    }
-                    .opacity(isFlipped ? 0 : 1)
-                    .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+                    CardImageView(maxWidth: 220, name: faces.first!.name, imageURIs: faces.first!.imageURIs)
+                        .opacity(isFlipped ? 0 : 1)
+                        .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
 
                     /// Back face
-                    ZStack {
-                        CardImageView(maxWidth: 220, name: faces.last!.name, imageURIs: faces.last!.imageURIs)
-                        if isFoil {
-                            gradFoil.opacity(0.3)
-                        }
-                    }
-                    .opacity(isFlipped ? 1 : 0)
-                    .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
-                    
+                    CardImageView(maxWidth: 220, name: faces.last!.name, imageURIs: faces.last!.imageURIs)
+                        .opacity(isFlipped ? 1 : 0)
+                        .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
+
                 } else {
                     /// Single faced card
-                    ZStack {
-                        CardImageView(maxWidth: 220, name: card.name, imageURIs: card.imageURIs)
-                        if isFoil {
-                            gradFoil.opacity(0.3)
-                        }
-                    }
+                    CardImageView(maxWidth: 220, name: card.name, imageURIs: card.imageURIs)
                 }
                 
                 /// set flip button over both faces if it is multifaced
@@ -105,6 +86,7 @@ struct CardGridView: View {
             }
             .aspectRatio(0.714, contentMode: .fit)
             .cornerRadius(8)
+            .cardFinish(finish, cornerRadius: 8)
             .padding([.horizontal, .top], 10)
 
             if showPreviews {

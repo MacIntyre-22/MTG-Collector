@@ -28,7 +28,7 @@ struct PriceStatWidget: View {
                 Label("Cost", systemImage: "chart.line.uptrend.xyaxis")
                     .foregroundColor(.gray)
                     .italic()
-                Text(currency.format(currency.total(stats)))
+                Text(currency.formatCompact(currency.total(stats)))
                     .lineLimit(1)
                     .font(.title)
                     .bold()

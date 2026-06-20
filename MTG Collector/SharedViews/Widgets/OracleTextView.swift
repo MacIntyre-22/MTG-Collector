@@ -297,7 +297,9 @@ struct OracleTextView: View {
             } else if let uri = SymbolStore.uri(for: key) {
                 raw = await SymbolCache.shared.load(symbol: key, uri: uri)
             }
-            if let raw { symbolImages[key] = raw.scaledToPoint(targetSize) }
+            // Bake a small left/right margin into each inline symbol so it doesn't touch the
+            // surrounding words (the cost-row symbols use SwiftUI padding; inline text can't).
+            if let raw { symbolImages[key] = raw.scaledToPoint(targetSize, horizontalPadding: 2.5) }
         }
     }
 }

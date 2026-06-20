@@ -20,22 +20,26 @@ struct SearchCardView: View {
     // MARK: Stored Properties
 
     var card: Card
-    
+
     // MARK: State Properties
 
     @Environment(\.modelContext) var modelContext
     @Environment(\.appTint) private var tint
     @Query var binders: [Binder]
     @Query var decks: [Deck]
+    @State private var selectedCard: Card?
     
     // MARK: View
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            NavigationLink(destination: CardInfoView(card: card)){
+            Button {
+                selectedCard = card
+            } label: {
                 CardGridView(card: card, showPreviews: true)
                     .widgetStyle(.solid)
             }
+            .buttonStyle(.plain)
             /// controls
             HStack {
                 Menu {
@@ -53,6 +57,7 @@ struct SearchCardView: View {
             }
             .padding(.top, 30)
         }
+        .cardInfoSheet(card: $selectedCard)
     }
 }
 

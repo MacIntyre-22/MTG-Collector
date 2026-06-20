@@ -24,6 +24,7 @@ import SwiftData
 enum FilterContext {
     case scryfall
     case collection
+    case deck        // a deck board — same as collection, plus the legality filter
 }
 
 struct FilterSheetView: View {
@@ -35,7 +36,7 @@ struct FilterSheetView: View {
 
     let allColors = ["W", "U", "B", "R", "G"]
     let allTypes = ["Creature", "Instant", "Sorcery", "Artifact", "Enchantment", "Land", "Planeswalker"]
-    let allRarities = ["common", "uncommon", "rare", "mythic"]
+    let allRarities = ["common", "uncommon", "rare", "mythic", "special"]
     let formats = ["standard", "modern", "legacy", "vintage", "commander", "pauper", "pioneer"]
     let columns = [
         GridItem(.adaptive(minimum: 100, maximum: 300), spacing: 15),
@@ -51,6 +52,7 @@ struct FilterSheetView: View {
     @Binding var filters: FilterState
 
     private var isScryfall: Bool { context == .scryfall }
+    private var isDeck: Bool { context == .deck }
 
     // MARK: View
 
@@ -58,6 +60,8 @@ struct FilterSheetView: View {
         NavigationStack {
             Form {
                 resetSection
+                // Legality sits up top for decks so it's the first, quickest filter to reach.
+                if isDeck { legalitySection }
                 sortSection
                 colorsSection
                 typesSection
@@ -96,6 +100,15 @@ struct FilterSheetView: View {
                 Button("Reset") { filters.reset() }.bold()
                 Spacer()
             }
+        }
+    }
+
+    private var legalitySection: some View {
+        Section("Legality") {
+            Picker("Show", selection: $filters.legality) {
+                ForEach(LegalityFilter.allCases) { Text($0.rawValue).tag($0) }
+            }
+            .pickerStyle(.segmented)
         }
     }
 

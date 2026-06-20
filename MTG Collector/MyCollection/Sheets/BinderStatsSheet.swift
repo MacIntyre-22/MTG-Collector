@@ -1,12 +1,15 @@
-﻿//
+//
 //  BinderStatsSheet.swift
 //  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-10-10.
-//  Pourpose:
-//      Displays the stats for the respective binder
+//  Purpose:
+//      The full stats sheet for a single binder — renders the shared CollectionStatsContent from the
+//      binder's stored CollectionStats. (The whole-collection "My Hold" view uses the same content
+//      via WholeCollectionStatsSheet.)
 //  External Types:
-//      Binder, StatWidget, PriceStatWidget, HighCardWidget, ManaCountWidget, TypeCountWidget,
+//      Binder, CollectionStatsContent, StatsUpdater, StatsStore
+//
 
 // MARK: Imports
 
@@ -24,40 +27,25 @@ struct BinderStatsSheet: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) private var modelContext
+    @State private var stats: CollectionStats?
 
     // MARK: View
 
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
-                VStack {
-                    HStack(spacing: 20) {
-                        StatWidget(text: "\(binder.cardCount)", label: Label("Cards", systemImage: "square.stack"))
-                        PriceStatWidget(stats: binder.stats)
-                    }
-                    .padding(.bottom, 20)
-
-                    if !binder.highestPricedCardID.isEmpty {
-                        HighCardWidget(cardID: binder.highestPricedCardID)
-                            .padding(.bottom, 10)
-                    }
-
-                    ManaCountWidget(manaTypeCount: binder.manaTypeCount)
-                        .padding(.bottom, 10)
-
-                    TypeCountWidget(cardTypeCount: binder.cardTypeCount)
-                        .padding(.bottom, 10)
-
-                    ExternalResourcesWidget(context: .binder(binder))
-                        .padding(.bottom, 10)
-                }
+                CollectionStatsContent(
+                    stats: stats,
+                    cardCount: binder.cardCount,
+                    resources: .binder(binder)
+                )
                 .padding()
             }
             .navigationTitle("Statistics")
             .task {
                 StatsUpdater.update(binder, context: modelContext)
+                stats = StatsStore.stats(for: binder, context: modelContext)
             }
         }
     }
 }
-

@@ -7,7 +7,10 @@
 //      Renders Scryfall SVG set icons to UIImage using a single shared WKWebView. Requests are
 //      queued and processed serially: the SVG text is downloaded via URLSession (backed by
 //      URLCache), embedded in a styled HTML page that forces white fill, and the snapshot is stored
-//      in an NSCache for instant re-use.
+//      in an NSCache *and on disk*. The disk copy matters most for the Search "Sets" filter, which
+//      shows hundreds of set symbols — without persistence every launch re-rendered them all through
+//      the single WKWebView and the sheet crawled. Now each icon renders once ever and later launches
+//      read the PNG off disk.
 //  External Types:
 //      (WebKit, UIKit)
 //
@@ -41,6 +44,21 @@ final class SetIconCache: NSObject, WKNavigationDelegate {
 
     private static let size = CGSize(width: 80, height: 80)
 
+    /// On-disk home for rendered set symbols, so they survive app quits. In Caches (the OS may evict
+    /// under storage pressure; a missing file just re-renders).
+    private static let diskDir: URL = {
+        let dir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("set-icons", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir
+    }()
+
+    /// Filesystem-safe filename for a set code.
+    private static func diskURL(for code: String) -> URL {
+        let name = String(code.unicodeScalars.map { CharacterSet.alphanumerics.contains($0) ? Character($0) : "_" })
+        return diskDir.appendingPathComponent(name + ".png")
+    }
+
     // MARK: Init
 
     private override init() {
@@ -64,11 +82,24 @@ final class SetIconCache: NSObject, WKNavigationDelegate {
     }
 
     func load(code: String, uri: String) async -> UIImage? {
-        if let cached = image(for: code) { return cached }
-        return await withCheckedContinuation { cont in
+        if let cached = image(for: code) { return cached }            // memory
+        if let disk = await diskImage(for: code) {                    // disk (survives launches)
+            memory.setObject(disk, forKey: code as NSString)
+            return disk
+        }
+        return await withCheckedContinuation { cont in               // render once, then persist
             let job = RenderJob(code: code, uri: uri, continuation: cont)
             if active == nil { process(job) } else { queue.append(job) }
         }
+    }
+
+    /// Read a previously rendered PNG off the main thread. Nil if never rendered or evicted.
+    private func diskImage(for code: String) async -> UIImage? {
+        let url = Self.diskURL(for: code)
+        return await Task.detached(priority: .userInitiated) {
+            guard let data = try? Data(contentsOf: url) else { return nil }
+            return UIImage(data: data)
+        }.value
     }
 
     // MARK: Private rendering
@@ -108,6 +139,11 @@ final class SetIconCache: NSObject, WKNavigationDelegate {
     private func finish(image: UIImage?) {
         if let image, let code = active?.code {
             memory.setObject(image, forKey: code as NSString)
+            // Persist so this icon never has to be re-rendered on a future launch.
+            if let png = image.pngData() {
+                let url = Self.diskURL(for: code)
+                Task.detached(priority: .utility) { try? png.write(to: url, options: .atomic) }
+            }
         }
         active?.continuation.resume(returning: image)
         active = nil

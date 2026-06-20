@@ -216,6 +216,24 @@ struct PurchaseURIsJSON: Codable {
     var cardhoarder: String?
 }
 
+// MARK: Rulings
+
+/// Scryfall rulings list (fetched on demand from a card's `rulings_uri`).
+struct RulingsJSON: Codable {
+    var data: [RulingJSON]
+}
+
+struct RulingJSON: Codable {
+    var source: String?
+    var publishedAt: String?
+    var comment: String?
+
+    enum CodingKeys: String, CodingKey {
+        case source, comment
+        case publishedAt = "published_at"
+    }
+}
+
 /// Links to external resources surfaced by Scryfall (EDHREC, Gatherer, TCGPlayer Infinite)
 struct RelatedURIsJSON: Codable {
     var edhrec: String?

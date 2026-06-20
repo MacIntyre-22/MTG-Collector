@@ -30,15 +30,30 @@ struct BinderCardView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.appTint) private var tint
     @State private var card: Card?
+    @State private var selectedCard: Card?
+
+    // MARK: Computed
+
+    /// Setting the finish changes which price counts toward the binder's value, so recompute stats.
+    private var finishBinding: Binding<CardFinish> {
+        Binding(
+            get: { entry.finish },
+            set: { newValue in
+                entry.finish = newValue
+                entry.updatedAt = Date()
+                if let binder = entry.binder {
+                    StatsUpdater.update(binder, context: modelContext)
+                }
+            }
+        )
+    }
 
     // MARK: View
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            NavigationLink {
-                if let card {
-                    CardInfoView(card: card)
-                }
+            Button {
+                if let card { selectedCard = card }
             } label: {
                 CardEntryView(
                     entry: entry,
@@ -48,13 +63,13 @@ struct BinderCardView: View {
                     deleteEntry: { deleteEntry() }
                 )
             }
+            .buttonStyle(.plain)
 
             if showControls {
                 VStack {
                     Menu {
-                        Button("Toggle Foil") {
-                            entry.isFoil.toggle()
-                            entry.updatedAt = Date()
+                        Picker("Finish", selection: finishBinding) {
+                            ForEach(CardFinish.allCases, id: \.self) { Text($0.label).tag($0) }
                         }
 
                         Button("Delete", role: .destructive) {
@@ -80,5 +95,6 @@ struct BinderCardView: View {
                 card = await CardStore.resolve(entry.scryfallCardID, context: modelContext)
             }
         }
+        .cardInfoSheet(card: $selectedCard)
     }
 }

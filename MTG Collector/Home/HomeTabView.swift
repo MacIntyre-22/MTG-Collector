@@ -81,8 +81,7 @@ struct HomeTabView: View {
                 title: section.title,
                 description: section.blurb,
                 collection: cards[section] ?? [],
-                isLoading: loading.contains(section),
-                shuffle: { cards[section] = (cards[section] ?? []).shuffled() }
+                isLoading: loading.contains(section)
             )
         }
     }
@@ -90,15 +89,14 @@ struct HomeTabView: View {
     private var header: some View {
         VStack(spacing: 4) {
             HStack(alignment: .center) {
-                Image("MtgBinder")
+                Image("CardholdIcon")
                     .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 60, height: 60)
 
                 Text("Cardhold")
-                    .font(.title)
-                    .bold()
+                    .font(BrandFont.wordmark(40, relativeTo: .largeTitle))
             }
             .foregroundColor(.primary)
 
@@ -122,11 +120,18 @@ struct HomeTabView: View {
         }
 
         // Fresh day: fetch every row concurrently, updating each as its own request returns so the
-        // page fills in progressively instead of waiting on the slowest one.
+        // page fills in progressively instead of waiting on the slowest one. The day's seed varies
+        // the random page jump per section so the picks change daily but stay stable through the day.
+        let seed = HomeFeed.dailySeed(token: reloadToken)
         loading = Set(HomeSection.allCases)
         await withTaskGroup(of: (HomeSection, [CardJSON]).self) { group in
             for section in HomeSection.allCases {
-                group.addTask { (section, await SFAPI.fetchCardQuery(query: section.query)) }
+                group.addTask {
+                    // Keep the first 25 per row — the preview shows 8 and the "View All" list shows
+                    // the rest. Still far smaller than a full 175-card page for cache + prefetch.
+                    let cards = await SFAPI.fetchCardQuery(query: section.fetchQuery(seed: seed))
+                    return (section, Array(cards.prefix(25)))
+                }
             }
             for await (section, result) in group {
                 cards[section] = result

@@ -1,0 +1,1458 @@
+{
+  "version": 2,
+  "note": "Plain-language, original paraphrases of how each MTG keyword functions (game rules aren't copyrightable; only Wizards' exact wording is, so nothing here is copied verbatim). Keyed by the keyword name lowercased, matched case-insensitively against a card's Scryfall `keywords`. Each entry carries a `type`: 'ability' (keyword ability — a property the card has), 'action' (keyword action — a verb a player performs), or 'ability_word' (an italic flavour label with no rules of its own). Names sourced from Scryfall catalogs /keyword-abilities, /keyword-actions, /ability-words. Definitions for the newest sets (2025+) are best-effort and easy to refine — a keyword with no entry just renders as a non-tappable chip.",
+  "keywords": {
+    "flying": {
+      "type": "ability",
+      "definition": "Can only be blocked by creatures with flying or reach."
+    },
+    "reach": {
+      "type": "ability",
+      "definition": "Can block creatures with flying."
+    },
+    "trample": {
+      "type": "ability",
+      "definition": "Combat damage beyond what's needed to destroy its blockers is dealt to the player or planeswalker."
+    },
+    "vigilance": {
+      "type": "ability",
+      "definition": "Attacking doesn't cause it to tap."
+    },
+    "haste": {
+      "type": "ability",
+      "definition": "Can attack and use tap abilities the turn it comes under your control."
+    },
+    "lifelink": {
+      "type": "ability",
+      "definition": "Damage it deals also causes its controller to gain that much life."
+    },
+    "deathtouch": {
+      "type": "ability",
+      "definition": "Any amount of damage it deals to a creature is enough to destroy that creature."
+    },
+    "first strike": {
+      "type": "ability",
+      "definition": "Deals combat damage before creatures without first strike."
+    },
+    "double strike": {
+      "type": "ability",
+      "definition": "Deals both first-strike and regular combat damage."
+    },
+    "menace": {
+      "type": "ability",
+      "definition": "Can't be blocked except by two or more creatures."
+    },
+    "hexproof": {
+      "type": "ability",
+      "definition": "Can't be the target of spells or abilities opponents control."
+    },
+    "hexproof from": {
+      "type": "ability",
+      "definition": "Can't be the target of spells or abilities of the named quality that opponents control."
+    },
+    "shroud": {
+      "type": "ability",
+      "definition": "Can't be the target of any spells or abilities."
+    },
+    "indestructible": {
+      "type": "ability",
+      "definition": "Can't be destroyed by damage or by effects that say destroy."
+    },
+    "defender": {
+      "type": "ability",
+      "definition": "Can't attack."
+    },
+    "flash": {
+      "type": "ability",
+      "definition": "You may cast it any time you could cast an instant."
+    },
+    "ward": {
+      "type": "ability",
+      "definition": "When it becomes the target of a spell or ability an opponent controls, counter that spell or ability unless its controller pays the ward cost."
+    },
+    "protection": {
+      "type": "ability",
+      "definition": "Can't be blocked, targeted, dealt damage, enchanted, or equipped by anything with the named quality."
+    },
+    "prowess": {
+      "type": "ability",
+      "definition": "Whenever you cast a noncreature spell, it gets +1/+1 until end of turn."
+    },
+    "infect": {
+      "type": "ability",
+      "definition": "Deals damage to creatures as -1/-1 counters and to players as poison counters."
+    },
+    "wither": {
+      "type": "ability",
+      "definition": "Deals damage to creatures as -1/-1 counters."
+    },
+    "toxic": {
+      "type": "ability",
+      "definition": "A player dealt combat damage by it also gets that many poison counters."
+    },
+    "poisonous": {
+      "type": "ability",
+      "definition": "Whenever it deals combat damage to a player, that player gets that many poison counters."
+    },
+    "fear": {
+      "type": "ability",
+      "definition": "Can't be blocked except by artifact creatures and black creatures."
+    },
+    "intimidate": {
+      "type": "ability",
+      "definition": "Can't be blocked except by artifact creatures and creatures that share a color with it."
+    },
+    "skulk": {
+      "type": "ability",
+      "definition": "Can't be blocked by creatures with greater power."
+    },
+    "shadow": {
+      "type": "ability",
+      "definition": "Can block or be blocked only by creatures with shadow."
+    },
+    "horsemanship": {
+      "type": "ability",
+      "definition": "Can only be blocked by creatures with horsemanship."
+    },
+    "flanking": {
+      "type": "ability",
+      "definition": "When a creature without flanking blocks it, the blocker gets -1/-1 until end of turn."
+    },
+    "banding": {
+      "type": "ability",
+      "definition": "Helps creatures attack and block together; you choose how combat damage is assigned."
+    },
+    "rampage": {
+      "type": "ability",
+      "definition": "Whenever it becomes blocked, it gets +N/+N for each creature blocking it beyond the first."
+    },
+    "bushido": {
+      "type": "ability",
+      "definition": "Whenever it blocks or becomes blocked, it gets +N/+N until end of turn."
+    },
+    "frenzy": {
+      "type": "ability",
+      "definition": "Whenever it attacks and isn't blocked, it gets +N/+0 until end of turn."
+    },
+    "melee": {
+      "type": "ability",
+      "definition": "Whenever it attacks, it gets +1/+1 until end of turn for each opponent you attacked this combat."
+    },
+    "battle cry": {
+      "type": "ability",
+      "definition": "Whenever it attacks, each other attacking creature gets +1/+0 until end of turn."
+    },
+    "exalted": {
+      "type": "ability",
+      "definition": "Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn."
+    },
+    "mentor": {
+      "type": "ability",
+      "definition": "Whenever it attacks, put a +1/+1 counter on a target attacking creature with lesser power."
+    },
+    "training": {
+      "type": "ability",
+      "definition": "Whenever it attacks with another creature of greater power, put a +1/+1 counter on it."
+    },
+    "dethrone": {
+      "type": "ability",
+      "definition": "Whenever it attacks the player with the most life, put a +1/+1 counter on it."
+    },
+    "afflict": {
+      "type": "ability",
+      "definition": "Whenever it becomes blocked, the defending player loses that much life."
+    },
+    "annihilator": {
+      "type": "ability",
+      "definition": "Whenever it attacks, the defending player sacrifices that many permanents."
+    },
+    "provoke": {
+      "type": "ability",
+      "definition": "Whenever it attacks, you may have a target creature the defending player controls untap and block it if able."
+    },
+    "enlist": {
+      "type": "ability",
+      "definition": "As it attacks, you may tap a nonattacking creature you control to add its power to this creature for the combat."
+    },
+    "myriad": {
+      "type": "ability",
+      "definition": "Whenever it attacks, for each other opponent you may create a tapped, attacking token copy attacking that player; exile the copies at end of combat."
+    },
+    "mobilize": {
+      "type": "ability",
+      "definition": "Whenever it attacks, create that many 1/1 red Warrior creature tokens tapped and attacking; sacrifice them at the next end step."
+    },
+    "decayed": {
+      "type": "ability",
+      "definition": "It can't block, and when it attacks you sacrifice it at end of combat."
+    },
+    "renown": {
+      "type": "ability",
+      "definition": "When it deals combat damage to a player, if it isn't renowned, put that many +1/+1 counters on it and it becomes renowned."
+    },
+    "boast": {
+      "type": "ability",
+      "definition": "Activate its boast ability only if it attacked this turn, and only once each turn."
+    },
+    "prowl": {
+      "type": "ability",
+      "definition": "You may cast it for its cheaper prowl cost if you dealt combat damage to a player this turn with a Rogue or a creature of the listed type."
+    },
+    "dash": {
+      "type": "ability",
+      "definition": "You may cast it for its dash cost; it gains haste and returns to your hand at the beginning of the next end step."
+    },
+    "blitz": {
+      "type": "ability",
+      "definition": "You may cast it for its blitz cost; it gains haste, draws you a card when it dies, and is sacrificed at the next end step."
+    },
+    "freerunning": {
+      "type": "ability",
+      "definition": "You may cast it for its cheaper freerunning cost if you dealt combat damage to a player this turn with an Assassin or your commander."
+    },
+    "web-slinging": {
+      "type": "ability",
+      "definition": "You may cast it for its web-slinging cost, which includes returning a tapped creature you control to its owner's hand."
+    },
+    "unleash": {
+      "type": "ability",
+      "definition": "It may enter with a +1/+1 counter; if it has one, it can't block."
+    },
+    "bloodthirst": {
+      "type": "ability",
+      "definition": "If an opponent was dealt damage this turn, it enters with that many +1/+1 counters."
+    },
+    "sunburst": {
+      "type": "ability",
+      "definition": "Enters with a +1/+1 (or charge) counter for each color of mana spent to cast it."
+    },
+    "fabricate": {
+      "type": "ability",
+      "definition": "When it enters, put that many +1/+1 counters on it, or instead create that many 1/1 colorless Servo artifact tokens."
+    },
+    "graft": {
+      "type": "ability",
+      "definition": "Enters with that many +1/+1 counters; whenever another creature enters, you may move a +1/+1 counter from this onto it."
+    },
+    "modular": {
+      "type": "ability",
+      "definition": "Enters with that many +1/+1 counters; when it dies, you may move those counters onto a target artifact creature."
+    },
+    "evolve": {
+      "type": "ability",
+      "definition": "Whenever a creature with greater power or toughness enters under your control, put a +1/+1 counter on this."
+    },
+    "amplify": {
+      "type": "ability",
+      "definition": "As it enters, you may reveal any number of cards sharing a listed creature type from your hand; it gets that many +1/+1 counters."
+    },
+    "devour": {
+      "type": "ability",
+      "definition": "As it enters, you may sacrifice any number of creatures; it enters with that many (times the devour number) +1/+1 counters."
+    },
+    "tribute": {
+      "type": "ability",
+      "definition": "As it enters, an opponent chooses whether to put that many +1/+1 counters on it; if they don't, its tribute ability triggers."
+    },
+    "ravenous": {
+      "type": "ability",
+      "definition": "Enters with X +1/+1 counters; if X is 5 or more, draw a card."
+    },
+    "backup": {
+      "type": "ability",
+      "definition": "When it enters, put that many +1/+1 counters on a creature; if it's another creature, it also gains this creature's other abilities until end of turn."
+    },
+    "afterlife": {
+      "type": "ability",
+      "definition": "When it dies, create that many 1/1 white and black Spirit creature tokens with flying."
+    },
+    "undying": {
+      "type": "ability",
+      "definition": "When it dies, if it had no +1/+1 counters, return it to the battlefield with one."
+    },
+    "persist": {
+      "type": "ability",
+      "definition": "When it dies, if it had no -1/-1 counters, return it to the battlefield with one."
+    },
+    "soulshift": {
+      "type": "ability",
+      "definition": "When it dies, you may return a target Spirit card with mana value N or less from your graveyard to your hand."
+    },
+    "recover": {
+      "type": "ability",
+      "definition": "When a creature dies, you may pay its recover cost to return it from your graveyard to your hand; otherwise exile it."
+    },
+    "haunt": {
+      "type": "ability",
+      "definition": "When it dies, exile it haunting a target creature; its triggered effect happens again when that haunted creature dies."
+    },
+    "exploit": {
+      "type": "ability",
+      "definition": "When it enters, you may sacrifice a creature; if you do, its exploit ability triggers."
+    },
+    "champion": {
+      "type": "ability",
+      "definition": "When it enters, exile another creature you control until it leaves the battlefield."
+    },
+    "soulbond": {
+      "type": "ability",
+      "definition": "When it or another creature enters, you may pair the two; the paired creatures share a bonus until one leaves."
+    },
+    "evoke": {
+      "type": "ability",
+      "definition": "You may cast it for its evoke cost, but sacrifice it when it enters."
+    },
+    "emerge": {
+      "type": "ability",
+      "definition": "You may cast it for its emerge cost by sacrificing a creature, reducing the cost by that creature's mana value."
+    },
+    "offering": {
+      "type": "ability",
+      "definition": "You may cast it any time you could cast an instant by sacrificing a creature of the listed type, reducing its cost by that creature's mana cost."
+    },
+    "surge": {
+      "type": "ability",
+      "definition": "You may cast it for its cheaper surge cost if you or a teammate already cast another spell this turn."
+    },
+    "spectacle": {
+      "type": "ability",
+      "definition": "You may cast it for its spectacle cost if an opponent lost life this turn."
+    },
+    "casualty": {
+      "type": "ability",
+      "definition": "As you cast it, you may sacrifice a creature with power N or greater to copy it."
+    },
+    "conspire": {
+      "type": "ability",
+      "definition": "As you cast it, you may tap two untapped creatures that share a color with it to copy it."
+    },
+    "replicate": {
+      "type": "ability",
+      "definition": "As you cast it, you may pay its replicate cost any number of times to copy it that many times."
+    },
+    "storm": {
+      "type": "ability",
+      "definition": "When you cast it, copy it for each other spell cast before it this turn."
+    },
+    "gravestorm": {
+      "type": "ability",
+      "definition": "When you cast it, copy it for each permanent put into a graveyard this turn."
+    },
+    "cascade": {
+      "type": "ability",
+      "definition": "When you cast it, exile cards from the top of your library until you exile a cheaper nonland card; you may cast that for free, then put the rest on the bottom in random order."
+    },
+    "ripple": {
+      "type": "ability",
+      "definition": "When you cast it, you may reveal the top N cards of your library and cast any with the same name for free; put the rest on the bottom."
+    },
+    "demonstrate": {
+      "type": "ability",
+      "definition": "When you cast it, you may copy it; if you do, choose an opponent who also copies it."
+    },
+    "squad": {
+      "type": "ability",
+      "definition": "As you cast it, you may pay its squad cost any number of times to create that many token copies when it enters."
+    },
+    "offspring": {
+      "type": "ability",
+      "definition": "As you cast it, you may pay its offspring cost to also create a 1/1 token copy when it enters."
+    },
+    "kicker": {
+      "type": "ability",
+      "definition": "You may pay an additional cost as you cast it to get a bonus effect."
+    },
+    "multikicker": {
+      "type": "ability",
+      "definition": "Its kicker cost can be paid any number of times for repeated effects."
+    },
+    "entwine": {
+      "type": "ability",
+      "definition": "You may pay the entwine cost to choose all of its modes instead of one."
+    },
+    "escalate": {
+      "type": "ability",
+      "definition": "Pay the escalate cost for each mode you choose beyond the first."
+    },
+    "spree": {
+      "type": "ability",
+      "definition": "Choose one or more additional modes as you cast it, paying each chosen mode's cost."
+    },
+    "overload": {
+      "type": "ability",
+      "definition": "You may cast it for its overload cost to change its 'target' wording to 'each,' affecting everything that qualifies."
+    },
+    "splice": {
+      "type": "ability",
+      "definition": "As you cast an Arcane spell, you may reveal this from your hand and pay its splice cost to add its text to that spell."
+    },
+    "fuse": {
+      "type": "ability",
+      "definition": "You may cast both halves of this split card together from your hand."
+    },
+    "aftermath": {
+      "type": "ability",
+      "definition": "You may cast its second half only from your graveyard, then exile the card."
+    },
+    "buyback": {
+      "type": "ability",
+      "definition": "Pay the extra buyback cost as you cast it to return it to your hand instead of the graveyard."
+    },
+    "assist": {
+      "type": "ability",
+      "definition": "Another player may help pay the generic portion of its cost as you cast it."
+    },
+    "convoke": {
+      "type": "ability",
+      "definition": "You may tap any number of creatures as you cast it; each pays for {1} or one mana of its color."
+    },
+    "improvise": {
+      "type": "ability",
+      "definition": "You may tap any number of artifacts as you cast it; each pays for {1}."
+    },
+    "delve": {
+      "type": "ability",
+      "definition": "Each card you exile from your graveyard as you cast it pays for {1}."
+    },
+    "affinity": {
+      "type": "ability",
+      "definition": "Costs {1} less to cast for each of the named permanent you control."
+    },
+    "undaunted": {
+      "type": "ability",
+      "definition": "Costs {1} less to cast for each opponent."
+    },
+    "crew": {
+      "type": "ability",
+      "definition": "Tap any number of creatures with total power equal to or greater than the crew number to turn this Vehicle into an artifact creature until end of turn."
+    },
+    "saddle": {
+      "type": "ability",
+      "definition": "Tap any number of other creatures with total power N or more to saddle this Mount; its saddled abilities work for the rest of the turn."
+    },
+    "living metal": {
+      "type": "ability",
+      "definition": "During your turn this Vehicle is also an artifact creature without needing to be crewed."
+    },
+    "for mirrodin!": {
+      "type": "ability",
+      "definition": "When it enters, create a 2/2 red Rebel creature token, then attach this Equipment to it."
+    },
+    "reconfigure": {
+      "type": "ability",
+      "definition": "Pay its reconfigure cost to attach this creature Equipment to another creature, or to unattach it; it's a creature while unattached."
+    },
+    "equip": {
+      "type": "ability",
+      "definition": "Pay its equip cost to attach this Equipment to a creature you control. Use only as a sorcery."
+    },
+    "fortify": {
+      "type": "ability",
+      "definition": "Pay its fortify cost to attach this Fortification to a land you control. Use only as a sorcery."
+    },
+    "enchant": {
+      "type": "ability",
+      "definition": "Describes what this Aura can be attached to (for example, 'enchant creature')."
+    },
+    "bestow": {
+      "type": "ability",
+      "definition": "You may cast it as an Aura for its bestow cost; it becomes a creature again if it becomes unattached."
+    },
+    "aura swap": {
+      "type": "ability",
+      "definition": "Pay its aura swap cost to exchange this Aura with an Aura card in your hand."
+    },
+    "umbra armor": {
+      "type": "ability",
+      "definition": "If the enchanted permanent would be destroyed, instead remove all damage from it and destroy this Aura."
+    },
+    "cycling": {
+      "type": "ability",
+      "definition": "Pay the cycling cost and discard this card to draw a card."
+    },
+    "landcycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for a land card."
+    },
+    "basic landcycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for a basic land card."
+    },
+    "plainscycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for a Plains card."
+    },
+    "islandcycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for an Island card."
+    },
+    "swampcycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for a Swamp card."
+    },
+    "mountaincycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for a Mountain card."
+    },
+    "forestcycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for a Forest card."
+    },
+    "slivercycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for a Sliver card."
+    },
+    "wizardcycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for a Wizard card."
+    },
+    "typecycling": {
+      "type": "ability",
+      "definition": "Pay its cost and discard it to search your library for a card of the listed type."
+    },
+    "transmute": {
+      "type": "ability",
+      "definition": "Pay its transmute cost and discard it to search your library for a card with the same mana value. Use only as a sorcery."
+    },
+    "transfigure": {
+      "type": "ability",
+      "definition": "Pay its transfigure cost and sacrifice it to search your library for a creature with the same mana value. Use only as a sorcery."
+    },
+    "reinforce": {
+      "type": "ability",
+      "definition": "Discard it and pay its reinforce cost to put that many +1/+1 counters on a target creature."
+    },
+    "scavenge": {
+      "type": "ability",
+      "definition": "Exile it from your graveyard and pay its scavenge cost to put that many +1/+1 counters on a creature. Use only as a sorcery."
+    },
+    "flashback": {
+      "type": "ability",
+      "definition": "You may cast it from your graveyard for its flashback cost, then exile it."
+    },
+    "jump-start": {
+      "type": "ability",
+      "definition": "You may cast it from your graveyard by paying its cost and discarding a card, then exile it as it resolves."
+    },
+    "retrace": {
+      "type": "ability",
+      "definition": "You may cast it from your graveyard by also discarding a land card as an additional cost."
+    },
+    "escape": {
+      "type": "ability",
+      "definition": "You may cast it from your graveyard for its escape cost, which includes exiling cards from your graveyard."
+    },
+    "unearth": {
+      "type": "ability",
+      "definition": "Pay its unearth cost to return it from your graveyard to the battlefield with haste; exile it at end of turn or when it leaves."
+    },
+    "encore": {
+      "type": "ability",
+      "definition": "Pay its encore cost and exile it from your graveyard to create a tapped, attacking token copy for each opponent; sacrifice them at the next end step."
+    },
+    "embalm": {
+      "type": "ability",
+      "definition": "Exile it from your graveyard and pay its embalm cost to create a token copy that is also white."
+    },
+    "eternalize": {
+      "type": "ability",
+      "definition": "Exile it from your graveyard and pay its eternalize cost to create a 4/4 black token copy."
+    },
+    "harmonize": {
+      "type": "ability",
+      "definition": "You may cast it from your graveyard for its harmonize cost, tapping creatures to help pay, then exile it."
+    },
+    "disturb": {
+      "type": "ability",
+      "definition": "You may cast it from your graveyard transformed for its disturb cost."
+    },
+    "mayhem": {
+      "type": "ability",
+      "definition": "You may cast it from your graveyard for its mayhem cost the turn it was discarded, then exile it."
+    },
+    "madness": {
+      "type": "ability",
+      "definition": "If you discard this card, you may cast it for its madness cost instead of putting it into your graveyard."
+    },
+    "dredge": {
+      "type": "ability",
+      "definition": "Instead of drawing a card, you may mill cards equal to its dredge number and return it from your graveyard to your hand."
+    },
+    "miracle": {
+      "type": "ability",
+      "definition": "If it's the first card you drew this turn, you may reveal it as you draw and cast it for its cheaper miracle cost."
+    },
+    "rebound": {
+      "type": "ability",
+      "definition": "If you cast it from your hand, exile it instead of putting it in the graveyard; on your next upkeep you may cast it from exile for free."
+    },
+    "suspend": {
+      "type": "ability",
+      "definition": "Exile it from your hand with time counters; remove one each upkeep, then cast it for free when the last is removed."
+    },
+    "foretell": {
+      "type": "ability",
+      "definition": "During your turn you may pay {2} to exile it face down; cast it later for its foretell cost."
+    },
+    "plot": {
+      "type": "ability",
+      "definition": "Pay its plot cost and exile it from your hand any time you could cast a sorcery; cast it for free on a later turn."
+    },
+    "warp": {
+      "type": "ability",
+      "definition": "You may cast it for its cheaper warp cost; exile it at the next end step, then cast it later from exile for its normal cost."
+    },
+    "impending": {
+      "type": "ability",
+      "definition": "You may cast it for its impending cost; it enters with N time counters and isn't a creature until the last is removed, one each upkeep."
+    },
+    "cipher": {
+      "type": "ability",
+      "definition": "After it resolves, you may exile it encoded on a creature you control; whenever that creature deals combat damage to a player, you may cast the encoded copy for free."
+    },
+    "awaken": {
+      "type": "ability",
+      "definition": "You may cast it for its awaken cost to also put N +1/+1 counters on a target land and make it a 0/0 creature."
+    },
+    "epic": {
+      "type": "ability",
+      "definition": "Copy it at the start of each of your upcoming turns for free, but you can't cast other spells for the rest of the game."
+    },
+    "split second": {
+      "type": "ability",
+      "definition": "While it's on the stack, players can't cast spells or activate non-mana abilities."
+    },
+    "gift": {
+      "type": "ability",
+      "definition": "As you cast it, you may promise an opponent a gift; if you do, the card's improved effect happens and that opponent gets the gift."
+    },
+    "bargain": {
+      "type": "ability",
+      "definition": "You may sacrifice an artifact, enchantment, or token as you cast it for an additional effect."
+    },
+    "cleave": {
+      "type": "ability",
+      "definition": "You may pay the cleave cost to cast it without the text in square brackets."
+    },
+    "morph": {
+      "type": "ability",
+      "definition": "You may cast it face down as a 2/2 creature for {3}; turn it face up any time by paying its morph cost."
+    },
+    "megamorph": {
+      "type": "ability",
+      "definition": "You may cast it face down as a 2/2 for {3}; turn it face up by paying its megamorph cost, and it enters with a +1/+1 counter."
+    },
+    "disguise": {
+      "type": "ability",
+      "definition": "You may cast it face down as a 2/2 with ward {2} for {3}; turn it face up any time by paying its disguise cost."
+    },
+    "hideaway": {
+      "type": "ability",
+      "definition": "When it enters, look at the top N cards of your library, exile one face down, and put the rest on the bottom; later you may play that card under the stated condition."
+    },
+    "forecast": {
+      "type": "ability",
+      "definition": "Once each turn during your upkeep, you may reveal it from your hand and pay its forecast cost to use the listed ability."
+    },
+    "level up": {
+      "type": "ability",
+      "definition": "Pay its cost any time you could cast a sorcery to put a level counter on it, improving its stats and abilities."
+    },
+    "monstrosity": {
+      "type": "ability",
+      "definition": "Pay its cost to put that many +1/+1 counters on it and make it monstrous, if it isn't already."
+    },
+    "outlast": {
+      "type": "ability",
+      "definition": "Tap it and pay its outlast cost to put a +1/+1 counter on it. Use only as a sorcery."
+    },
+    "adapt": {
+      "type": "ability",
+      "definition": "If it has no +1/+1 counters, put that many +1/+1 counters on it."
+    },
+    "riot": {
+      "type": "ability",
+      "definition": "It enters with your choice of a +1/+1 counter or haste."
+    },
+    "mutate": {
+      "type": "ability",
+      "definition": "You may cast it for its mutate cost onto a target non-Human creature, merging them into one creature with all their abilities."
+    },
+    "ninjutsu": {
+      "type": "ability",
+      "definition": "Return an unblocked attacker you control to hand to put it onto the battlefield tapped and attacking."
+    },
+    "commander ninjutsu": {
+      "type": "ability",
+      "definition": "Like ninjutsu, but you may also reveal it from the command zone to swap it in for an unblocked attacker."
+    },
+    "exhaust": {
+      "type": "ability",
+      "definition": "An activated ability marked exhaust can be used only once each game."
+    },
+    "specialize": {
+      "type": "ability",
+      "definition": "Pay its specialize cost and discard a card of a chosen color to transform it into that color's specialized side."
+    },
+    "craft": {
+      "type": "ability",
+      "definition": "Pay its craft cost, which can include exiling other permanents or cards, to transform it. Use only as a sorcery."
+    },
+    "prototype": {
+      "type": "ability",
+      "definition": "You may cast it as a smaller, differently-costed colored creature with reduced stats instead of its normal artifact form."
+    },
+    "more than meets the eye": {
+      "type": "ability",
+      "definition": "You may cast it converted to its other face for that face's cost."
+    },
+    "compleated": {
+      "type": "ability",
+      "definition": "If you pay a Phyrexian mana symbol with life as you cast this planeswalker, it enters with that many fewer loyalty counters."
+    },
+    "read ahead": {
+      "type": "ability",
+      "definition": "Enters as a Saga with your choice of chapter and adds only that chapter's ability instead of starting at the first."
+    },
+    "daybound": {
+      "type": "ability",
+      "definition": "A day-and-night card; it stays on its day face and transforms to its night face when it becomes night."
+    },
+    "nightbound": {
+      "type": "ability",
+      "definition": "The night face of a day-and-night card; it transforms back to its day face when it becomes day."
+    },
+    "vanishing": {
+      "type": "ability",
+      "definition": "Enters with N time counters; remove one each upkeep, and sacrifice it when the last is removed."
+    },
+    "fading": {
+      "type": "ability",
+      "definition": "Enters with N fade counters; remove one each upkeep, and sacrifice it when you can't."
+    },
+    "cumulative upkeep": {
+      "type": "ability",
+      "definition": "At each upkeep, put an age counter on it, then pay its cumulative upkeep cost for each age counter or sacrifice it."
+    },
+    "echo": {
+      "type": "ability",
+      "definition": "At the first upkeep after it comes under your control, pay its echo cost or sacrifice it."
+    },
+    "phasing": {
+      "type": "ability",
+      "definition": "During each of your untap steps it phases out if phased in, or phases in if phased out; while phased out it's treated as though it doesn't exist."
+    },
+    "absorb": {
+      "type": "ability",
+      "definition": "If a source would deal damage to it, prevent N of that damage."
+    },
+    "changeling": {
+      "type": "ability",
+      "definition": "Has every creature type."
+    },
+    "devoid": {
+      "type": "ability",
+      "definition": "Has no color."
+    },
+    "ingest": {
+      "type": "ability",
+      "definition": "Whenever it deals combat damage to a player, that player exiles the top card of their library."
+    },
+    "extort": {
+      "type": "ability",
+      "definition": "Whenever you cast a spell, you may pay {W/B} to drain each opponent 1 life and gain that much life."
+    },
+    "living weapon": {
+      "type": "ability",
+      "definition": "Enters as a 0/0 black Phyrexian Germ creature token with this Equipment attached; if the creature dies, the Equipment stays behind unattached."
+    },
+    "ascend": {
+      "type": "ability",
+      "definition": "If you control ten or more permanents, you get the city's blessing for the rest of the game."
+    },
+    "companion": {
+      "type": "ability",
+      "definition": "If your deck meets this card's listed condition, you may pay {3} once per game to put it from outside the game into your hand."
+    },
+    "partner": {
+      "type": "ability",
+      "definition": "You may have two legendary creatures with partner as your commanders instead of one."
+    },
+    "partner with": {
+      "type": "ability",
+      "definition": "When it enters, you may search your library for its named partner; the two can be commanders together."
+    },
+    "friends forever": {
+      "type": "ability",
+      "definition": "You may have two commanders if both have friends forever."
+    },
+    "doctor's companion": {
+      "type": "ability",
+      "definition": "You may pair this with a legendary Doctor as your two commanders."
+    },
+    "choose a background": {
+      "type": "ability",
+      "definition": "This commander can pair with a Background enchantment as a second commander."
+    },
+    "landwalk": {
+      "type": "ability",
+      "definition": "Can't be blocked as long as the defending player controls a land of the listed type."
+    },
+    "forestwalk": {
+      "type": "ability",
+      "definition": "Can't be blocked as long as the defending player controls a Forest."
+    },
+    "islandwalk": {
+      "type": "ability",
+      "definition": "Can't be blocked as long as the defending player controls an Island."
+    },
+    "swampwalk": {
+      "type": "ability",
+      "definition": "Can't be blocked as long as the defending player controls a Swamp."
+    },
+    "mountainwalk": {
+      "type": "ability",
+      "definition": "Can't be blocked as long as the defending player controls a Mountain."
+    },
+    "plainswalk": {
+      "type": "ability",
+      "definition": "Can't be blocked as long as the defending player controls a Plains."
+    },
+    "desertwalk": {
+      "type": "ability",
+      "definition": "Can't be blocked as long as the defending player controls a Desert."
+    },
+    "legendary landwalk": {
+      "type": "ability",
+      "definition": "Can't be blocked as long as the defending player controls a legendary land."
+    },
+    "nonbasic landwalk": {
+      "type": "ability",
+      "definition": "Can't be blocked as long as the defending player controls a nonbasic land."
+    },
+    "augment": {
+      "type": "ability",
+      "definition": "Reveal it from your hand and pay its augment cost to combine it with a host creature, merging their text."
+    },
+    "hidden agenda": {
+      "type": "ability",
+      "definition": "As the game begins, secretly name a card; reveal it at any time to apply the effect."
+    },
+    "double agenda": {
+      "type": "ability",
+      "definition": "A hidden-agenda variant: secretly name two cards as it starts the game face down."
+    },
+    "max speed": {
+      "type": "ability",
+      "definition": "Has a bonus that's active only while your speed is at its maximum."
+    },
+    "station": {
+      "type": "ability",
+      "definition": "Tap creatures with total power N or more to place station counters on it; when it reaches counter thresholds it gains the listed abilities or becomes a creature."
+    },
+    "double team": {
+      "type": "ability",
+      "definition": "When it attacks, if it isn't a token, create or conjure a copy, and it loses double team."
+    },
+    "job select": {
+      "type": "ability",
+      "definition": "When directed, choose one of its listed jobs to grant that job's ability."
+    },
+    "intensity": {
+      "type": "ability",
+      "definition": "Tracks an intensity value; its abilities raise or lower that value and check it for stronger effects."
+    },
+    "tiered": {
+      "type": "ability",
+      "definition": "Choose one of its tiered options as you cast it, paying that tier's cost for a stronger effect at higher tiers."
+    },
+    "increment": {
+      "type": "ability",
+      "definition": "Increases a tracked value, growing its effect each time it's incremented."
+    },
+    "paradigm": {
+      "type": "ability",
+      "definition": "Sets or shifts a paradigm condition that changes how its abilities apply."
+    },
+    "teamwork": {
+      "type": "ability",
+      "definition": "Cooperate with another player as described to share the listed effect."
+    },
+    "power-up": {
+      "type": "ability",
+      "definition": "Spend resources to power it up for a stronger, upgraded effect."
+    },
+    "firebending": {
+      "type": "ability",
+      "definition": "Produces the listed firebending effect when triggered (an Avatar bending mechanic), often dealing damage scaled by its number."
+    },
+    "sneak": {
+      "type": "ability",
+      "definition": "Enter or attack stealthily for the listed benefit, as described on the card."
+    },
+    "solved": {
+      "type": "ability",
+      "definition": "Once its 'to solve' condition is met, this Case becomes solved and its solved ability turns on."
+    },
+    "scry": {
+      "type": "action",
+      "definition": "Look at the top N cards of your library, then put any number of them on the bottom and the rest back on top in any order."
+    },
+    "surveil": {
+      "type": "action",
+      "definition": "Look at the top N cards of your library, then put any of them into your graveyard and the rest back on top in any order."
+    },
+    "fateseal": {
+      "type": "action",
+      "definition": "Look at the top N cards of an opponent's library, then put any number on the bottom and the rest back on top in any order."
+    },
+    "seek": {
+      "type": "action",
+      "definition": "Find a card matching the description at random from your library and put it into your hand, without searching or shuffling."
+    },
+    "mill": {
+      "type": "action",
+      "definition": "Put the top N cards of a library into its owner's graveyard."
+    },
+    "explore": {
+      "type": "action",
+      "definition": "Reveal the top card of your library. If it's a land, put it into your hand; otherwise put a +1/+1 counter on this creature and put the card back on top or into your graveyard."
+    },
+    "discover": {
+      "type": "action",
+      "definition": "Exile cards from the top of your library until you exile a nonland card with mana value N or less, then cast it for free or put it into your hand; put the rest on the bottom."
+    },
+    "manifest": {
+      "type": "action",
+      "definition": "Put the top card of your library onto the battlefield face down as a 2/2 creature; turn it face up any time if it's a creature card by paying its mana cost."
+    },
+    "manifest dread": {
+      "type": "action",
+      "definition": "Look at the top two cards of your library, put one onto the battlefield face down as a 2/2, and put the other into your graveyard."
+    },
+    "cloak": {
+      "type": "action",
+      "definition": "Put a card onto the battlefield face down as a 2/2 with ward {2}; turn it face up any time if it's a creature by paying its mana cost."
+    },
+    "activate": {
+      "type": "action",
+      "definition": "To use an activated ability by paying its cost (the part before the colon)."
+    },
+    "cast": {
+      "type": "action",
+      "definition": "To take a spell from where it is, put it on the stack, and pay its costs."
+    },
+    "play": {
+      "type": "action",
+      "definition": "To either cast a card as a spell or put a land onto the battlefield."
+    },
+    "counter": {
+      "type": "action",
+      "definition": "To cancel a spell or ability on the stack so it doesn't resolve."
+    },
+    "attach": {
+      "type": "action",
+      "definition": "To put an Aura, Equipment, or Fortification onto the permanent it affects."
+    },
+    "create": {
+      "type": "action",
+      "definition": "To put the described token onto the battlefield."
+    },
+    "destroy": {
+      "type": "action",
+      "definition": "To move a permanent to its owner's graveyard (indestructible permanents aren't affected)."
+    },
+    "sacrifice": {
+      "type": "action",
+      "definition": "To move one of your own permanents to its owner's graveyard; can't be stopped by indestructible."
+    },
+    "exile": {
+      "type": "action",
+      "definition": "To move a card or permanent to the exile zone, outside the game until something brings it back."
+    },
+    "discard": {
+      "type": "action",
+      "definition": "To move a card from your hand to your graveyard."
+    },
+    "reveal": {
+      "type": "action",
+      "definition": "To show a card to all players without changing where it is."
+    },
+    "shuffle": {
+      "type": "action",
+      "definition": "To randomize the order of a library."
+    },
+    "tap": {
+      "type": "action",
+      "definition": "To turn a permanent sideways, usually as a cost or effect."
+    },
+    "untap": {
+      "type": "action",
+      "definition": "To return a tapped permanent to its upright, usable position."
+    },
+    "exchange": {
+      "type": "action",
+      "definition": "To swap two things as described, such as life totals or control of permanents."
+    },
+    "regenerate": {
+      "type": "action",
+      "definition": "Set up a shield: the next time the permanent would be destroyed this turn, instead tap it, remove it from combat, and heal its damage."
+    },
+    "fight": {
+      "type": "action",
+      "definition": "Two creatures each deal damage equal to their power to the other."
+    },
+    "goad": {
+      "type": "action",
+      "definition": "The goaded creature must attack each combat if able, and must attack a player other than you."
+    },
+    "detain": {
+      "type": "action",
+      "definition": "Until your next turn, the detained permanent can't attack, block, or have its activated abilities used."
+    },
+    "support": {
+      "type": "action",
+      "definition": "Put a +1/+1 counter on each of up to N target creatures."
+    },
+    "bolster": {
+      "type": "action",
+      "definition": "Put N +1/+1 counters on the creature you control with the least power."
+    },
+    "amass": {
+      "type": "action",
+      "definition": "Put that many +1/+1 counters on an Army you control, creating a 0/0 black Zombie Army token first if you have none."
+    },
+    "proliferate": {
+      "type": "action",
+      "definition": "Choose any number of permanents and players with a counter, then give each another counter of a kind it already has."
+    },
+    "populate": {
+      "type": "action",
+      "definition": "Choose a creature token you control and create a copy of it."
+    },
+    "incubate": {
+      "type": "action",
+      "definition": "Create an Incubator token with N +1/+1 counters; later pay {2} to transform it into a 0/0 Phyrexian artifact creature with those counters."
+    },
+    "investigate": {
+      "type": "action",
+      "definition": "Create a Clue token: an artifact with '{2}, {T}, Sacrifice this: Draw a card.'"
+    },
+    "food": {
+      "type": "action",
+      "definition": "Create a Food token: an artifact with '{2}, {T}, Sacrifice this: Gain 3 life.'"
+    },
+    "treasure": {
+      "type": "action",
+      "definition": "Create a Treasure token: an artifact with '{T}, Sacrifice this: Add one mana of any color.'"
+    },
+    "role token": {
+      "type": "action",
+      "definition": "Create an Aura Role token attached to a creature for the listed bonus; a creature can have only one Role you own."
+    },
+    "conjure": {
+      "type": "action",
+      "definition": "Create the named card in the specified zone (a digital-only effect)."
+    },
+    "vote": {
+      "type": "action",
+      "definition": "Each player votes among the listed choices, and the outcome depends on the tally."
+    },
+    "clash": {
+      "type": "action",
+      "definition": "You and an opponent each reveal the top card of your library and may put it on the bottom; you benefit if your card's mana value is higher."
+    },
+    "meld": {
+      "type": "action",
+      "definition": "Combine two specific cards into a single oversized permanent when their condition is met."
+    },
+    "transform": {
+      "type": "action",
+      "definition": "To turn a double-faced permanent to its other face."
+    },
+    "convert": {
+      "type": "action",
+      "definition": "To transform a double-faced card to its other side."
+    },
+    "time travel": {
+      "type": "action",
+      "definition": "For each suspended card and permanent with time counters you have, add or remove a time counter."
+    },
+    "venture into the dungeon": {
+      "type": "action",
+      "definition": "Enter the next room of your dungeon, or the first room of a new one, and follow its instructions."
+    },
+    "open an attraction": {
+      "type": "action",
+      "definition": "Put the top card of your Attraction deck onto the battlefield."
+    },
+    "roll to visit your attractions": {
+      "type": "action",
+      "definition": "Roll a six-sided die; if the result matches a number on one of your Attractions, that Attraction's ability triggers."
+    },
+    "learn": {
+      "type": "action",
+      "definition": "You may reveal a Lesson card from outside the game and put it into your hand, or discard a card to draw a card."
+    },
+    "connive": {
+      "type": "action",
+      "definition": "Draw a card, then discard a card. If you discarded a nonland card, put a +1/+1 counter on this creature."
+    },
+    "exert": {
+      "type": "action",
+      "definition": "You may exert it as it attacks; if you do, it won't untap during your next untap step but you get the listed bonus."
+    },
+    "suspect": {
+      "type": "action",
+      "definition": "A suspected creature has menace and can't block."
+    },
+    "collect evidence": {
+      "type": "action",
+      "definition": "Exile cards with total mana value N or greater from your graveyard to pay a cost."
+    },
+    "forage": {
+      "type": "action",
+      "definition": "Pay a cost by either exiling three cards from your graveyard or sacrificing a Food."
+    },
+    "endure": {
+      "type": "action",
+      "definition": "Either put N +1/+1 counters on a creature you control, or create an N/N white Spirit creature token."
+    },
+    "heist": {
+      "type": "action",
+      "definition": "Carry out a heist as described, exiling or using a card from an opponent."
+    },
+    "behold": {
+      "type": "action",
+      "definition": "As an additional cost or condition, reveal from your hand or choose a permanent of the listed type you control."
+    },
+    "double": {
+      "type": "action",
+      "definition": "Double the listed quantity, such as life, counters, tokens, or mana."
+    },
+    "triple": {
+      "type": "action",
+      "definition": "Triple the listed quantity."
+    },
+    "abandon": {
+      "type": "action",
+      "definition": "Put a face-up plane or phenomenon on the bottom of the planar deck and move to the next plane."
+    },
+    "planeswalk": {
+      "type": "action",
+      "definition": "In the Planechase format, move to a new plane card."
+    },
+    "set in motion": {
+      "type": "action",
+      "definition": "Put a scheme card from your scheme deck into motion in the Archenemy format."
+    },
+    "assemble": {
+      "type": "action",
+      "definition": "Put a Contraption card from your Contraption deck onto the battlefield."
+    },
+    "harness": {
+      "type": "action",
+      "definition": "Use the harness ability to fuel or direct the listed effect, as described on the card."
+    },
+    "prepared": {
+      "type": "action",
+      "definition": "Ready the listed resource ahead of time for a later benefit, as described on the card."
+    },
+    "incorporate": {
+      "type": "action",
+      "definition": "Combine the listed elements into the effect as described on the card."
+    },
+    "blight": {
+      "type": "action",
+      "definition": "Apply the listed blight effect, weakening or corrupting the target as described."
+    },
+    "waterbend": {
+      "type": "action",
+      "definition": "Produce the listed water-bending effect (an Avatar bending mechanic)."
+    },
+    "airbend": {
+      "type": "action",
+      "definition": "Produce the listed air-bending effect (an Avatar bending mechanic)."
+    },
+    "earthbend": {
+      "type": "action",
+      "definition": "Put +1/+1 counters or produce the listed earth-bending effect (an Avatar bending mechanic)."
+    },
+    "landfall": {
+      "type": "ability_word",
+      "definition": "Has an ability that triggers whenever a land enters the battlefield under your control."
+    },
+    "constellation": {
+      "type": "ability_word",
+      "definition": "Has an ability that triggers whenever an enchantment enters the battlefield under your control."
+    },
+    "magecraft": {
+      "type": "ability_word",
+      "definition": "Has an ability that triggers whenever you cast or copy an instant or sorcery spell."
+    },
+    "eerie": {
+      "type": "ability_word",
+      "definition": "Triggers whenever an enchantment enters under your control or a permanent you control is turned face up."
+    },
+    "alliance": {
+      "type": "ability_word",
+      "definition": "Triggers whenever another creature enters the battlefield under your control."
+    },
+    "rally": {
+      "type": "ability_word",
+      "definition": "Triggers whenever it or another Ally enters the battlefield under your control."
+    },
+    "inspired": {
+      "type": "ability_word",
+      "definition": "Triggers whenever it becomes untapped."
+    },
+    "enrage": {
+      "type": "ability_word",
+      "definition": "Has an ability that triggers whenever it's dealt damage."
+    },
+    "heroic": {
+      "type": "ability_word",
+      "definition": "Has an ability that triggers whenever you cast a spell that targets it."
+    },
+    "valiant": {
+      "type": "ability_word",
+      "definition": "Triggers the first time each turn it becomes the target of a spell or ability you control."
+    },
+    "battalion": {
+      "type": "ability_word",
+      "definition": "Triggers when it and at least two other creatures attack together."
+    },
+    "celebration": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if two or more nonland permanents entered under your control this turn."
+    },
+    "flurry": {
+      "type": "ability_word",
+      "definition": "Triggers whenever you cast your second spell each turn."
+    },
+    "survival": {
+      "type": "ability_word",
+      "definition": "At the beginning of your second main phase, if you control a tapped creature, you get the listed bonus."
+    },
+    "kinship": {
+      "type": "ability_word",
+      "definition": "At the start of your upkeep you may look at the top card of your library; if it shares a creature type with this, reveal it for a bonus."
+    },
+    "metalcraft": {
+      "type": "ability_word",
+      "definition": "Gets a bonus while you control three or more artifacts."
+    },
+    "threshold": {
+      "type": "ability_word",
+      "definition": "Gets a bonus while seven or more cards are in your graveyard."
+    },
+    "delirium": {
+      "type": "ability_word",
+      "definition": "Gets a bonus while four or more card types are among cards in your graveyard."
+    },
+    "undergrowth": {
+      "type": "ability_word",
+      "definition": "Its effect scales with the number of creature cards in your graveyard."
+    },
+    "spell mastery": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if there are two or more instant and/or sorcery cards in your graveyard."
+    },
+    "hellbent": {
+      "type": "ability_word",
+      "definition": "Gets a bonus as long as you have no cards in hand."
+    },
+    "fateful hour": {
+      "type": "ability_word",
+      "definition": "Gets a bonus as long as you have 5 or less life."
+    },
+    "revolt": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if a permanent you controlled left the battlefield this turn."
+    },
+    "raid": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if you attacked with a creature this turn."
+    },
+    "morbid": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if a creature died this turn."
+    },
+    "ferocious": {
+      "type": "ability_word",
+      "definition": "Gets a bonus while you control a creature with power 4 or greater."
+    },
+    "formidable": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if creatures you control have total power 8 or greater."
+    },
+    "coven": {
+      "type": "ability_word",
+      "definition": "Gets a bonus while you control three or more creatures with different powers."
+    },
+    "pack tactics": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if you attacked with creatures of total power 6 or greater."
+    },
+    "corrupted": {
+      "type": "ability_word",
+      "definition": "Gets a bonus as long as an opponent has three or more poison counters."
+    },
+    "adamant": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if at least three mana of the same color was spent to cast it."
+    },
+    "addendum": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if you cast it during your main phase."
+    },
+    "lieutenant": {
+      "type": "ability_word",
+      "definition": "Gets a bonus as long as you control your commander."
+    },
+    "eminence": {
+      "type": "ability_word",
+      "definition": "Has an ability that works even while this commander is in the command zone."
+    },
+    "domain": {
+      "type": "ability_word",
+      "definition": "Its effect scales with the number of basic land types among lands you control."
+    },
+    "converge": {
+      "type": "ability_word",
+      "definition": "Its effect scales with the number of colors of mana spent to cast it."
+    },
+    "chroma": {
+      "type": "ability_word",
+      "definition": "Counts the listed colored mana symbols among cards or permanents to scale its effect."
+    },
+    "sweep": {
+      "type": "ability_word",
+      "definition": "Return any number of lands of the named type you control to your hand; the effect scales with how many."
+    },
+    "strive": {
+      "type": "ability_word",
+      "definition": "Costs more for each target beyond the first you choose."
+    },
+    "imprint": {
+      "type": "ability_word",
+      "definition": "Exile a card to associate it with this permanent; the permanent's ability refers to the exiled card."
+    },
+    "grandeur": {
+      "type": "ability_word",
+      "definition": "Discard another card with the same name to use the listed ability."
+    },
+    "radiance": {
+      "type": "ability_word",
+      "definition": "Affects the target and every other permanent that shares a color with it."
+    },
+    "bloodrush": {
+      "type": "ability_word",
+      "definition": "Discard it and pay its bloodrush cost to give an attacking creature the listed power, toughness, and keywords."
+    },
+    "channel": {
+      "type": "ability_word",
+      "definition": "Discard it and pay its channel cost for the listed effect, instead of casting it."
+    },
+    "cohort": {
+      "type": "ability_word",
+      "definition": "Tap an untapped Ally you control and this creature to use the listed ability."
+    },
+    "join forces": {
+      "type": "ability_word",
+      "definition": "Starting with you, each player may pay into the spell to increase its effect."
+    },
+    "tempting offer": {
+      "type": "ability_word",
+      "definition": "You get the effect; each opponent may also choose to get it, and for each who does, you get it an extra time."
+    },
+    "parley": {
+      "type": "ability_word",
+      "definition": "Each player reveals the top card of their library; the effect scales with the number of nonland cards revealed."
+    },
+    "will of the council": {
+      "type": "ability_word",
+      "definition": "Players vote, and the outcome follows the vote."
+    },
+    "council's dilemma": {
+      "type": "ability_word",
+      "definition": "Each opponent votes among the choices, and the result scales with the tally."
+    },
+    "will of the planeswalkers": {
+      "type": "ability_word",
+      "definition": "Players vote, and the outcome follows the vote."
+    },
+    "secret council": {
+      "type": "ability_word",
+      "definition": "Resolve a secret-council vote or choice among players as described on the card."
+    },
+    "underdog": {
+      "type": "ability_word",
+      "definition": "Gets a bonus while you're behind an opponent in the relevant resource, as described on the card."
+    },
+    "void": {
+      "type": "ability_word",
+      "definition": "Gets a bonus if a nonland permanent left the battlefield or a spell was warped this turn."
+    },
+    "descend": {
+      "type": "ability_word",
+      "definition": "Cares about permanent cards in your graveyard — for example a bonus at four (Descend 4) or eight (Descend 8) or more."
+    },
+    "fathomless descent": {
+      "type": "ability_word",
+      "definition": "Scales an effect with the number of permanent cards in your graveyard."
+    },
+    "start your engines!": {
+      "type": "ability_word",
+      "definition": "Sets your speed to 1 the first time you'd get it, turning on speed-based abilities."
+    },
+    "paradox": {
+      "type": "ability_word",
+      "definition": "Gets a bonus from a paradoxical condition, as described on the card."
+    },
+    "disappear": {
+      "type": "ability_word",
+      "definition": "Triggers or benefits when the listed thing leaves or disappears, as described on the card."
+    },
+    "renew": {
+      "type": "ability_word",
+      "definition": "Exile it from your graveyard and pay the renew cost for the listed effect, such as distributing +1/+1 counters."
+    },
+    "repartee": {
+      "type": "ability_word",
+      "definition": "Triggers from the listed back-and-forth interaction, as described on the card."
+    },
+    "opus": {
+      "type": "ability_word",
+      "definition": "An ability tied to building or completing an opus, as described on the card."
+    },
+    "infusion": {
+      "type": "ability_word",
+      "definition": "Pay an infusion cost for the listed added effect, as described on the card."
+    },
+    "covercast": {
+      "type": "ability_word",
+      "definition": "Cast it under cover for the listed alternative effect, as described on the card."
+    },
+    "vivid": {
+      "type": "ability_word",
+      "definition": "Gets a bonus from the listed vivid condition, as described on the card."
+    },
+    "legacy": {
+      "type": "ability_word",
+      "definition": "An ability tied to a Legacy or heritage card, as described on the card."
+    },
+    "kinfall": {
+      "type": "ability_word",
+      "definition": "Triggers whenever a creature that shares a type enters under your control."
+    },
+    "landship": {
+      "type": "ability_word",
+      "definition": "An ability tied to a landship's movement or position, as described on the card."
+    },
+    "hero's reward": {
+      "type": "ability_word",
+      "definition": "Grants the listed reward when its hero or quest condition is met."
+    }
+  }
+}

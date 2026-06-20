@@ -42,7 +42,7 @@ struct CardEntryView: View {
 
             ZStack(alignment: .topLeading) {
                 if let card {
-                    CardGridView(card: card, showPreviews: showPreviews, isFoil: entry.isFoil)
+                    CardGridView(card: card, showPreviews: showPreviews, finish: entry.finish)
                 } else {
                     cardPlaceholder
                 }

@@ -29,6 +29,9 @@ struct SearchTabView: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) var modelContext
+    @Environment(AppRouter.self) private var router
+    @Environment(ProAccessManager.self) private var pro
+    @State private var showPaywall = false
     @State var filters = FilterState()
     @State var results: [CardJSON] = []
     @State var totalCards: Int = 0
@@ -37,6 +40,8 @@ struct SearchTabView: View {
     @State var isSearching = false
     @State var isLoadingMore = false
     @State var showScanner = false
+    /// Drives the searchable field's active/focused state so deep links can open the keyboard.
+    @State private var searchBarPresented = false
     /// false until the first search runs, so we can show a "start searching" state.
     @State var hasSearched = false
 
@@ -60,11 +65,19 @@ struct SearchTabView: View {
                         icon: "magnifyingglass",
                         title: "Search for any Magic card",
                         message: "Search by name, or tap the filters to browse by colour, type, set and more."
-                    )
+                    ) {
+                        if DataScannerViewController.isSupported {
+                            PrimaryGlassButton(title: "Scan a Card", systemImage: "camera.viewfinder") {
+                                openScanner()
+                            }
+                            .padding(.horizontal, 32)
+                            .padding(.top, 8)
+                        }
+                    }
                 }
             }
             .navigationTitle("Search")
-            .searchable(text: $filters.text, prompt: "Search Cards")
+            .searchable(text: $filters.text, isPresented: $searchBarPresented, prompt: "Search Cards")
             .keyboardType(.default)
             .onSubmit(of: .search) {
                 Task { await search() }
@@ -73,14 +86,12 @@ struct SearchTabView: View {
                 if DataScannerViewController.isSupported {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button("Scan", systemImage: "camera.viewfinder") {
-                            showScanner = true
+                            openScanner()
                         }
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Filters", systemImage: "slider.horizontal.3") {
-                        showFilters.toggle()
-                    }
+                    filterButton
                 }
             }
             .sheet(isPresented: $showFilters) {
@@ -89,16 +100,61 @@ struct SearchTabView: View {
                 }, filters: $filters)
             }
             .fullScreenCover(isPresented: $showScanner) {
-                CardScannerSheet(onSearch: { name in
-                    filters.text = name
-                    showScanner = false
-                    Task { await search() }
-                })
+                CardScannerSheet()
             }
+            .sheet(isPresented: $showPaywall) { PaywallView() }
+            .onAppear { consumeRouterRequests() }
+            .onChange(of: router.focusSearch) { _, _ in consumeRouterRequests() }
+            .onChange(of: router.pendingScan) { _, _ in consumeRouterRequests() }
+        }
+    }
+
+    // MARK: Deep linking
+
+    /// Apply any pending request the router placed here (from a quick action, Siri shortcut or
+    /// Spotlight): focus the search bar, or open the scanner. Each request is cleared once handled.
+    private func consumeRouterRequests() {
+        if router.focusSearch {
+            router.focusSearch = false
+            searchBarPresented = true
+        }
+        if router.pendingScan {
+            router.pendingScan = false
+            openScanner()
+        }
+    }
+
+    /// Open the scanner, or the paywall if a free user has used today's scans. (Pro = unlimited.)
+    private func openScanner() {
+        guard DataScannerViewController.isSupported else { return }
+        if !pro.isPro && ScanLimit.remainingToday() <= 0 {
+            showPaywall = true
+        } else {
+            showScanner = true
         }
     }
 
     // MARK: Subviews
+
+    /// Filter toolbar button — matches the collection tabs: an outline funnel that fills once any
+    /// filter is set, with an Edit/Clear menu while active.
+    @ViewBuilder
+    private var filterButton: some View {
+        if filters.hasActiveScryfallFilters {
+            Menu {
+                Button("Edit Filter", systemImage: "slider.horizontal.3") { showFilters = true }
+                Button("Clear Filter", systemImage: "xmark") {
+                    filters.resetFilters()
+                }
+            } label: {
+                Image(systemName: "line.3.horizontal.decrease.circle.fill")
+            }
+        } else {
+            Button("Filter", systemImage: "line.3.horizontal.decrease.circle") {
+                showFilters = true
+            }
+        }
+    }
 
     private var loadingState: some View {
         VStack(spacing: 16) {
@@ -142,7 +198,12 @@ struct SearchTabView: View {
         .padding(.top, 8)
     }
 
-    private func emptyState(icon: String, title: String, message: String) -> some View {
+    private func emptyState<Accessory: View>(
+        icon: String,
+        title: String,
+        message: String,
+        @ViewBuilder accessory: () -> Accessory = { EmptyView() }
+    ) -> some View {
         VStack(spacing: 16) {
             Image(systemName: icon)
                 .resizable()
@@ -159,6 +220,8 @@ struct SearchTabView: View {
                 .foregroundStyle(.gray)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 30)
+
+            accessory()
         }
         .frame(maxWidth: .infinity, minHeight: 300)
         .padding(.top, 100)

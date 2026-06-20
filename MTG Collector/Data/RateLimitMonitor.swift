@@ -5,7 +5,7 @@
 //  Created by Ben MacIntyre on 2026-06-16.
 //  Purpose:
 //      Tracks the rate of outgoing Scryfall requests (their guideline is ~10/sec). Every request
-//      funnels through SFAPI.request(from:), which calls `record()`. For now it just prints the
+//      funnels through SFAPI.request(from:), which calls `record()`. It logs (debug level) the
 //      running total + rolling 1-second count; `requestsInLastSecond` / `isThrottled` are exposed
 //      so the UI can later explain to users why content isn't loading when the limit is hit.
 //
@@ -13,6 +13,7 @@
 // MARK: Imports
 
 import Foundation
+import os
 
 // MARK: Types
 
@@ -23,13 +24,15 @@ final class RateLimitMonitor {
     /// Scryfall asks for a maximum of ~10 requests/second.
     let limitPerSecond = 10
 
+    private let log = Logger(subsystem: "net.benmacintyre.cardhold", category: "Scryfall")
+
     private let queue = DispatchQueue(label: "net.benmacintyre.cardhoard.ratelimit")
     private var timestamps: [Date] = []
     private var total = 0
 
     private init() {}
 
-    /// Record one outgoing request and print the current rate.
+    /// Record one outgoing request and log the current rate.
     func record() {
         queue.async {
             let now = Date()
@@ -38,7 +41,7 @@ final class RateLimitMonitor {
             self.timestamps.removeAll { now.timeIntervalSince($0) > 1 }
             let inWindow = self.timestamps.count
             let flag = inWindow > self.limitPerSecond ? "  ⚠️ OVER LIMIT" : ""
-            print("[Scryfall] request #\(self.total) — \(inWindow)/\(self.limitPerSecond) req/s\(flag)")
+            self.log.debug("request #\(self.total) — \(inWindow)/\(self.limitPerSecond) req/s\(flag)")
         }
     }
 

@@ -73,10 +73,40 @@ struct FilterState {
     var foilOnly: Bool = false
     var favouritesOnly: Bool = false
 
+    // MARK: Deck only
+
+    /// Filters a deck board's cards by their legality status in the deck's format (All / Issues /
+    /// Legal). Lives here so it's set from the deck filter sheet rather than a separate control.
+    var legality: LegalityFilter = .all
+
     // MARK: Reset
 
     mutating func reset() {
         self = FilterState()
+    }
+
+    /// Reset everything except the free-text query (used by the Search tab's "Clear" so the
+    /// typed search term survives a filter clear).
+    mutating func resetFilters() {
+        let keepText = text
+        self = FilterState()
+        text = keepText
+    }
+
+    /// Whether any Scryfall filter (i.e. anything other than the free-text query) is active.
+    /// Drives the filled/outline state of the Search tab's filter button.
+    var hasActiveScryfallFilters: Bool {
+        !colors.isEmpty
+            || !types.isEmpty
+            || !sets.isEmpty
+            || !rarities.isEmpty
+            || !producedMana.isEmpty
+            || cmcLower != 0
+            || cmcUpper != 20
+            || sortBy != .name
+            || sortDescending
+            || !formatLegality.isEmpty
+            || isCommander
     }
 
     // MARK: Scryfall Query

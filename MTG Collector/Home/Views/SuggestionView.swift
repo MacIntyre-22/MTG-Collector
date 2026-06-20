@@ -42,10 +42,26 @@ struct SuggestionView: View {
                         SearchCardView(card: tempModel)
                     }
                 }
+
+                refreshFooter
             }
             .navigationTitle(title)
             .toolbarTitleDisplayMode(.large)
         }
+    }
+
+    // MARK: Subviews
+
+    /// When today's daily set rolls over to a fresh one.
+    private var refreshFooter: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "clock.arrow.circlepath")
+            Text(HomeSuggestionsStore.refreshCountdownText())
+        }
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 28)
     }
 }
 

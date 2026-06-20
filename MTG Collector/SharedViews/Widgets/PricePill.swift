@@ -25,16 +25,19 @@ struct PricePill: View {
     var stats: CollectionStats?
     /// Colour for the text + glass tint (defaults to green-on-green).
     var tint: Color = .green
+    /// Use the K/M/B short form — for tight spots like collection list tiles.
+    var compact: Bool = false
 
     @Environment(\.appCurrency) private var currency
 
     // MARK: View
 
     var body: some View {
-        Text(currency.format(currency.total(stats)))
+        let total = currency.total(stats)
+        Text(compact ? currency.formatCompact(total) : currency.format(total))
             .padding(5)
             // lighten the text relative to the tint so it reads light-on-dark on the glass
-            .foregroundColor(tint.mix(with: .white, by: 0.5))
+            .foregroundColor(tint.mix(with: .white, by: 0.7))
             .pillStyle(.tinted(tint))
     }
 }

@@ -1,0 +1,11 @@
+# Serve the "get the app" page (share.html) for every share path (/share/<id>) without a redirect,
+# so non-installers see a real page. iOS intercepts these URLs before the page loads when the app is
+# installed, so this only ever shows to people without Cardhold.
+#
+# Destination is the clean path "/share" (Cloudflare serves share.html and auto-strips ".html").
+# "/share" itself isn't matched by "/share/*" (needs a segment after), so there's no rewrite loop.
+# The 200 keeps it a rewrite (URL stays /share/<id>), not a redirect.
+/share/*  /share  200
+
+# The marketing site now lives at the root, so send the old /marketing path home.
+/marketing  /  301

@@ -56,9 +56,9 @@ enum DeckWeakness: String, CaseIterable, Identifiable {
     /// Plain-English reason shown with the suggestion group.
     var reason: String {
         switch self {
-        case .needsLands: return "Your land count looks low — these help you hit your land drops."
-        case .curveTooHigh: return "Your average mana value is high — cheaper cards smooth your curve."
-        case .needsRemoval: return "Light on interaction — removal answers your opponent's threats."
+        case .needsLands: return "Your land count looks low. These help you hit your land drops."
+        case .curveTooHigh: return "Your average mana value is high. Cheaper cards smooth your curve."
+        case .needsRemoval: return "Light on interaction. Removal answers your opponent's threats."
         case .needsCardDraw: return "Add card advantage to keep cards flowing into your hand."
         }
     }
@@ -130,8 +130,8 @@ struct DeckSuggestionEngine {
         "commander", "brawl", "historic", "alchemy", "explorer", "penny", "premodern", "oathbreaker"
     ]
 
-    func suggestions(for deck: Deck) async -> [DeckSuggestionGroup] {
-        let profile = profile(for: deck)
+    func suggestions(for deck: Deck, stats: CollectionStats?) async -> [DeckSuggestionGroup] {
+        let profile = profile(for: deck, stats: stats)
 
         var groups: [DeckSuggestionGroup] = []
         for weakness in detector.weaknesses(for: profile) {
@@ -144,17 +144,16 @@ struct DeckSuggestionEngine {
         return groups
     }
 
-    private func profile(for deck: Deck) -> DeckProfile {
-        let identity = (deck.stats?.colourBreakdown.keys ?? [:].keys)
-            .map { $0.lowercased() }
+    private func profile(for deck: Deck, stats: CollectionStats?) -> DeckProfile {
+        let identity = (stats?.colourBreakdown.keys.map { $0.lowercased() } ?? [])
             .sorted()
             .joined()
         let format = Self.scryfallFormats.contains(deck.ruleType) ? deck.ruleType : ""
 
         return DeckProfile(
             totalCards: deck.cardCount,
-            landCount: deck.landCount,
-            avgManaCost: deck.avgManaCost,
+            landCount: stats?.landCount ?? 0,
+            avgManaCost: stats?.avgManaCost ?? 0,
             colourIdentity: identity,
             format: format
         )

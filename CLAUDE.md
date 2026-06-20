@@ -46,7 +46,7 @@ These are required or strongly recommended before submission.
 ### App Identity
 - [x] Bundle ID set: `net.benmacintyre.cardhoard`. Display name `Cardhold` via `CFBundleDisplayName` (internal Xcode target/folder still named "MTG Collector" — not user-facing).
 - [ ] Configure signing with your personal Apple Developer account
-- [ ] Remove all "(School)" references from code comments and file headers
+- [x] Remove all "(School)" references from code comments and file headers — none found (the only "School" is the legitimate "Old School" home card category)
 - [x] App name chosen: **Cardhold** — avoids Wizards of the Coast trademarks (no "Magic"/"MTG"/"Gathering" in the name). Keep "mtg"/"magic gathering" in keywords only.
 
 ### App Store Connect Metadata
@@ -66,7 +66,7 @@ These are required or strongly recommended before submission.
 - ~~Widget fill `Color(.secondarySystemBackground)`~~
 
 ### Code Cleanup
-- [ ] Audit all `print()` statements — remove or replace with proper logging before release
+- [x] Audit all `print()` statements — replaced with `os.Logger` (`Persistence` + `Scryfall` categories); zero `print()` calls remain
 - [ ] Handle the force-unwrap in `SFAPI.buildSearchURL` (`URL(string:)!` on line 37) — can crash if the query builds an invalid URL
 - [ ] Add empty-state handling anywhere the API returns `[]`
 - [ ] Test onboarding reset path (Settings → Delete Data should reset `onBoarding` flag too)
@@ -241,29 +241,20 @@ RelatedURIs {
 
 ## Phase 4 — Screen Reworks
 
-### Home Tab
-- [ ] Load each suggestion section independently so they appear as they finish rather than all-or-nothing
-- [ ] Show a skeleton/placeholder row per section while it is fetching
-- [ ] Cards load once per day — refresh on next day's first open, not on every launch (replace `isLoaded` bool with a stored `lastLoadedDate` and compare to today)
-- [ ] Communicate the daily discovery concept in the UI — e.g. a subtitle under the header like "Your daily card discovery" so users understand the content is intentionally curated once per day
-- [ ] Fix randomness — replace local `.shuffled()` with Scryfall's `order:random` sort parameter so cards are drawn from the full matching dataset, not just the first page of 175
-  - Sections to update: New, Popular, Full Art, Old School
-  - Pricey and Budget must keep price ordering — use a random `&page=N` offset instead so results vary while still being genuinely expensive/cheap
+### Home Tab ✅ DONE
+- [x] Load each suggestion section independently — `loadSuggestions()` uses a `withTaskGroup`, filling `cards[section]` as each request returns
+- [x] Skeleton/placeholder row per section while fetching — `SuggestionWidget.skeletonRow` (`.redacted(.placeholder).shimmering()`)
+- [x] Cards load once per day — `HomeSuggestionsStore.isFreshForToday()` serves the cached blob; only a fresh day (or dev reload token) refetches
+- [x] Daily discovery concept communicated — "Your daily card discovery" subtitle under the header
+- [x] Fixed randomness via `HomeSection.fetchQuery(seed:)`, seeded from the day so it re-rolls at reset:
+  - **Full Art, Old School** → `order=random` (pure pools, draw from the whole set)
+  - **Popular, Pricey, Budget** → keep their ranking, jump to a daily-random `&page=N` (`maxPage` 4/3/8) so picks vary but stay on-theme
+  - **New** kept newest-first (`order=released`) — `order:random` would defeat "recently released"; *(deviates from the literal roadmap, which also listed New/Popular under order:random — kept them meaningful instead)*
 
-### Card Info View — Sheet Carousel
+### Card Info View — Sheet Carousel — ❌ CUT
 
-Replace the current full-screen navigation push with a **sheet carousel**:
-
-- [ ] Present card info as a large sheet (near full screen) instead of a navigation push
-- [ ] Inside the sheet, cards are in a horizontally paged carousel — each card page is slightly narrower than the screen so the edge of the next/previous card peeks in from the side
-- [ ] Swiping left/right moves through the cards in whatever collection the card was opened from:
-  - Opened from search results → swipe through search results
-  - Opened from a binder → swipe through that binder's cards
-  - Opened from a deck board → swipe through that board's cards
-  - Opened from a Home suggestion row → swipe through that row's cards
-- [ ] Scrolling down within a card expands the detail content (replaces the current layout where the card image sits in a fixed position)
-- [ ] Every place that currently opens `CardInfoView` via `NavigationLink` needs to pass its surrounding card array + the starting index so the carousel knows its context
-- [ ] Implementation: each call site passes `cards: [Card]` and `selectedIndex: Int` into the sheet; the sheet wraps them in a `TabView` with `.tabViewStyle(.page)` or `ScrollView(.horizontal)` with `.scrollTargetBehavior(.viewAligned)` (iOS 17+)
+**Cut from the roadmap (not shipping).** Card info stays a standard navigation push; the swipeable
+paged carousel is not being built.
 
 ---
 
@@ -335,7 +326,7 @@ Replace the current full-screen navigation push with a **sheet carousel**:
   - **Binder stats:** total cards, unique cards, total value (in selected currency), value by rarity, colour breakdown, type breakdown, highest valued card, set breakdown
   - **Deck stats:** all of the above for mainboard + land count, average CMC, mana curve chart, legality status per format, commander legality, colour identity, sideboard value
   - **General Collection stats:** total cards, total value, rarity breakdown, colour breakdown — simpler than a full deck view
-- [ ] Card rulings displayed within the card info sheet (fetched from `rulings_uri` on demand) — not part of stats but lives in the same area of the app
+- [x] Card rulings displayed within the card info sheet — `InfoRulingsWidget` fetches from `rulings_uri` on demand (`SFAPI.fetchRulings`), shown in a "Rulings" section when present
 
 ### Haptics
 - [ ] Light tap (`UIImpactFeedbackGenerator(.light)`) when adding a card to any collection
@@ -413,9 +404,11 @@ Deck import is its own self-contained feature. Build it as a dedicated engine se
 - Home discovery tab
 - General Collection (unlimited cards)
 - Up to 3 binders + 3 decks (basic view, no stats)
-- Card scanner (5 scans/day)
+- Card scanner (2 scans/day)
 
-### Pro Tier — one-time purchase ($1.99–$2.99)
+### Pro Tier — auto-renewable subscription (monthly + annual)
+
+*Shipping model is a subscription with two options (`pro_monthly`, `pro_annually`), not the earlier one-time purchase.*
 - Unlimited binders and decks
 - Detailed binder stats sheet
 - Detailed deck stats sheet (mana curve, legality, type breakdown)
@@ -447,7 +440,11 @@ The front end should not be heavily polished until the data layer is stable.
 
 ---
 
-## Extended Phase 1 — Deck Suggestion Engine
+## Extended Phase 1 — Deck Suggestion Engine — 🔒 VAULTED
+
+**Vaulted — not shipping in v1.** The heuristic scaffold (`DeckSuggestionEngine`: land/curve
+thresholds + Scryfall queries) stays in the codebase but is parked; the Create ML model is not
+being built for launch. Leave the code in place for a future release.
 
 See **[SuggestionModelPlan.md](SuggestionModelPlan.md)** for full details.
 
@@ -506,8 +503,21 @@ The calling screen passes a context value that determines which resources are re
 - [ ] **Share sheet** — share a card image or deck list via the iOS share sheet
 - [ ] **CSV / text export** — export a binder or deck as plain text (Name, Set, Quantity) compatible with Moxfield, Archidekt, etc.
 
-### Collection Types
-- [ ] **Wishlist binder** — special binder mode marking cards as "wanted" rather than "owned"; shows total wishlist value
+### Collection Ownership — "In Collection" toggle ✅ DONE
+
+Replaces the old wishlist-binder idea. A per-collection flag that controls whether a binder/deck
+counts toward your *owned* collection — i.e. whether its cards are included in the whole-collection
+stats, total value, and breakdowns. Shipped as **`Collection.inCollection: Bool`**; the edit-sheet
+toggle is labelled **"Count in Collection Totals"**.
+
+- [x] Added `inCollection: Bool = true` to `Collection` (synced).
+- [x] When **off**, excluded from the whole-collection aggregate (`WholeCollectionStatsWidget`
+      filters `where collection.inCollection`); its own stats sheet still works.
+- [x] **Defaults:** Binders → **on** (base default); Decks → **off** (`Deck.init` sets it);
+      shared-link imports → **off** (`CollectionSnapshotImporter` forces it for deck + binder).
+- [x] Toggle exposed in `EditBinderSheet` / `EditDeckSheet` ("Count in Collection Totals").
+- [x] `WholeCollectionStatsWidget` **and** the Siri `CollectionValueIntent` filter to only
+      `inCollection` collections.
 
 ---
 

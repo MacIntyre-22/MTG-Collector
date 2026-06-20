@@ -15,7 +15,6 @@
 
 import SwiftUI
 import SwiftData
-import UIKit
 
 // MARK: Types
 
@@ -149,19 +148,53 @@ struct SetsFilterSheet: View {
 
     // MARK: Helpers
 
-    /// Set logo if bundled, otherwise the generic app logo.
     @ViewBuilder
     private func icon(for set: SetInfo) -> some View {
-        Image(UIImage(named: set.code) != nil ? set.code : "Logo")
-            .renderingMode(.template)
-            .resizable()
-            .scaledToFit()
-            .frame(width: 24, height: 24)
-            .foregroundColor(.primary)
+        SetFilterIcon(code: set.code)
     }
 
     /// Turns a raw Scryfall set_type (e.g. "draft_innovation") into a display label.
     private func prettyType(_ raw: String) -> String {
         raw.replacingOccurrences(of: "_", with: " ").capitalized
+    }
+}
+
+// MARK: - Set Filter Icon
+
+/// Lazy-loading set icon for list rows. Checks NSCache synchronously so already-rendered icons
+/// appear instantly; only kicks off a render task when the row enters the visible List region.
+/// The task is automatically cancelled if the row scrolls away before rendering completes,
+/// so offscreen rows never queue WKWebView render jobs.
+private struct SetFilterIcon: View {
+
+    let code: String
+    @State private var icon: UIImage?
+
+    var body: some View {
+        Group {
+            if let icon {
+                Image(uiImage: icon)
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .foregroundStyle(.primary)
+            } else {
+                Image(systemName: "seal.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .frame(width: 24, height: 24)
+        .task(id: code) {
+            // Instant hit — no async work if already rendered
+            if let cached = SetIconCache.shared.image(for: code) {
+                icon = cached
+                return
+            }
+            // Only render if the registry has a URI (populated from SwiftData at launch)
+            guard let uri = SetIconRegistry.shared.iconURI(for: code) else { return }
+            icon = await SetIconCache.shared.load(code: code, uri: uri)
+        }
     }
 }

@@ -1,10 +1,15 @@
-﻿//
+//
 //  Spotlight.swift
 //  Cardhold
 //
 //  Created by Ben MacIntyre on 2025-10-30.
 //  Purpose:
-//         Handles spotlight indexing
+//      Indexes the user's binders and decks into CoreSpotlight so they appear in iOS Search,
+//      and routes a tapped result back into the app (via AppRouter) by parsing the typed
+//      identifier it stored at index time.
+//  External Types:
+//      AppRouter
+//
 
 // MARK: Imports
 
@@ -13,35 +18,57 @@ import UIKit
 
 // MARK: Types
 
-struct Spotlight{
-   
-    // MARK: Spotlight Functions
-    
-    /// Spotlight Indexing
-    /// index binders and decks
-    static func indexData(id: String, name: String, image: UIImage?, description: String){
-        var attributeSet: CSSearchableItemAttributeSet{
-            let attributeSet = CSSearchableItemAttributeSet(contentType: .text)
-            attributeSet.title = name
-            attributeSet.contentDescription = description
-            attributeSet.keywords = ["Deck", "Binder", "Collection", "Cards", "Magic", "Magic The Gathering", name, description]
-            
-            return attributeSet
-        }
-        
-        let item = CSSearchableItem(uniqueIdentifier: id, domainIdentifier: "mtgcollector", attributeSet: attributeSet)
-        
-        CSSearchableIndex.default().indexSearchableItems([item]) { _ in }
-        
+struct Spotlight {
+
+    /// The kind of collection a Spotlight item points at. Encoded into the item identifier so a
+    /// tapped result can be routed to the right view.
+    enum Kind: String {
+        case binder
+        case deck
     }
-    
-    /// MARK: Handle Spotlight
-//    static func handleSpotlight(userActivity: NSUserActivity, index: inout String)  {
-//        guard let searched = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String else {
-//            return
-//        }
-//        
-//        print(searched)
-//        index = searched
-//    }
+
+    /// Domain all Cardhold items share, so the whole index can be cleared in one call if needed.
+    private static let domain = "net.benmacintyre.cardhold.collection"
+
+    // MARK: Indexing
+
+    /// Index (or re-index) a binder or deck. The identifier is `kind-id` so taps can be routed.
+    static func index(kind: Kind, id: String, name: String, image: UIImage?, description: String) {
+        let attributes = CSSearchableItemAttributeSet(contentType: .text)
+        attributes.title = name
+        attributes.contentDescription = description
+        attributes.keywords = ["Deck", "Binder", "Collection", "Cards", "MTG", "Magic", name]
+        if let image, let data = image.pngData() {
+            attributes.thumbnailData = data
+        }
+
+        let item = CSSearchableItem(
+            uniqueIdentifier: "\(kind.rawValue)-\(id)",
+            domainIdentifier: domain,
+            attributeSet: attributes
+        )
+        CSSearchableIndex.default().indexSearchableItems([item])
+    }
+
+    /// Remove a binder or deck from the index (call on delete).
+    static func remove(kind: Kind, id: String) {
+        CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: ["\(kind.rawValue)-\(id)"])
+    }
+
+    // MARK: Handling
+
+    /// Route a tapped Spotlight result back into the app.
+    static func handle(activity: NSUserActivity, router: AppRouter) {
+        guard let identifier = activity.userInfo?[CSSearchableItemActivityIdentifier] as? String else { return }
+        // Identifier is "kind-rawID"; split on the first hyphen since UUIDs contain hyphens too.
+        guard let dash = identifier.firstIndex(of: "-") else { return }
+        let kindRaw = String(identifier[..<dash])
+        let id = String(identifier[identifier.index(after: dash)...])
+
+        switch Kind(rawValue: kindRaw) {
+        case .binder: router.openBinder(id: id)
+        case .deck:   router.openDeck(id: id)
+        case .none:   break
+        }
+    }
 }

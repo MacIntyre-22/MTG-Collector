@@ -26,26 +26,19 @@ enum StatsUpdater {
         let entries = activeEntries(for: collection)
         let lookup = CardStore.lookup(for: entries.map { $0.scryfallCardID }, context: context)
 
-        // Find or create the linked stats object
-        let stats: CollectionStats
-        if let existing = collection.stats {
-            stats = existing
-        } else {
-            stats = CollectionStats(collection: collection)
-            context.insert(stats)
-            collection.stats = stats
-        }
+        // Find or create the local stats row (keyed by collection id; lives in the cache store).
+        let stats = StatsStore.ensure(for: collection.id, context: context)
 
         var totalCards = 0
         var totalUSD = 0.0
-        var totalEUR = 0.0
-        var totalTix = 0.0
         var cmcSum = 0.0
         var cmcCount = 0
         var landCount = 0
         var rarity: [String: Int] = [:]
         var colour: [String: Int] = [:]
         var type: [String: Int] = [:]
+        var set: [String: Int] = [:]
+        var finish: [String: Int] = [:]
         var highestID = ""
         var highestPrice = 0.0
         var deckLegal = true
@@ -58,13 +51,11 @@ enum StatsUpdater {
 
             guard let card = lookup[entry.scryfallCardID] else { continue }
 
-            // prices
-            let usd = Double(card.prices.usd) ?? 0
-            let eur = Double(card.prices.eur) ?? 0
-            let tix = Double(card.prices.tix) ?? 0
+            // Canonical USD per card, honouring the owned finish (binders and decks alike) with
+            // cross-market fallback — a card priced only in EUR still contributes, FX-converted to
+            // USD. The display layer converts this stored USD to the user's currency.
+            let usd = AppCurrency.canonicalUSD(card.prices, finish: entry.finish)
             totalUSD += usd * Double(qty)
-            totalEUR += eur * Double(qty)
-            totalTix += tix * Double(qty)
 
             if usd > highestPrice {
                 highestPrice = usd
@@ -97,6 +88,15 @@ enum StatsUpdater {
                 type[mainType, default: 0] += qty
             }
 
+            // set breakdown (by full set name, falling back to the code)
+            let setKey = card.setName.isEmpty ? card.set.uppercased() : card.setName
+            if !setKey.isEmpty {
+                set[setKey, default: 0] += qty
+            }
+
+            // finish breakdown (by the owned finish — nonfoil / foil / etched)
+            finish[entry.finish.rawValue, default: 0] += qty
+
             // deck legality
             if let ruleType, let status = card.legalities[ruleType], status != "legal" {
                 deckLegal = false
@@ -106,14 +106,16 @@ enum StatsUpdater {
         stats.totalCards = totalCards
         stats.uniqueCards = entries.count
         stats.totalPriceUSD = totalUSD
-        stats.totalPriceEUR = totalEUR
-        stats.totalPriceTix = totalTix
         stats.avgManaCost = cmcCount > 0 ? cmcSum / Double(cmcCount) : 0
+        stats.manaCount = cmcCount
         stats.landCount = landCount
         stats.highestPricedCardID = highestID
+        stats.highestPricedCardValue = highestPrice
         stats.rarityBreakdown = rarity
         stats.colourBreakdown = colour
         stats.typeBreakdown = type
+        stats.setBreakdown = set
+        stats.finishBreakdown = finish
         stats.updatedAt = Date()
 
         if let deck = collection as? Deck {

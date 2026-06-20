@@ -36,6 +36,7 @@ enum SymbolStore {
     /// Fetch /symbology and refresh the local map if stale. Safe to call on app launch.
     static func load() async {
         guard needsRefresh() else { return }
+        await ScryfallLimiter.shared.wait()   // api.scryfall.com → respect the shared rate limit
         guard let url = URL(string: "https://api.scryfall.com/symbology"),
               let (data, _) = try? await URLSession.shared.data(from: url),
               let response = try? JSONDecoder().decode(SymbologyResponse.self, from: data) else { return }

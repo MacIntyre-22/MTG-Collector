@@ -72,7 +72,9 @@ struct DeckSuggestionsView: View {
             }
             .navigationTitle("Suggestions")
             .task {
-                groups = await engine.suggestions(for: deck)
+                StatsUpdater.update(deck, context: modelContext)
+                let stats = StatsStore.stats(for: deck, context: modelContext)
+                groups = await engine.suggestions(for: deck, stats: stats)
                 isLoading = false
             }
         }

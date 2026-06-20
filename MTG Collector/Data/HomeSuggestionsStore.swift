@@ -33,6 +33,23 @@ enum HomeSuggestionsStore {
         return Calendar.current.isDateInToday(date)
     }
 
+    /// Seconds until the next daily refresh (the next local midnight, when `isFreshForToday()` flips
+    /// to false and the suggestions refetch on next open).
+    static func timeUntilRefresh() -> TimeInterval {
+        let cal = Calendar.current
+        guard let tomorrow = cal.date(byAdding: .day, value: 1, to: Date()) else { return 0 }
+        return max(0, cal.startOfDay(for: tomorrow).timeIntervalSince(Date()))
+    }
+
+    /// A short "Refreshes in 5h" / "Refreshes in 45m" label for the discovery list footer.
+    static func refreshCountdownText() -> String {
+        let total = Int(timeUntilRefresh())
+        let hours = total / 3600
+        let minutes = (total % 3600) / 60
+        if hours >= 1 { return "Refreshes in \(hours)h" }
+        return "Refreshes in \(max(minutes, 1))m"
+    }
+
     static func load() -> HomeSuggestions? {
         guard let data = try? Data(contentsOf: fileURL) else { return nil }
         return try? JSONDecoder().decode(HomeSuggestions.self, from: data)

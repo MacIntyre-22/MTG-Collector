@@ -44,9 +44,18 @@ class Collection {
     /// each collection remembers its own sort independently (no global default)
     var sortBy: String = "editedAt"
 
-    /// one-to-one stored stats, recomputed by StatsUpdater on card changes
-    @Relationship(deleteRule: .cascade, inverse: \CollectionStats.collection)
-    var stats: CollectionStats?
+    /// Whether this collection counts toward the whole-collection totals (value, card counts,
+    /// breakdowns). Binders default on (owned cards); Deck overrides to off (a build, not stock);
+    /// anything imported from a shared link is forced off (it's someone else's list). Toggleable
+    /// per collection in its edit sheet.
+    var inCollection: Bool = true
+
+    /// Cover photo, synced. Stored as external-storage Data so CloudKit ships it as a file rather
+    /// than bloating the record. Read/written via the Collection+Cover helpers.
+    @Attribute(.externalStorage) var coverImageData: Data?
+
+    // Stats are NOT a relationship here — they live local-only in CollectionStats (cache store),
+    // keyed by `id`, and are fetched via StatsStore. This keeps derived data out of CloudKit sync.
 
     // MARK: Initializer
 

@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["45FDM938CG.net.benmacintyre.cardhold"],
+        "components": [
+          {
+            "/": "/share/*",
+            "comment": "Shared deck/binder links open in Cardhold"
+          }
+        ]
+      }
+    ]
+  }
+}

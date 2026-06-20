@@ -50,6 +50,15 @@ enum NewsSource: String, Codable, CaseIterable {
         }
     }
 
+    /// Host used to fetch the source's official logo (shared with the external links engine).
+    var domain: String {
+        switch self {
+        case .mtggoldfish: return "mtggoldfish.com"
+        case .edhrec:      return "edhrec.com"
+        case .reddit:      return "reddit.com"
+        }
+    }
+
     var color: Color {
         switch self {
         case .mtggoldfish: return .yellow

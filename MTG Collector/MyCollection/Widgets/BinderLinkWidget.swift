@@ -16,18 +16,20 @@ import SwiftData
 // MARK: Types
 
 struct BinderLinkWidget: View {
-    
+
     // MARK: Stored Properties
-    
+
     var binder: Binder
-    
+
+    @Environment(\.modelContext) private var modelContext
+
     // MARK: View
     
     var body: some View {
         ZStack {
             HStack {
                 ZStack(alignment: .topLeading) {
-                    if let image =  ImageManager.fetchImage(withIdentifier: binder.id){
+                    if let image = binder.coverUIImage {
                         Image(uiImage: image)
                             .resizable()
                             .scaledToFill()
@@ -37,7 +39,7 @@ struct BinderLinkWidget: View {
                         Color.gray
                             .frame(width: 100, height: 100)
                             .cornerRadius(10)
-                        Image("MtgBinder")
+                        Image("CardholdIcon")
                             .resizable()
                             .renderingMode(.template)
                             .scaledToFit()
@@ -66,13 +68,13 @@ struct BinderLinkWidget: View {
                         .foregroundColor(.primary)
                     Divider()
                     HStack {
-                        PricePill(stats: binder.stats)
+                        PricePill(stats: StatsStore.stats(for: binder, context: modelContext), compact: true)
                         Image(systemName: "square.stack")
                             .foregroundColor(.primary)
                         Text("\(binder.cardCount)")
                             .foregroundColor(.primary)
                     }
-                    
+
                     Spacer()
                 }
                 .padding(.leading, 10)
@@ -82,6 +84,8 @@ struct BinderLinkWidget: View {
             .frame(minHeight: 100)
             .widgetStyle()
         }
+        // Make the whole tile the long-press target for the context menu, not just the cover.
+        .contentShape(Rectangle())
     }
 }
 

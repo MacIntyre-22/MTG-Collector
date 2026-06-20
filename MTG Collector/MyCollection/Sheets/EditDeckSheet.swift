@@ -11,6 +11,7 @@
 // MARK: Imports
 
 import SwiftUI
+import SwiftData
 
 // MARK: Types
 
@@ -42,7 +43,10 @@ struct EditDeckSheet: View {
     // MARK: State Properties
 
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Bindable var deck: Deck
+    /// Called when the user confirms deletion (the presenter performs the delete + any navigation).
+    var onDelete: (() -> Void)? = nil
     @State var name: String
     @State var ruleType: String
     @State var selectedImage: UIImage?
@@ -50,20 +54,30 @@ struct EditDeckSheet: View {
     @State var showPreviews: Bool
     @State var showControls: Bool
     @State var showCover: Bool
+    @State var inCollection: Bool
+    @State var colorIdentity: [String]
     @State var showSourceSelection = false
     @State var photoSource: UIImagePickerController.SourceType = .photoLibrary
     @State private var showImagePicker = false
-    
+    @State private var showDeleteAlert = false
+    /// When deleting, skip the onDisappear save so we don't write to a removed deck.
+    @State private var isDeleting = false
+
+    private let allColors = ["W", "U", "B", "R", "G"]
+
     // MARK: Initializer
-    
-    init(deck: Deck) {
+
+    init(deck: Deck, onDelete: (() -> Void)? = nil) {
         self.deck = deck
+        self.onDelete = onDelete
         self.name = deck.name
         self.ruleType = deck.ruleType
         self.pinned = deck.pinned
         self.showPreviews = deck.showPreviews
         self.showControls = deck.showControls
         self.showCover = deck.showCover
+        self.inCollection = deck.inCollection
+        self.colorIdentity = deck.colorIdentity
         /// set image in on appear
     }
     
@@ -78,7 +92,7 @@ struct EditDeckSheet: View {
                             Color.gray
                                 .frame(width: 200, height: 200)
                                 .cornerRadius(10)
-                            Image(uiImage: selectedImage ?? UIImage(named: "MtgDeck")!)
+                            Image(uiImage: selectedImage ?? UIImage(named: "CardholdIcon")!)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 200, height: 200)
@@ -115,6 +129,45 @@ struct EditDeckSheet: View {
                     Toggle("Controls", isOn: $showControls)
                     Toggle("Cover Image", isOn: $showCover)
                 }
+                Section {
+                    Toggle("Count in Collection Totals", isOn: $inCollection)
+                } footer: {
+                    Text("Include this deck's cards in your whole-collection value and counts. Off by default, since a deck is a build, not owned stock.")
+                }
+
+                Section {
+                    HStack {
+                        ForEach(allColors, id: \.self) { colour in
+                            Button {
+                                if colorIdentity.contains(colour) {
+                                    colorIdentity.removeAll { $0 == colour }
+                                } else {
+                                    colorIdentity = allColors.filter { colorIdentity.contains($0) || $0 == colour }
+                                }
+                            } label: {
+                                OracleSymbolImage(symbol: "{\(colour)}", size: 44)
+                                    .padding(5)
+                                    .background(colorIdentity.contains(colour) ? .gray.opacity(0.18) : .clear)
+                                    .cornerRadius(5)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    Button("Clear", role: .destructive) { colorIdentity = [] }
+                } header: {
+                    Text("Colour Identity")
+                } footer: {
+                    Text("Set automatically from the deck's leader. Designating a new leader resets these to the leader's colours.")
+                }
+
+                if onDelete != nil {
+                    Section {
+                        Button("Delete Deck", role: .destructive) {
+                            showDeleteAlert = true
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                }
             }
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -124,13 +177,35 @@ struct EditDeckSheet: View {
                 }
             })
             .navigationTitle("Edit Deck")
+            .alert("Delete Deck?", isPresented: $showDeleteAlert) {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive) {
+                    isDeleting = true
+                    dismiss()
+                    onDelete?()
+                }
+            } message: {
+                Text("This permanently removes “\(name)” and its card lists. This can't be undone.")
+            }
             .onDisappear() {
-                deck.name = $name.wrappedValue
-                deck.ruleType = $ruleType.wrappedValue
-                deck.pinned = $pinned.wrappedValue
-                deck.showPreviews = $showPreviews.wrappedValue
-                deck.showControls = $showControls.wrappedValue
-                deck.showCover = $showCover.wrappedValue
+                guard !isDeleting else { return }
+                let ruleChanged = deck.ruleType != ruleType
+                deck.name = name
+                deck.ruleType = ruleType
+                deck.pinned = pinned
+                deck.showPreviews = showPreviews
+                deck.showControls = showControls
+                deck.showCover = showCover
+                deck.inCollection = inCollection
+                deck.colorIdentity = colorIdentity
+
+                // Switching game mode invalidates the leader slots — clear them (cards return to the
+                // mainboard) and re-derive colours. This wins over a manual colour edit above.
+                if ruleChanged {
+                    deck.resetLeaders()
+                    DeckColors.refresh(deck, context: modelContext)
+                    StatsUpdater.update(deck, context: modelContext)
+                }
             }
             .confirmationDialog("Select Source",isPresented: $showSourceSelection, actions:{
                 Button("Camera"){
@@ -145,7 +220,7 @@ struct EditDeckSheet: View {
             )
             .fullScreenCover(isPresented: $showImagePicker) {
                 if let image = selectedImage {
-                    ImageManager.saveImage(forImage: image, withIdentifier: deck.id)
+                    deck.setCover(image)
                 }
             } content: {
                 if photoSource == .camera{
@@ -157,7 +232,7 @@ struct EditDeckSheet: View {
             }
             .onAppear {
                 if selectedImage == nil {
-                    selectedImage = ImageManager.fetchImage(withIdentifier: deck.id)
+                    selectedImage = deck.coverUIImage
                 }
             }
         }

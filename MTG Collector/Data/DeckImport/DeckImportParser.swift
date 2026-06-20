@@ -33,13 +33,16 @@ struct ParsedDeckLine: Equatable, Identifiable {
     var setCode: String?
     var collectorNumber: String?
     var board: DeckBoard
+    /// Foil finish, carried through import so it can be set on the created CardEntry.
+    var isFoil: Bool = false
 
     static func == (lhs: ParsedDeckLine, rhs: ParsedDeckLine) -> Bool {
         lhs.quantity == rhs.quantity &&
         lhs.name == rhs.name &&
         lhs.setCode == rhs.setCode &&
         lhs.collectorNumber == rhs.collectorNumber &&
-        lhs.board == rhs.board
+        lhs.board == rhs.board &&
+        lhs.isFoil == rhs.isFoil
     }
 }
 
@@ -111,6 +114,14 @@ struct DeckImportParser {
             working = String(working.dropFirst(3)).trimmingCharacters(in: .whitespaces)
         }
 
+        // trailing foil marker used by Moxfield/Archidekt, e.g. "4 Bolt *F*" / "*E*"
+        var isFoil = false
+        for marker in ["*f*", "*e*", "*foil*"] where working.lowercased().hasSuffix(marker) {
+            isFoil = true
+            working = String(working.dropLast(marker.count)).trimmingCharacters(in: .whitespaces)
+            break
+        }
+
         // leading quantity (supports "4", "4x", "4 x")
         var quantity = 1
         var tokens = working.split(separator: " ", omittingEmptySubsequences: true).map(String.init)
@@ -139,7 +150,8 @@ struct DeckImportParser {
             name: name,
             setCode: setCode,
             collectorNumber: collector,
-            board: lineBoard
+            board: lineBoard,
+            isFoil: isFoil
         )
     }
 

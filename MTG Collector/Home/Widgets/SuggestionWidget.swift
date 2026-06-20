@@ -4,9 +4,9 @@
 //
 //  Created by Ben MacIntyre on 2025-10-18.
 //  Purpose:
-//      Displays one daily suggestion row: a header with a shuffle control, a horizontal card strip
-//      (or a loading skeleton while the row fetches), and a footer with a "Daily Suggestions" tag,
-//      the row blurb and a View All link.
+//      Displays one daily suggestion row: a header, a horizontal card strip (or a loading skeleton
+//      while the row fetches) capped at 8 cards with a trailing "View All" tile, and a footer with a
+//      "Daily Suggestions" tag, the row blurb and a View All link.
 //  External types:
 //      CardJSON, SFAPI, CardInfoView, CardGridView, SuggestionView
 
@@ -25,12 +25,11 @@ struct SuggestionWidget: View {
     var description: String
     var collection: [CardJSON]
     var isLoading: Bool = false
-    var shuffle: () -> Void
 
     // MARK: State Properties
 
     @Environment(\.appTint) private var tint
-    @State var rotation: Double = 0
+    @State private var selectedCard: Card?
 
     // MARK: View
 
@@ -42,18 +41,6 @@ struct SuggestionWidget: View {
                         .font(.title2)
                         .bold()
                     Spacer()
-                    Button {
-                        rotation += 360
-                        shuffle()
-                    } label: {
-                        Image(systemName: "arrow.trianglehead.2.clockwise")
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 25, height: 25)
-                            .rotationEffect(.degrees(rotation))
-                    }
-                    .disabled(isLoading || collection.isEmpty)
                 }
                 .padding(.horizontal, 15)
                 .padding(.top, 20)
@@ -75,24 +62,55 @@ struct SuggestionWidget: View {
 
     private var cardRow: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack {
-                if collection.count >= 10 {
-                    ForEach(0..<10) { i in
-                        /// take index from collection — don't show all the cards.
-                        /// Lazy so only the visible cards build/decode and load art.
-                        let cardModel = SFAPI.JSONtoModel(json: collection[i])
+            LazyHStack(alignment: .top) {
+                // Show the first 8 as a preview — lazy so only visible cards build/decode + load art.
+                ForEach(Array(collection.prefix(8).enumerated()), id: \.offset) { _, json in
+                    let cardModel = SFAPI.JSONtoModel(json: json)
 
-                        NavigationLink(destination: CardInfoView(card: cardModel)) {
-                            CardGridView(card: cardModel, showPreviews: true)
-                                .frame(width: 180)
-                                .widgetStyle(.solid)
-                        }
+                    Button {
+                        selectedCard = cardModel
+                    } label: {
+                        CardGridView(card: cardModel, showPreviews: true)
+                            .frame(width: 180)
+                            .widgetStyle(.solid)
                     }
+                    .buttonStyle(.plain)
+                }
+
+                // Trailing tile that opens the full list (only once there are cards to show).
+                if !collection.isEmpty {
+                    viewAllCard
                 }
             }
         }
         .padding(.bottom, 20)
         .padding(.horizontal, 10)
+        .cardInfoSheet(card: $selectedCard)
+    }
+
+    /// A ghost card-shaped tile at the end of the strip that links to the full list.
+    private var viewAllCard: some View {
+        NavigationLink(destination: SuggestionView(systemImage: systemImage, title: title, description: description, collection: collection)) {
+            VStack(spacing: 12) {
+                Image(systemName: "rectangle.stack.fill")
+                    .font(.system(size: 36))
+                Text("View All")
+                    .font(.headline)
+                Text("\(collection.count) cards")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .foregroundStyle(tint)
+            .frame(width: 160, height: 224)
+            .background(RoundedRectangle(cornerRadius: 8).fill(tint.opacity(0.08)))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .strokeBorder(style: StrokeStyle(lineWidth: 1.5, dash: [7]))
+                    .foregroundStyle(tint.opacity(0.45))
+            )
+            .padding([.horizontal, .top], 10)
+        }
+        .buttonStyle(.plain)
     }
 
     /// Placeholder card shapes shown while the row's request is in flight.
@@ -130,14 +148,17 @@ struct SuggestionWidget: View {
             NavigationLink(destination: SuggestionView(systemImage: systemImage, title: title, description: description, collection: collection)) {
                 Text("View All")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.primary)
                     .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .pillStyle()
+                    .padding(.vertical, 6)
             }
+            .buttonStyle(.glass)
+            .buttonBorderShape(.capsule)
+            .tint(tint)
             .disabled(collection.isEmpty)
         }
         .padding()
-        .background(Color(.secondarySystemFill))
+        // Frosted band that stays distinct from the glass widget body in both light and dark
+        // (system fills read too pale, especially in dark mode).
+        .background(.regularMaterial)
     }
 }

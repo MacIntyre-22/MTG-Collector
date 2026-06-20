@@ -76,8 +76,14 @@ struct ExternalResourcesWidget: View {
 
     private func row(_ resource: ExternalResource) -> some View {
         HStack(spacing: 12) {
-            icon(resource.icon)
-                .frame(width: 26, height: 26)
+            // The site's official logo (Clearbit → DuckDuckGo), in its own colours and cached on
+            // disk by ImageCache. The SF Symbol shows while it loads or if no source has one.
+            BrandLogoView(domain: BrandLogo.domain(from: resource.url)) {
+                fallbackSymbol(resource.icon)
+            }
+            .frame(width: 26, height: 26)
+            .clipShape(RoundedRectangle(cornerRadius: 6))
+
             Text(resource.title)
             Spacer()
             Image(systemName: "arrow.up.right")
@@ -89,14 +95,8 @@ struct ExternalResourcesWidget: View {
     }
 
     @ViewBuilder
-    private func icon(_ icon: ResourceIcon) -> some View {
+    private func fallbackSymbol(_ icon: ResourceIcon) -> some View {
         switch icon {
-        case .asset(let name):
-            Image(name)
-                .renderingMode(.template)
-                .resizable()
-                .scaledToFit()
-                .foregroundStyle(.tint)
         case .symbol(let name):
             Image(systemName: name)
                 .font(.title3)

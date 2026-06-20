@@ -34,7 +34,6 @@ final class DeckImportViewModel: ObservableObject {
 
     // MARK: Dependencies
 
-    private let parser = DeckImportParser()
     private let resolver = DeckImportResolver()
 
     // MARK: Derived
@@ -49,9 +48,12 @@ final class DeckImportViewModel: ObservableObject {
 
     // MARK: Actions
 
-    /// Parse the current raw text (no network).
+    /// Optional source filename (set when importing a file) so CSV vs text is detected reliably.
+    var sourceFilename: String?
+
+    /// Parse the current raw text, auto-detecting plain-text vs CSV (no network).
     func parse() {
-        parsedLines = parser.parse(rawText)
+        parsedLines = CollectionImporter.parse(rawText, filename: sourceFilename)
         hasResolved = false
         result = DeckImportResult()
     }

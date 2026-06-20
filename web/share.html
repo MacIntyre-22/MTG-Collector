@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-itunes-app" content="app-id=__APP_STORE_ID__" />
+  <title>Cardhold — Shared Collection</title>
+
+  <!-- Link preview (Open Graph + Twitter Card). Generic for every share, since this page is
+       static; iMessage/social read these to render the rich card. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Cardhold" />
+  <meta property="og:title" content="A shared collection on Cardhold" />
+  <meta property="og:description" content="Tap to open it in Cardhold and import the deck or binder — cards, prices and all." />
+  <meta property="og:image" content="https://cardhold.ca/cardholdlogo.png" />
+  <meta property="og:url" content="https://cardhold.ca/share" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="A shared collection on Cardhold" />
+  <meta name="twitter:description" content="Tap to open it in Cardhold and import the deck or binder — cards, prices and all." />
+  <meta name="twitter:image" content="https://cardhold.ca/cardholdlogo.png" />
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(120% 120% at 50% 0%, #1e3a8a 0%, #0f1830 55%, #0a0c14 100%);
+      color: #eef3ff;
+      padding: 24px;
+      text-align: center;
+    }
+    .card {
+      max-width: 380px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      padding: 40px 28px;
+      backdrop-filter: blur(20px);
+    }
+    .logo {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 22px;
+      border-radius: 22px;
+      object-fit: contain;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.35);
+    }
+    h1 { font-size: 22px; margin: 0 0 10px; }
+    p { font-size: 15px; line-height: 1.5; color: #bcc8e6; margin: 0 0 26px; }
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      background: #3b82f6;
+      color: #ffffff;
+    }
+    .hint { margin-top: 18px; font-size: 13px; color: #8893b0; }
+    footer { margin-top: 28px; text-align: center; color: #7e8cb0; font-size: 12px; line-height: 1.5; max-width: 460px; }
+    footer a { color: #6ea8ff; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img class="logo" src="cardholdlogo.png" alt="Cardhold" />
+    <h1>Someone shared a collection with you</h1>
+    <p>Open this link on your iPhone with <strong>Cardhold</strong> installed and it loads straight into the app. Don't have it yet?</p>
+    <a class="btn" href="https://apps.apple.com/app/id__APP_STORE_ID__">Get Cardhold on the App Store</a>
+    <p class="hint">If you already have Cardhold, tapping the link again will open it automatically.</p>
+  </main>
+
+  <footer>
+    © 2026 Ben MacIntyre · Cardhold&trade; &nbsp;·&nbsp;
+    <a href="/">Home</a> &nbsp;·&nbsp; <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/support">Support</a>
+    <br /><br />
+    Card data and images courtesy of <a href="https://scryfall.com/">Scryfall</a>.
+    Cardhold ships with no card content of its own; all Magic: The Gathering names, text and images
+    are owned by Wizards of the Coast LLC and are used within Scryfall's terms. Cardhold is unofficial
+    fan content and is not affiliated with or endorsed by Wizards of the Coast.
+  </footer>
+</body>
+</html>

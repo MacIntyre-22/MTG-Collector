@@ -37,15 +37,17 @@ struct SetIconWidget: View {
         case "uncommon": return .blue
         case "rare":     return .yellow
         case "mythic":   return .red
+        case "special", "timeshifted", "bonus": return .purple
         default:         return .gray
         }
     }
 
     var shine: ShineLevel {
         switch rarity {
-        case "rare":   return .holo
-        case "mythic": return .mythic
-        default:       return .none
+        case "rare":                            return .holo
+        case "mythic":                          return .mythic
+        case "special", "timeshifted", "bonus": return .special
+        default:                                return .none
         }
     }
 
@@ -53,6 +55,7 @@ struct SetIconWidget: View {
         switch rarity {
         case "rare":   return [.yellow, .orange, .white, .yellow, .orange]
         case "mythic": return [.red, .orange, .yellow, .pink, .red]
+        case "special", "timeshifted", "bonus": return ShineLevel.specialPalette
         default:       return [tint]
         }
     }

@@ -26,9 +26,11 @@ struct AllBindersView: View {
     @Environment(ProAccessManager.self) private var pro
     @Query var binders: [Binder]
     @State var newBinder: Bool = false
-    @State var showAlert: Bool = false
     @State var showPaywall: Bool = false
-    @State var selectedBinder: Binder?
+    /// Context-menu actions, presented as sheets owned here (so they work from a long-press).
+    @State private var statsBinder: Binder?
+    @State private var notesBinder: Binder?
+    @State private var editBinder: Binder?
 
     /// Free tier allows up to 3 user binders.
     private var canCreate: Bool { pro.isPro || sortedBinders.count < 3 }
@@ -48,25 +50,49 @@ struct AllBindersView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 15) {
-                    ForEach(sortedBinders) { binder in
-                        NavigationLink(destination: BinderView(binder: binder)) {
-                            BinderLinkWidget(binder: binder)
-                                .contextMenu {
-                                    NavigationLink(destination: EditBinderSheet(binder: binder)) {
-                                        Text("Edit")
-                                    }
-                                    Button("Delete", role: .destructive) {
-                                        selectedBinder = binder
-                                        showAlert.toggle()
-                                    }
-                                }
+            Group {
+                if sortedBinders.isEmpty {
+                    VStack(spacing: 16) {
+                        Image(systemName: "folder")
+                            .font(.system(size: 60))
+                            .foregroundStyle(.secondary)
+                        Text("No Binders")
+                            .font(.title2.bold())
+                        Text("Create a binder to organize cards by set, colour or theme.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                        PrimaryGlassButton(title: "New Binder", systemImage: "plus") {
+                            if canCreate { newBinder.toggle() } else { showPaywall = true }
                         }
+                        .padding(.horizontal, 32)
+                        .padding(.top, 8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding()
+                } else {
+                    ScrollView(showsIndicators: false) {
+                        VStack(spacing: 15) {
+                            ForEach(sortedBinders) { binder in
+                                NavigationLink(destination: BinderView(binder: binder)) {
+                                    BinderLinkWidget(binder: binder)
+                                        .contextMenu {
+                                            // Mirrors the binder screen's toolbar (minus filter).
+                                            CollectionShareMenu(target: .binder(binder), compact: false)
+                                            Button("Stats", systemImage: "chart.bar") {
+                                                if pro.isPro { statsBinder = binder } else { showPaywall = true }
+                                            }
+                                            Button("Notes", systemImage: "note.text") { notesBinder = binder }
+                                            Button("Settings", systemImage: "gearshape") { editBinder = binder }
+                                        }
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.top, 10)
                     }
                 }
-                .padding(.horizontal, 10)
-                .padding(.top, 10)
             }
             .navigationTitle("My Binders")
             .toolbar(content: {
@@ -82,22 +108,24 @@ struct AllBindersView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
-            .alert("Confirm", isPresented: $showAlert) {
-                Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
-                    deleteBinder()
-                }
-            } message: {
-                Text("Delete this Binder?")
+            .sheet(item: $statsBinder) { binder in
+                BinderStatsSheet(binder: binder)
+            }
+            .sheet(item: $notesBinder) { binder in
+                BinderNotesSheet(binder: binder)
+                    .presentationDetents([.medium, .large])
+            }
+            .sheet(item: $editBinder) { binder in
+                EditBinderSheet(binder: binder, onDelete: { deleteBinder(binder) })
             }
         }
     }
 
     // MARK: deleteBinder
 
-    func deleteBinder() {
-        if let binder = selectedBinder {
-            modelContext.delete(binder)
-        }
+    func deleteBinder(_ binder: Binder) {
+        Spotlight.remove(kind: .binder, id: binder.id)
+        StatsStore.remove(for: binder.id, context: modelContext)
+        modelContext.delete(binder)
     }
 }

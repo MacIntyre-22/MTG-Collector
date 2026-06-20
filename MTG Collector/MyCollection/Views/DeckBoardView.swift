@@ -31,7 +31,8 @@ enum DeckBoardKind: Hashable {
 
     func entries(of deck: Deck) -> [CardEntry] {
         switch self {
-        case .main: return deck.mainboard
+        // Leaders are flagged mainboard cards shown in their own widget, so keep them out of the grid.
+        case .main: return deck.mainboard.filter { $0.role.isEmpty }
         case .side: return deck.sideboard
         case .maybe: return deck.maybeboard
         }
@@ -54,6 +55,9 @@ struct DeckBoardView: View {
 
     var deck: Deck
     var board: DeckBoardKind
+    /// The selected board index (0 main / 1 side / 2 maybe) — bound so the header title doubles as
+    /// the board switcher.
+    @Binding var selectedBoard: Int
     /// Shared collection filter applied to every board (from DeckView).
     var filters: FilterState = FilterState()
     var isFiltering: Bool = false
@@ -64,7 +68,6 @@ struct DeckBoardView: View {
 
     @Environment(\.modelContext) private var modelContext
     @State private var lookup: [String: Card] = [:]
-    @State private var legalFilter: LegalityFilter = .all
     /// This board's cards after the shared collection filter (engine output).
     @State private var stateFiltered: [CardEntry] = []
 
@@ -87,7 +90,7 @@ struct DeckBoardView: View {
     }
 
     private var filteredEntries: [CardEntry] {
-        baseEntries.filter { legalFilter.matches(status($0)) }
+        baseEntries.filter { filters.legality.matches(status($0)) }
     }
 
     private var totalCount: Int {
@@ -141,9 +144,27 @@ struct DeckBoardView: View {
 
     private var header: some View {
         HStack(spacing: 8) {
-            Text(board.title)
-                .font(.title3)
-                .bold()
+            // The board title is the switcher itself — tap to jump between boards (no toolbar item).
+            Menu {
+                Picker("Board", selection: $selectedBoard) {
+                    Text("Mainboard").tag(0)
+                    Text("Sideboard").tag(1)
+                    Text("Maybeboard").tag(2)
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text(board.title)
+                        .font(.title3)
+                        .bold()
+                        .foregroundStyle(.primary)
+                    Image(systemName: "chevron.down")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .accessibilityLabel("Board: \(board.title)")
+            .accessibilityHint("Switch board")
+
             Image(systemName: "square.stack")
                 .foregroundStyle(.secondary)
             Text("\(totalCount)")
@@ -159,16 +180,6 @@ struct DeckBoardView: View {
                     Text("\(item.count)")
                 }
                 .font(.subheadline)
-            }
-
-            Menu {
-                Picker("Legality", selection: $legalFilter) {
-                    ForEach(LegalityFilter.allCases) { Text($0.rawValue).tag($0) }
-                }
-            } label: {
-                Image(systemName: legalFilter == .all
-                      ? "line.3.horizontal.decrease.circle"
-                      : "line.3.horizontal.decrease.circle.fill")
             }
         }
         .padding(.horizontal)

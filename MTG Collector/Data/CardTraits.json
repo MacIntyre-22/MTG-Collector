@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "note": "Beginner-facing explainers for notable card traits, surfaced as tappable pills under the type line. Keyed by trait id. Detection lives in CardTraits.swift (name prefix / reserved flag / Scryfall layout); this file holds the display text. tint is a colour name mapped in CardTraits.swift. Definitions are original paraphrases (game rules aren't copyrightable). Add a trait by adding an entry here plus one detection line in CardTraits.swift.",
+  "traits": {
+    "alchemy": {
+      "label": "Alchemy",
+      "icon": "testtube.2",
+      "category": "Digital Card",
+      "tint": "indigo",
+      "definition": "A rebalanced, digital-only version of a card made for Magic: The Gathering Arena's Alchemy format. Its stats or text have been tuned for digital play, so it differs from the paper card and can't be used in tabletop formats."
+    },
+    "reserved": {
+      "label": "Reserved List",
+      "icon": "lock.fill",
+      "category": "Collector",
+      "tint": "orange",
+      "definition": "This card is on Wizards of the Coast's Reserved List — a long-standing promise never to reprint it. That guaranteed scarcity often makes original printings sought-after and valuable."
+    },
+    "double_faced": {
+      "label": "Double-Faced",
+      "icon": "arrow.triangle.2.circlepath",
+      "category": "Card Type",
+      "tint": "teal",
+      "definition": "A card with two faces. It enters on its front face and can transform to the back — or, for modal double-faced cards, be cast as either side. Use the flip control to view each face."
+    },
+    "split": {
+      "label": "Split Card",
+      "icon": "arrow.left.arrow.right",
+      "category": "Card Type",
+      "tint": "teal",
+      "definition": "Two separate spells printed on one card. You may cast either half, each with its own cost and effect; some split cards let you cast both halves together."
+    },
+    "adventure": {
+      "label": "Adventure",
+      "icon": "arrow.turn.down.right",
+      "category": "Card Type",
+      "tint": "teal",
+      "definition": "A creature that also carries an Adventure spell. You may cast the Adventure first for its effect and exile the card, then cast the creature later from exile — or just cast the creature normally."
+    },
+    "flip": {
+      "label": "Flip Card",
+      "icon": "arrow.uturn.up",
+      "category": "Card Type",
+      "tint": "teal",
+      "definition": "An older two-in-one card. A listed condition flips it 180 degrees to its other half, which has its own name, stats and abilities."
+    },
+    "saga": {
+      "label": "Saga",
+      "icon": "book.closed",
+      "category": "Card Type",
+      "tint": "teal",
+      "definition": "An enchantment that tells a story. It gains a lore counter as it enters and on each of your draw steps, triggering its chapter abilities in order, then is sacrificed after the final chapter."
+    },
+    "class": {
+      "label": "Class",
+      "icon": "books.vertical",
+      "category": "Card Type",
+      "tint": "teal",
+      "definition": "An enchantment you can level up. Pay its level cost any time you could cast a sorcery to advance to the next level and unlock stronger abilities."
+    }
+  }
+}

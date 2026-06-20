@@ -18,9 +18,10 @@ import Foundation
 
 // MARK: Icon
 
-/// How a resource row draws its leading glyph: a bundled brand asset, or an SF Symbol fallback.
+/// The fallback glyph a resource row draws while its official favicon loads (or if it can't be
+/// fetched). The widget pulls each site's real favicon from its URL; this SF Symbol is the
+/// placeholder so the row is never empty offline.
 enum ResourceIcon: Hashable {
-    case asset(String)
     case symbol(String)
 }
 
@@ -64,9 +65,9 @@ enum ExternalResourcesManager {
             make("Scryfall Page", .symbol("magnifyingglass.circle.fill"), card.scryfallURI),
             make("EDHREC", .symbol("chart.bar.doc.horizontal.fill"), card.relatedURIs.edhrec),
             make("Gatherer", .symbol("books.vertical.fill"), card.relatedURIs.gatherer),
-            make("TCGPlayer", .asset("TcgPlayer"), card.purchaseURIs.tcgplayer),
-            make("Cardmarket", .asset("CardMarket"), card.purchaseURIs.cardmarket),
-            make("CardHoarder", .asset("CardHoarder"), card.purchaseURIs.cardhoarder),
+            make("TCGPlayer", .symbol("cart.fill"), card.purchaseURIs.tcgplayer),
+            make("Cardmarket", .symbol("cart.fill"), card.purchaseURIs.cardmarket),
+            make("CardHoarder", .symbol("cart.fill"), card.purchaseURIs.cardhoarder),
             make("TCGPlayer Decks", .symbol("rectangle.stack.fill"), card.relatedURIs.tcgplayerInfiniteDecks)
         ].compactMap { $0 }
     }
@@ -89,8 +90,8 @@ enum ExternalResourcesManager {
 
     private static func binderResources(_ binder: Binder) -> [ExternalResource] {
         [
-            make("TCGPlayer", .asset("TcgPlayer"), "https://www.tcgplayer.com/massentry"),
-            make("Cardmarket", .asset("CardMarket"), "https://www.cardmarket.com/en/Magic")
+            make("TCGPlayer", .symbol("cart.fill"), "https://www.tcgplayer.com/massentry"),
+            make("Cardmarket", .symbol("cart.fill"), "https://www.cardmarket.com/en/Magic")
         ].compactMap { $0 }
     }
 

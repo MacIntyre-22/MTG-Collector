@@ -29,6 +29,7 @@ struct DeckCardView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.appTint) private var tint
     @State private var card: Card?
+    @State private var selectedCard: Card?
 
     // MARK: Computed Properties
 
@@ -38,14 +39,21 @@ struct DeckCardView: View {
         return LegalityStatus.of(card, ruleType: deck.ruleType)
     }
 
+    /// The owned finish (metadata for export/sharing). Deck value always uses base price, so this
+    /// doesn't trigger a stats recompute.
+    private var finishBinding: Binding<CardFinish> {
+        Binding(
+            get: { entry.finish },
+            set: { entry.finish = $0; entry.updatedAt = Date() }
+        )
+    }
+
     // MARK: View
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            NavigationLink {
-                if let card {
-                    CardInfoView(card: card)
-                }
+            Button {
+                if let card { selectedCard = card }
             } label: {
                 CardEntryView(
                     entry: entry,
@@ -55,17 +63,23 @@ struct DeckCardView: View {
                     deleteEntry: { deleteEntry() }
                 )
             }
+            .buttonStyle(.plain)
 
             if deck.showControls {
                 VStack {
                     Menu {
                         /// Controls
-                        Button("Toggle Foil") {
-                            entry.isFoil.toggle()
-                            entry.updatedAt = Date()
+                        Picker("Finish", selection: finishBinding) {
+                            ForEach(CardFinish.allCases, id: \.self) { Text($0.label).tag($0) }
                         }
-                        Button("Make Commander") {
-                            deck.commander = entry
+                        // Leader slots for this deck's game mode (Commander, Oathbreaker, Signature
+                        // Spell, …) — generated from DeckRules, so no slot is hardcoded.
+                        ForEach(DeckRules.leaderSlots(for: deck.ruleType)) { slot in
+                            Button("Make \(slot.label)") {
+                                deck.setLeader(entry, slot: slot)
+                                DeckColors.refresh(deck, context: modelContext)
+                                StatsUpdater.update(deck, context: modelContext)
+                            }
                         }
                         Button("Mainboard") {
                             mvtoMain(entry: entry)
@@ -110,6 +124,7 @@ struct DeckCardView: View {
                 card = await CardStore.resolve(entry.scryfallCardID, context: modelContext)
             }
         }
+        .cardInfoSheet(card: $selectedCard)
     }
 
     // MARK: Board Moving Functions

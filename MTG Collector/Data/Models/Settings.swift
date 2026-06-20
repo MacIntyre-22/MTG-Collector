@@ -18,8 +18,8 @@ import SwiftData
 @Model
 class Settings {
 
-    /// Accent colour as a hex string (free ColorPicker selection).
-    var theme: String = "#FF9500"
+    /// Accent colour as a hex string (free ColorPicker selection). Defaults to the app-icon blue.
+    var theme: String = "#007AFF"
     var onBoarding = true
 
     /// Display currency: "cad" / "usd" / "eur" / "tix".
@@ -27,11 +27,15 @@ class Settings {
     /// Card image quality: "normal" / "large".
     var cardImageQuality: String = "normal"
     /// User preference for iCloud sync (the container reads this via UserDefaults at launch).
-    var iCloudSyncEnabled: Bool = true
+    /// Off by default — sync is opt-in, so CloudKit is never engaged unless the user turns it on.
+    var iCloudSyncEnabled: Bool = false
     /// Default preview visibility for newly created binders/decks.
     var defaultShowPreviews: Bool = true
     /// Pro entitlement — set true after a verified StoreKit purchase.
     var isPro: Bool = false
+    /// Show beginner "tap to learn" cues on functional elements (deck roles, legality/format…).
+    /// On by default; experts can switch it off to keep the UI uncluttered.
+    var beginnerHints: Bool = true
 
     init() {}
 

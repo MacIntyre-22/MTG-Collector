@@ -21,11 +21,21 @@ struct SFAPI {
     // MARK: Private Helpers
 
     private static func request(from url: URL) -> URLRequest {
-        // Single choke point for every Scryfall request — count it for rate-limit monitoring.
-        RateLimitMonitor.shared.record()
         var req = URLRequest(url: url)
-        req.setValue("Cardhold/1.0 (benmacintyre09@gmail.com)", forHTTPHeaderField: "User-Agent")
+        req.setValue(AppHTTP.userAgent, forHTTPHeaderField: "User-Agent")
+        // Scryfall requires an Accept header on every request (alongside User-Agent).
+        req.setValue("application/json", forHTTPHeaderField: "Accept")
         return req
+    }
+
+    /// Single choke point for every api.scryfall.com call: wait for a rate-limit slot (≤10/sec),
+    /// record it for monitoring, then perform the request. Card art / SVGs / logos load on CDNs and
+    /// don't pass through here, so they're never throttled.
+    private static func send(_ request: URLRequest) async throws -> Data {
+        await ScryfallLimiter.shared.wait()
+        RateLimitMonitor.shared.record()
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return data
     }
 
     // MARK: API Functions
@@ -36,7 +46,7 @@ struct SFAPI {
         let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         guard let url = URL(string: "https://api.scryfall.com/cards/search?q=\(encoded)") else { return [] }
         do {
-            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let data = try await send(request(from: url))
             let fetchResults = try JSONDecoder().decode(ScryfallCardData.self, from: data)
             return shuffle ? fetchResults.data.shuffled() : fetchResults.data
         } catch {
@@ -53,7 +63,23 @@ struct SFAPI {
             return nil
         }
         do {
-            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let data = try await send(request(from: url))
+            return try JSONDecoder().decode(CardJSON.self, from: data)
+        } catch {
+            return nil
+        }
+    }
+
+    /// Resolve an exact printing from a set code + collector number (Scryfall `/cards/:code/:number`).
+    /// Used by the card scanner when it can read the bottom-line set/collector info. Returns nil if
+    /// that exact printing doesn't exist (caller falls back to a fuzzy name match).
+    static func fetchCard(set: String, number: String) async -> CardJSON? {
+        let code = set.lowercased().addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        let num = number.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        guard !code.isEmpty, !num.isEmpty,
+              let url = URL(string: "https://api.scryfall.com/cards/\(code)/\(num)") else { return nil }
+        do {
+            let data = try await send(request(from: url))
             return try JSONDecoder().decode(CardJSON.self, from: data)
         } catch {
             return nil
@@ -64,7 +90,7 @@ struct SFAPI {
     static func fetchCardId(id: String) async -> CardJSON? {
         guard let url = URL(string: "https://api.scryfall.com/cards/\(id)") else { return nil }
         do {
-            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let data = try await send(request(from: url))
             return try JSONDecoder().decode(CardJSON.self, from: data)
         } catch {
             return nil
@@ -77,10 +103,24 @@ struct SFAPI {
     static func fetchCardURI(uri: String) async -> CardJSON? {
         guard let url = URL(string: uri) else { return nil }
         do {
-            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let data = try await send(request(from: url))
             return try JSONDecoder().decode(CardJSON.self, from: data)
         } catch {
             return nil
+        }
+    }
+
+    /// Fetch a card's rulings from its `rulings_uri`. Returns [] on any failure.
+    static func fetchRulings(uri: String) async -> [Ruling] {
+        guard let url = URL(string: uri) else { return [] }
+        do {
+            let data = try await send(request(from: url))
+            let decoded = try JSONDecoder().decode(RulingsJSON.self, from: data)
+            return decoded.data.map {
+                Ruling(source: $0.source ?? "", publishedAt: $0.publishedAt ?? "", comment: $0.comment ?? "")
+            }
+        } catch {
+            return []
         }
     }
 
@@ -89,7 +129,7 @@ struct SFAPI {
     static func fetchSetData() async -> [SetJSON] {
         guard let url = URL(string: "https://api.scryfall.com/sets") else { return [] }
         do {
-            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let data = try await send(request(from: url))
             let fetchResults = try JSONDecoder().decode(ScryfallSetData.self, from: data)
             return fetchResults.data
         } catch {
@@ -107,12 +147,19 @@ struct SFAPI {
             return []
         }
         do {
-            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let data = try await send(request(from: url))
             let fetchResults = try JSONDecoder().decode(ScryfallCardData.self, from: data)
             return fetchResults.data
         } catch {
             return []
         }
+    }
+
+    /// Every printing of a card (one per set/collector-number variant), newest first. Keyed by the
+    /// card's `oracle_id` so split / double-faced names resolve cleanly. Used by the scanner's
+    /// printing picker so a user can correct an auto-guessed printing.
+    static func fetchPrintings(oracleID: String) async -> [CardJSON] {
+        await fetchCards(query: "oracleid:\(oracleID) unique:prints", order: "released", descending: true)
     }
 
     /// One page of a Scryfall search: the cards plus paging metadata.
@@ -144,7 +191,7 @@ struct SFAPI {
 
     private static func fetchPage(url: URL) async -> CardPage {
         do {
-            let (data, _) = try await URLSession.shared.data(for: request(from: url))
+            let data = try await send(request(from: url))
             let result = try JSONDecoder().decode(ScryfallCardData.self, from: data)
             return CardPage(
                 cards: result.data,
@@ -170,7 +217,7 @@ struct SFAPI {
             req.setValue("application/json", forHTTPHeaderField: "Content-Type")
             req.httpBody = try JSONEncoder().encode(["identifiers": Array(identifiers.prefix(75))])
 
-            let (data, _) = try await URLSession.shared.data(for: req)
+            let data = try await send(req)
             let result = try JSONDecoder().decode(ScryfallCollectionData.self, from: data)
             return (result.data, result.notFound ?? [])
         } catch {

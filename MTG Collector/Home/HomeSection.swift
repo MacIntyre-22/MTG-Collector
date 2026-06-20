@@ -60,10 +60,37 @@ enum HomeSection: String, CaseIterable, Identifiable {
         case .new:       return "(is:rare+or+is:mythic)+game:paper+-t:token&order=released&dir=desc"
         case .popular:   return "game:paper+-t:land+-t:token&order=edhrec&dir=asc"
         case .pricey:    return "(is:mythic+or+is:promo)+game:paper&order=usd&dir=desc"
-        case .budget:    return "usd<=5+order:edhrec&dir=asc"
-        case .fullArt:   return "(is:fullart+or+is:borderless+or+is:showcase)+game:paper&order=released&dir=desc"
-        case .oldSchool: return "frame:1997+or+frame:1993&order=released&dir=asc"
+        case .budget:    return "usd<=5+game:paper&order=edhrec&dir=asc"
+        // Pure aesthetic pools — order doesn't matter, so let Scryfall draw a random sample from the
+        // whole matching set rather than always the same first page.
+        case .fullArt:   return "(is:fullart+or+is:borderless+or+is:showcase)+game:paper&order=random"
+        case .oldSchool: return "frame:1997+or+frame:1993&order=random"
         }
+    }
+
+    // MARK: Daily variety
+
+    /// How deep the random page jump may go for ranked sections (kept small so each stays on-theme —
+    /// Pricey shouldn't wander into cheap cards). 1 = no page jump.
+    var maxPage: Int {
+        switch self {
+        case .popular: return 4
+        case .pricey:  return 3
+        case .budget:  return 8
+        default:       return 1   // new (newest-first) + fullArt/oldSchool (order=random)
+        }
+    }
+
+    /// The query actually fetched today. Full Art / Old School use `order=random` (in `query`);
+    /// Popular / Pricey / Budget keep their ranking but jump to a random page so the picks vary day
+    /// to day while staying genuinely popular/expensive/cheap; New stays newest-first. The page is
+    /// drawn from the day's seed, so it's stable through the day and re-rolls at the daily reset.
+    func fetchQuery(seed: UInt64) -> String {
+        guard maxPage > 1 else { return query }
+        let offset = UInt64(HomeSection.allCases.firstIndex(of: self) ?? 0)
+        var rng = SeededGenerator(seed: seed &+ offset &* 0x9E3779B1)
+        let page = Int.random(in: 1...maxPage, using: &rng)
+        return query + "&page=\(page)"
     }
 }
 

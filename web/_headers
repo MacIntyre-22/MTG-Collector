@@ -1,0 +1,4 @@
+# Apple fetches the AASA file and expects valid JSON. Serving it as application/json (and never
+# behind a redirect) avoids any content-type ambiguity during app-link verification.
+/.well-known/apple-app-site-association
+  Content-Type: application/json

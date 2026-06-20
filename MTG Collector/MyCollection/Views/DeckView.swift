@@ -29,6 +29,7 @@ struct DeckView: View {
 
     @Environment(\.modelContext) var modelContext
     @Environment(ProAccessManager.self) private var pro
+    @Environment(\.dismiss) private var dismiss
     @State var showEdit: Bool = false
     @State var showNotes: Bool = false
     @State var showStats: Bool = false
@@ -40,13 +41,16 @@ struct DeckView: View {
     @State private var isFiltering = false
     /// Bumped on each Apply so each board re-runs the filter.
     @State private var filterToken = 0
+    @State private var stats: CollectionStats?
+    /// Transient "prices updated" banner shown after an on-open refresh.
+    @State private var priceBanner: String?
 
     // MARK: Initializer
 
     init(deck: Deck) {
         self.deck = deck
-        let custom = ImageManager.fetchImage(withIdentifier: deck.id)
-        self.coverImage = custom ?? UIImage(named: "MtgDeck")!
+        let custom = deck.coverUIImage
+        self.coverImage = custom ?? UIImage(named: "CardholdIcon")!
         self.hasCover = custom != nil
     }
 
@@ -58,39 +62,53 @@ struct DeckView: View {
             hasCover: hasCover,
             showCover: deck.showCover,
             name: deck.name,
-            stats: deck.stats,
+            stats: stats,
             count: deck.cardCount
         ) {
             VStack {
-                Picker("Boards", selection: $selectedBoard) {
-                    Text("Main").tag(0)
-                    Text("Side").tag(1)
-                    Text("Maybe").tag(2)
-                }
-                .pickerStyle(.segmented)
-                .padding(.horizontal)
-
-                if let commander = deck.commander {
-                    CommanderWidget(entry: commander) {
-                        deck.commander = nil
+                ForEach(deck.activeLeaders) { leader in
+                    CommanderWidget(
+                        entry: leader,
+                        label: DeckRules.slot(role: leader.role, ruleType: deck.ruleType)?.label ?? "Leader"
+                    ) {
+                        deck.removeLeader(leader)
+                        DeckColors.refresh(deck, context: modelContext)
                     }
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.top, 4)
                 }
 
                 switch selectedBoard {
-                case 0: DeckBoardView(deck: deck, board: .main, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
-                case 1: DeckBoardView(deck: deck, board: .side, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
-                case 2: DeckBoardView(deck: deck, board: .maybe, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
+                case 0: DeckBoardView(deck: deck, board: .main, selectedBoard: $selectedBoard, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
+                case 1: DeckBoardView(deck: deck, board: .side, selectedBoard: $selectedBoard, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
+                case 2: DeckBoardView(deck: deck, board: .maybe, selectedBoard: $selectedBoard, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
                 default: EmptyView()
                 }
             }
         }
+        .priceRefreshBanner($priceBanner)
         .task {
             StatsUpdater.update(deck, context: modelContext)
+            stats = StatsStore.stats(for: deck, context: modelContext)
+            // Seed colours for decks that have none yet (older decks / freshly imported).
+            if deck.colorIdentity.isEmpty {
+                DeckColors.refresh(deck, context: modelContext)
+            }
+            // Refresh any cards whose prices are stale, then update totals + notify.
+            let ids = (deck.mainboard + deck.sideboard + deck.maybeboard).map(\.scryfallCardID)
+            let refreshed = await PriceRefresher.refreshCollection(ids: ids, context: modelContext)
+            if refreshed > 0 {
+                StatsUpdater.update(deck, context: modelContext)
+                stats = StatsStore.stats(for: deck, context: modelContext)
+                priceBanner = "Prices updated · \(refreshed) card\(refreshed == 1 ? "" : "s")"
+            }
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 filterButton
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                CollectionShareMenu(target: .deck(deck))
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -101,6 +119,7 @@ struct DeckView: View {
                     Button("Settings", systemImage: "gearshape") { showEdit.toggle() }
                 } label: {
                     Image(systemName: "ellipsis")
+                        .accessibilityLabel("More")
                 }
             }
         }
@@ -108,7 +127,7 @@ struct DeckView: View {
             DeckStatsSheet(deck: deck)
         }
         .sheet(isPresented: $showEdit) {
-            EditDeckSheet(deck: deck)
+            EditDeckSheet(deck: deck, onDelete: { deleteAndPop() })
         }
         .sheet(isPresented: $showNotes) {
             DeckNotesSheet(deck: deck)
@@ -118,7 +137,7 @@ struct DeckView: View {
             PaywallView()
         }
         .sheet(isPresented: $showFilters) {
-            FilterSheetView(context: .collection, onApply: { applyFilter() }, filters: $filters)
+            FilterSheetView(context: .deck, onApply: { applyFilter() }, filters: $filters)
         }
     }
 
@@ -136,6 +155,7 @@ struct DeckView: View {
                 }
             } label: {
                 Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                    .accessibilityLabel("Filter")
             }
         } else {
             Button("Filter", systemImage: "line.3.horizontal.decrease.circle") {
@@ -147,5 +167,17 @@ struct DeckView: View {
     private func applyFilter() {
         isFiltering = true
         filterToken += 1
+    }
+
+    /// Delete this deck and pop back to the list. Pops first, then deletes on the next runloop so the
+    /// view stops rendering the deck before it's removed.
+    private func deleteAndPop() {
+        dismiss()
+        let target = deck
+        DispatchQueue.main.async {
+            Spotlight.remove(kind: .deck, id: target.id)
+            StatsStore.remove(for: target.id, context: modelContext)
+            modelContext.delete(target)
+        }
     }
 }

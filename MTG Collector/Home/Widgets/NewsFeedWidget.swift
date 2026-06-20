@@ -75,9 +75,18 @@ struct NewsFeedWidget: View {
             thumbnail(item)
 
             VStack(alignment: .leading, spacing: 4) {
-                Label(item.source.rawValue, systemImage: item.source.systemImage)
-                    .font(.caption2.bold())
-                    .foregroundColor(item.source.color)
+                HStack(spacing: 4) {
+                    BrandLogoView(domain: item.source.domain) {
+                        Image(systemName: item.source.systemImage)
+                            .foregroundColor(item.source.color)
+                    }
+                    .frame(width: 14, height: 14)
+                    .clipShape(RoundedRectangle(cornerRadius: 3))
+
+                    Text(item.source.rawValue)
+                        .foregroundColor(item.source.color)
+                }
+                .font(.caption2.bold())
 
                 Text(item.title)
                     .font(.subheadline.weight(.medium))
@@ -124,9 +133,12 @@ struct NewsFeedWidget: View {
         source.color.opacity(0.15)
             .frame(width: size, height: size)
             .overlay(
-                Image(systemName: source.systemImage)
-                    .font(.title2)
-                    .foregroundColor(source.color)
+                BrandLogoView(domain: source.domain) {
+                    Image(systemName: source.systemImage)
+                        .font(.title2)
+                        .foregroundColor(source.color)
+                }
+                .frame(width: size * 0.5, height: size * 0.5)
             )
     }
 

@@ -27,7 +27,6 @@ struct DeckGridWidget: View {
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.appTint) private var tint
-    @State private var commanderColors: [String] = []
 
     // MARK: View
 
@@ -50,7 +49,7 @@ struct DeckGridWidget: View {
                     .bold()
                     .lineLimit(1)
                 HStack {
-                    PricePill(stats: deck.stats)
+                    PricePill(stats: StatsStore.stats(for: deck, context: modelContext), compact: true)
                         .lineLimit(1)
 
                     Image(systemName: "square.stack")
@@ -63,23 +62,20 @@ struct DeckGridWidget: View {
         .foregroundColor(.primary)
         .padding(10)
         .widgetStyle()
-        .task {
-            if let commander = deck.commander, commanderColors.isEmpty {
-                commanderColors = await CardStore.resolve(commander.scryfallCardID, context: modelContext)?.colors ?? []
-            }
-        }
+        // Make the whole tile the long-press target for the context menu, not just the cover.
+        .contentShape(Rectangle())
     }
 
     // MARK: Subviews
 
     @ViewBuilder
     private var cover: some View {
-        if let image = ImageManager.fetchImage(withIdentifier: deck.id) {
+        if let image = deck.coverUIImage {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()
         } else {
-            Image("MtgDeck")
+            Image("CardholdIcon")
                 .resizable()
                 .renderingMode(.template)
                 .scaledToFit()
@@ -102,8 +98,8 @@ struct DeckGridWidget: View {
             }
             Spacer()
             HStack {
-                // Commander colour identity (resolved from cache)
-                ForEach(commanderColors, id: \.self) { color in
+                // Deck colour identity (stored on the deck, auto-set from its leaders)
+                ForEach(deck.colorIdentity, id: \.self) { color in
                     OracleSymbolImage(symbol: "{\(color)}", size: 20)
                         .shadow(radius: 4)
                 }

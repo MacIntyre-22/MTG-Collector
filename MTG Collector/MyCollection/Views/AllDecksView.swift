@@ -27,10 +27,12 @@ struct AllDecksView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ProAccessManager.self) private var pro
     @Query var decks: [Deck]
-    @State var selectedDeck: Deck?
-    @State var showAlert: Bool = false
     @State var newDeck: Bool = false
     @State var showPaywall: Bool = false
+    /// Context-menu actions, presented as sheets owned here (so they work from a long-press).
+    @State private var statsDeck: Deck?
+    @State private var notesDeck: Deck?
+    @State private var editDeck: Deck?
 
     /// Free tier allows up to 3 decks.
     private var canCreate: Bool { pro.isPro || decks.count < 3 }
@@ -46,26 +48,50 @@ struct AllDecksView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(sortedDecks) { deck in
-                        NavigationLink(destination: DeckView(deck: deck)) {
-                            DeckGridWidget(deck: deck)
-                                .contextMenu {
-                                    NavigationLink(destination: EditDeckSheet(deck: deck)) {
-                                        Text("Edit")
-                                    }
-                                    Button("Delete", role: .destructive) {
-                                        selectedDeck = deck
-                                        showAlert.toggle()
-                                    }
-                                }
+            Group {
+                if sortedDecks.isEmpty {
+                    VStack(spacing: 16) {
+                        Image(systemName: "rectangle.stack")
+                            .font(.system(size: 60))
+                            .foregroundStyle(.secondary)
+                        Text("No Decks")
+                            .font(.title2.bold())
+                        Text("Build a deck to track its cards, mana curve and format legality.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                        PrimaryGlassButton(title: "New Deck", systemImage: "plus") {
+                            if canCreate { newDeck.toggle() } else { showPaywall = true }
                         }
+                        .padding(.horizontal, 32)
+                        .padding(.top, 8)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding()
+                } else {
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(sortedDecks) { deck in
+                                NavigationLink(destination: DeckView(deck: deck)) {
+                                    DeckGridWidget(deck: deck)
+                                        .contextMenu {
+                                            // Mirrors the deck screen's toolbar (minus filter).
+                                            CollectionShareMenu(target: .deck(deck), compact: false)
+                                            Button("Stats", systemImage: "chart.bar") {
+                                                if pro.isPro { statsDeck = deck } else { showPaywall = true }
+                                            }
+                                            Button("Notes", systemImage: "note.text") { notesDeck = deck }
+                                            Button("Settings", systemImage: "gearshape") { editDeck = deck }
+                                        }
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                    .padding(.horizontal, 10)
                 }
-                .padding()
             }
-            .padding(.horizontal, 10)
             .navigationTitle("My Decks")
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -80,22 +106,23 @@ struct AllDecksView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
-            .alert("Confirm", isPresented: $showAlert) {
-                Button("Cancel", role: .cancel) {}
-                
-                Button("Delete", role: .destructive) {
-                    deleteDeck()
-                }
-            } message: {
-                Text("Delete this Deck?")
+            .sheet(item: $statsDeck) { deck in
+                DeckStatsSheet(deck: deck)
+            }
+            .sheet(item: $notesDeck) { deck in
+                DeckNotesSheet(deck: deck)
+                    .presentationDetents([.medium, .large])
+            }
+            .sheet(item: $editDeck) { deck in
+                EditDeckSheet(deck: deck, onDelete: { deleteDeck(deck) })
             }
         }
     }
-    
+
     // MARK: deleteDeck
-    func deleteDeck() {
-        if let deck = selectedDeck {
-            modelContext.delete(deck)
-        }
+    func deleteDeck(_ deck: Deck) {
+        Spotlight.remove(kind: .deck, id: deck.id)
+        StatsStore.remove(for: deck.id, context: modelContext)
+        modelContext.delete(deck)
     }
 }

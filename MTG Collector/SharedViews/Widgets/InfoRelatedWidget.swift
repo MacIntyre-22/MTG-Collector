@@ -24,6 +24,7 @@ struct InfoRelatedWidget: View {
     
     @State var relatedCards: [Card] = []
     @State private var isLoaded = false
+    @State private var selectedCard: Card?
     
     // MARK: View
 
@@ -32,12 +33,15 @@ struct InfoRelatedWidget: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(relatedCards) { card in
-                        NavigationLink(destination: CardInfoView(card: card)) {
-                            CardGridView(card: card, showPreviews: true, isFoil: false)
+                        Button {
+                            selectedCard = card
+                        } label: {
+                            CardGridView(card: card, showPreviews: true, finish: .nonfoil)
                                 .frame(maxWidth: 180)
                                 .background(Color.gray.opacity(0.18))
                                 .cornerRadius(10)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
                 .frame(maxHeight: 275)
@@ -53,22 +57,20 @@ struct InfoRelatedWidget: View {
             .cornerRadius(9)
             .widgetStyle()
         }
+        .cardInfoSheet(card: $selectedCard)
     }
     
     
     // MARK: getCardParts
-    
-    /// fetch card parts using api
+
+    /// Resolve the related cards in a single batched request (`/cards/collection`) rather than one
+    /// fetch per part — the old loop fired N rate-limited requests, so a card with many parts crawled.
+    /// Capped defensively; the caller (CardInfoView) already hides generic-token dumps.
     func getCardParts() async {
-        for card in cardParts {
-            /// fetch a card object by the id privided in card parts
-            if let jsonPart = await SFAPI.fetchCardURI(uri: card.uri) {
-                /// convert and add
-                let modelPart = SFAPI.JSONtoModel(json: jsonPart)
-                relatedCards.append(modelPart)
-            }
-            
-        }
+        let ids = cardParts.prefix(20).map { CardIdentifierJSON(id: $0.id) }
+        guard !ids.isEmpty else { return }
+        let (found, _) = await SFAPI.fetchCardCollection(identifiers: ids)
+        relatedCards = found.map(SFAPI.JSONtoModel)
     }
 }
 

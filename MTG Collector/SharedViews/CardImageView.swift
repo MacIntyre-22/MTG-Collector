@@ -63,8 +63,11 @@ struct CardImageView: View {
                         .scaledToFit()
                         .cornerRadius(8)
                         .onLongPressGesture {
+                            HapticManager.medium()
                             showFullScreen = true
                         }
+                        .accessibilityLabel(name)
+                        .accessibilityHint("Press and hold to view full screen")
                         .fullScreenCover(isPresented: $showFullScreen) {
                             ZStack() {
                                 /// blurred card art filling the background.

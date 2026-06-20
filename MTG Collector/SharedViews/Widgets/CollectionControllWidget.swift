@@ -42,7 +42,12 @@ struct CollectionControllWidget: View {
                 Button {
                     addCard(collection: &general.cards, owner: general)
                 } label: {
-                    Label("My Hold", systemImage: "square.stack")
+                    Label {
+                                Text("My Hold")
+                            } icon: {
+                                Image("CardholdIcon")
+                                    .renderingMode(.template)
+                            }
                 }
             }
 

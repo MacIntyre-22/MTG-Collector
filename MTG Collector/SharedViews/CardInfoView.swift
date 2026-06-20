@@ -32,6 +32,8 @@ struct CardInfoView: View {
     @State private var isFlipped: Bool = false
     /// Vertical scroll offset, used to shrink the card as the user scrolls down.
     @State private var scrollY: CGFloat = 0
+    /// Card rulings, fetched once from `rulings_uri` when the sheet opens.
+    @State private var rulings: [Ruling] = []
 
     // MARK: Derived
 
@@ -61,6 +63,18 @@ struct CardInfoView: View {
         let t = min(max(scrollY, 0), 250) / 250
         return 1 - 0.18 * t
     }
+
+    /// Related parts worth showing: drop the card itself (tokens list themselves in `all_parts`).
+    private var relatedParts: [RelatedCardObject] {
+        card.allParts.filter { $0.id != card.id && !$0.id.isEmpty }
+    }
+
+    /// Generic tokens (Food, Treasure, Clue…) list *every* card that makes them — dozens to hundreds
+    /// — which is noise and slow to load. Only show Related Cards for a sensible handful.
+    private var showsRelated: Bool { (1...15).contains(relatedParts.count) }
+
+    /// Notable card traits (Alchemy, Reserved List, card type…) shown as tappable pills in Details.
+    private var cardTraits: [InfoDetail] { CardTraits.traits(for: card) }
 
     // MARK: View
 
@@ -102,22 +116,20 @@ struct CardInfoView: View {
                         section("Details") {
                             VStack(alignment: .leading) {
                                 if let face = currentFace {
-                                    InfoDisplayWidget(
-                                        name: face.name,
-                                        manaCost: face.manaCost,
-                                        cmc: face.cmc,
-                                        typeLine: face.typeLine,
-                                        colorIdentity: card.colorIdentity,
-                                        power: face.power,
-                                        toughness: face.toughness,
-                                        loyalty: face.loyalty,
-                                        defense: face.defense,
-                                        keywords: face.keywords,
-                                        producedMana: face.producedMana,
-                                        oracleText: face.oracleText,
-                                        flavorText: face.flavorText
-                                    )
+                                    // Flippable DFC — details for the face currently in view.
+                                    faceDetails(face, traits: cardTraits)
+                                } else if card.cardFaces.count > 1 {
+                                    // Single-image multi-face (split / aftermath / adventure / flip):
+                                    // no face to flip to, so stack each half's details with a divider.
+                                    // Card-level trait pills show once, above the first face only.
+                                    ForEach(Array(card.cardFaces.enumerated()), id: \.offset) { index, face in
+                                        if index > 0 {
+                                            Divider().padding(.vertical, 8)
+                                        }
+                                        faceDetails(face, traits: index == 0 ? cardTraits : [])
+                                    }
                                 } else {
+                                    // Truly single-faced — name lives in the nav title.
                                     InfoDisplayWidget(
                                         manaCost: card.manaCost,
                                         cmc: card.cmc,
@@ -130,7 +142,8 @@ struct CardInfoView: View {
                                         keywords: card.keywords,
                                         producedMana: card.producedMana,
                                         oracleText: card.oracleText,
-                                        flavorText: card.flavorText
+                                        flavorText: card.flavorText,
+                                        traits: cardTraits
                                     )
                                 }
 
@@ -139,6 +152,19 @@ struct CardInfoView: View {
                             .padding(15)
                             .cornerRadius(9)
                             .widgetStyle()
+                            // Flip control lives here for two-faced cards, aligned with the name.
+                            .overlay(alignment: .topTrailing) {
+                                if flippable {
+                                    flipButton.padding(15)
+                                }
+                            }
+                        }
+
+                        /// Card rulings — each ruling its own collapsible row; only shown when present
+                        if !rulings.isEmpty {
+                            section("Rulings") {
+                                InfoRulingsWidget(rulings: rulings)
+                            }
                         }
 
                         /// Legalities info here
@@ -146,10 +172,10 @@ struct CardInfoView: View {
                             InfoLegalWidget(legalities: card.legalities)
                         }
 
-                        /// related card items
-                        if !card.allParts.isEmpty {
+                        /// related card items (hidden for generic-token dumps — see `showsRelated`)
+                        if showsRelated {
                             section("Related Cards") {
-                                InfoRelatedWidget(cardParts: card.allParts)
+                                InfoRelatedWidget(cardParts: relatedParts)
                             }
                         }
 
@@ -188,19 +214,64 @@ struct CardInfoView: View {
                     scrollY = newValue
                 }
             }
-            .navigationTitle(currentName)
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
+                ToolbarItem(placement: .principal) {
+                    // Name with inline icons (Alchemy "A-" → flask, "//" → a layout-based glyph).
+                    CardNameView(name: currentName, layout: card.layout)
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu("Add", systemImage: "plus") {
                         CollectionControllWidget(card: card)
                     }
                 }
             })
+            .task {
+                guard rulings.isEmpty, !card.rulingsURI.isEmpty else { return }
+                rulings = await SFAPI.fetchRulings(uri: card.rulingsURI)
+            }
         }
     }
 
     // MARK: Subviews
+
+    /// One face's details, headed by its own name. Used both for the current face of a flippable
+    /// DFC and for each half of a single-image multi-face card (split / adventure / aftermath / flip).
+    private func faceDetails(_ face: CardFace, traits: [InfoDetail] = []) -> some View {
+        InfoDisplayWidget(
+            name: face.name,
+            manaCost: face.manaCost,
+            cmc: face.cmc,
+            typeLine: face.typeLine,
+            colorIdentity: card.colorIdentity,
+            power: face.power,
+            toughness: face.toughness,
+            loyalty: face.loyalty,
+            defense: face.defense,
+            keywords: face.keywords,
+            producedMana: face.producedMana,
+            oracleText: face.oracleText,
+            flavorText: face.flavorText,
+            traits: traits
+        )
+    }
+
+    /// Flip control for two-faced cards, styled as a chip to match the detail panel's keyword pills.
+    private var flipButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.6)) { isFlipped.toggle() }
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: "arrow.left.arrow.right")
+                Text("Flip")
+            }
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(Capsule().fill(Color.primary.opacity(0.08)))
+        }
+        .buttonStyle(.plain)
+    }
 
     /// Large card image at the top, with the same 3D flip control used in the card grid.
     private var cardImage: some View {
@@ -213,23 +284,6 @@ struct CardInfoView: View {
                 CardImageView(maxWidth: 320, name: back.name, imageURIs: back.imageURIs)
                     .opacity(isFlipped ? 1 : 0)
                     .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
-
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.6)) { isFlipped.toggle() }
-                        } label: {
-                            Image(systemName: "arrow.left.arrow.right.circle.fill")
-                                .font(.title)
-                                .foregroundColor(.white)
-                                .shadow(radius: 7)
-                        }
-                    }
-                    Spacer()
-                }
-                .padding(.top, 14)
-                .padding(.trailing, 18)
             } else {
                 CardImageView(maxWidth: 320, name: card.name, imageURIs: card.imageURIs)
             }

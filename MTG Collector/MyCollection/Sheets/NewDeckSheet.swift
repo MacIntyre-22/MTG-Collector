@@ -44,10 +44,15 @@ struct NewDeckSheet: View {
         "penny"
     ]
 
+    /// Optional card list to pre-load (e.g. a .txt / .csv opened from Files and routed here).
+    var initialImportText: String = ""
+
     // MARK: State Properties
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
+    @Environment(ProAccessManager.self) private var pro
+    @State private var showPaywall = false
     @State var name: String = ""
     @State var coverImage: String = ""
     @State var ruleType: String = "casual"
@@ -85,7 +90,7 @@ struct NewDeckSheet: View {
                             Color.gray
                                 .frame(width: 200, height: 200)
                                 .cornerRadius(10)
-                            Image(uiImage: selectedImage ?? UIImage(named: "MtgDeck")!)
+                            Image(uiImage: selectedImage ?? UIImage(named: "CardholdIcon")!)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 200, height: 200)
@@ -116,42 +121,57 @@ struct NewDeckSheet: View {
                 }
 
                 Section("Import Cards (Optional)") {
-                    ZStack(alignment: .topLeading) {
-                        if importVM.rawText.isEmpty {
-                            Text("Paste a deck list…\n4 Lightning Bolt\n2 Counterspell\n\nSideboard\n3 Negate")
-                                .foregroundStyle(.secondary)
-                                .font(.callout)
-                                .padding(.top, 8)
-                                .padding(.leading, 4)
-                                .allowsHitTesting(false)
-                        }
-                        TextEditor(text: $importVM.rawText)
-                            .frame(minHeight: 140)
-                            .onChange(of: importVM.rawText) { _, _ in
-                                importVM.parse()
-                            }
-                    }
-
-                    Button {
-                        showFileImporter = true
-                    } label: {
-                        Label("Import .txt File", systemImage: "doc.text")
-                    }
-
-                    if !boardSummary.isEmpty {
-                        ForEach(boardSummary, id: \.board) { item in
-                            HStack {
-                                Text(item.board.rawValue.capitalized)
-                                Spacer()
-                                Text("\(item.count) cards")
+                    if pro.isPro {
+                        ZStack(alignment: .topLeading) {
+                            if importVM.rawText.isEmpty {
+                                Text("Paste a deck list…\n4 Lightning Bolt\n2 Counterspell\n\nSideboard\n3 Negate")
                                     .foregroundStyle(.secondary)
+                                    .font(.callout)
+                                    .padding(.top, 8)
+                                    .padding(.leading, 4)
+                                    .allowsHitTesting(false)
                             }
-                            .font(.caption)
+                            TextEditor(text: $importVM.rawText)
+                                .frame(minHeight: 140)
+                                .onChange(of: importVM.rawText) { _, _ in
+                                    importVM.parse()
+                                }
                         }
+
+                        Button {
+                            showFileImporter = true
+                        } label: {
+                            Label("Import .txt / .csv File", systemImage: "doc.text")
+                        }
+
+                        if !boardSummary.isEmpty {
+                            ForEach(boardSummary, id: \.board) { item in
+                                HStack {
+                                    Text(item.board.rawValue.capitalized)
+                                    Spacer()
+                                    Text("\(item.count) cards")
+                                        .foregroundStyle(.secondary)
+                                }
+                                .font(.caption)
+                            }
+                        }
+                    } else {
+                        ProUpgradeButton(
+                            title: "Import is a Pro feature",
+                            message: "Upgrade to build decks from a text or .csv list."
+                        ) { showPaywall = true }
                     }
                 }
             }
             .navigationTitle("New Deck")
+            .onAppear {
+                // Seed a list opened from Files (parse fires via the editor's onChange). The file
+                // flow is Pro-gated upstream; guard here too so import stays Pro-only.
+                if pro.isPro, importVM.rawText.isEmpty, !initialImportText.isEmpty {
+                    importVM.rawText = initialImportText
+                    importVM.parse()
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -173,9 +193,10 @@ struct NewDeckSheet: View {
                     Task { await commitImport() }
                 }
             }
+            .sheet(isPresented: $showPaywall) { PaywallView() }
             .fileImporter(
                 isPresented: $showFileImporter,
-                allowedContentTypes: [.plainText, .text],
+                allowedContentTypes: [.plainText, .commaSeparatedText, .text],
                 allowsMultipleSelection: false
             ) { result in
                 loadImportFile(result)
@@ -236,11 +257,9 @@ struct NewDeckSheet: View {
     private func buildDeck(resolved: [ResolvedDeckCard]) {
         let deck = Deck(name: name, notes: "", ruleType: ruleType)
 
-        if let image = selectedImage {
-            ImageManager.saveImage(forImage: image, withIdentifier: deck.id)
-        }
+        deck.setCover(selectedImage)
 
-        Spotlight.indexData(id: deck.id, name: deck.name, image: ImageManager.fetchImage(withIdentifier: deck.id), description: "Deck in your collection.")
+        Spotlight.index(kind: .deck, id: deck.id, name: deck.name, image: deck.coverUIImage, description: "Deck in your collection.")
         modelContext.insert(deck)
 
         guard !resolved.isEmpty else { return }
@@ -255,10 +274,11 @@ struct NewDeckSheet: View {
             case .mainboard: deck.mainboard.append(entry)
             case .sideboard: deck.sideboard.append(entry)
             case .maybeboard: deck.maybeboard.append(entry)
-            case .commander: deck.commander = entry
+            case .commander: deck.designateImportedLeader(entry)
             }
         }
 
+        DeckColors.refresh(deck, context: modelContext)
         StatsUpdater.update(deck, context: modelContext)
         HapticManager.heavy()
         HapticManager.success()
@@ -274,6 +294,7 @@ struct NewDeckSheet: View {
 
         if let text = try? String(contentsOf: url, encoding: .utf8) {
             importVM.rawText = text
+            importVM.sourceFilename = url.lastPathComponent
             importVM.parse()
         }
     }

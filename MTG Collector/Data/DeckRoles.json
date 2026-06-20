@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "note": "Vocabulary for DeckRoleClassifier. `keywords` match Scryfall's structured card keywords (case-insensitive). `text` are oracle-text cues: a plain string is a substring match; a string with '|' requires ALL parts present (AND). `excludeLands` drops lands from the role (they are the mana base, not ramp). `summary` is the beginner-facing explainer shown when a role chip is tapped. Add a role object or extend a list to tune — no code change.",
+  "roles": [
+    {
+      "id": "ramp",
+      "label": "Ramp",
+      "summary": "Cards that produce extra mana so you can cast bigger spells sooner — mana rocks, mana dorks, and land fetchers. Decks that want to ramp usually run around ten or more pieces.",
+      "excludeLands": true,
+      "keywords": [],
+      "text": [
+        "add {",
+        "add one mana",
+        "add two mana",
+        "add three mana",
+        "search your library|land",
+        "untap target land",
+        "that land's controller adds"
+      ]
+    },
+    {
+      "id": "draw",
+      "label": "Card Draw",
+      "summary": "Cards that refill your hand so you keep finding gas instead of running empty. Steady card draw is one of the biggest things separating consistent decks from streaky ones.",
+      "excludeLands": false,
+      "keywords": ["Cycling", "Investigate", "Connive", "Learn", "Channel"],
+      "text": [
+        "draw a card",
+        "draw two cards",
+        "draw three cards",
+        "draw|cards",
+        "draws|cards"
+      ]
+    },
+    {
+      "id": "removal",
+      "label": "Removal",
+      "summary": "Interaction that deals with the opponent's threats — destroying, exiling, countering, bouncing, or shrinking them. Removal is how you stop them from simply executing their own plan.",
+      "excludeLands": false,
+      "keywords": ["Fight"],
+      "text": [
+        "destroy target",
+        "destroy all",
+        "destroy each",
+        "exile target",
+        "exile all",
+        "exile each",
+        "counter target",
+        "return target",
+        "deals damage to any target",
+        "deals damage to target",
+        "fights",
+        "-1/-1",
+        "each opponent sacrifices",
+        "target player sacrifices"
+      ]
+    },
+    {
+      "id": "tutor",
+      "label": "Tutor",
+      "summary": "Cards that search your library for a specific card, letting you find your best answer or combo piece on demand. Tutors make a deck more consistent but thin your library.",
+      "excludeLands": false,
+      "keywords": [],
+      "text": [
+        "search your library for a card",
+        "search your library for a creature",
+        "search your library for an",
+        "search your library for up to"
+      ]
+    }
+  ]
+}

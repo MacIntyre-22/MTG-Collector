@@ -30,8 +30,16 @@ final class Binder: Collection {
     /// Permanent catch-all binder (My Hold tab). Created on first launch, never deleted.
     var isGeneral: Bool = false
 
-    /// Array of CardEntries to store all cards added to this binder
-    @Relationship(deleteRule: .cascade) var cards: [CardEntry] = []
+    /// Backing store for the binder's cards. Optional because CloudKit requires to-many
+    /// relationships to be optional; the rest of the app uses the non-optional `cards` facade.
+    @Relationship(deleteRule: .cascade, inverse: \CardEntry.binder) var cardsStore: [CardEntry]?
+
+    /// Non-optional accessor so existing code can read / append / removeAll without unwrapping.
+    /// (Computed → not persisted; SwiftData only stores `cardsStore`.)
+    var cards: [CardEntry] {
+        get { cardsStore ?? [] }
+        set { cardsStore = newValue }
+    }
 
     // MARK: Quantity-based Computed Properties (no card data needed)
 
@@ -48,13 +56,8 @@ final class Binder: Collection {
         activeCards.count
     }
 
-    // MARK: Stats Convenience (read stored CollectionStats)
-
-    var totalPrice: Double { stats?.totalPriceUSD ?? 0 }
-    var rarities: [String: Int] { stats?.rarityBreakdown ?? [:] }
-    var manaTypeCount: [String: Int] { stats?.colourBreakdown ?? [:] }
-    var cardTypeCount: [String: Int] { stats?.typeBreakdown ?? [:] }
-    var highestPricedCardID: String { stats?.highestPricedCardID ?? "" }
+    // Stats (price, rarity/colour/type breakdowns, highest card) live in the local CollectionStats
+    // and are read via StatsStore.stats(for:context:) — they need a context, so not on the model.
 
     // MARK: Initializer
 

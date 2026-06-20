@@ -17,6 +17,7 @@
 
 import SwiftUI
 import SwiftData
+import CoreSpotlight
 
 // MARK: Types
 
@@ -25,58 +26,44 @@ struct MTG_CollectorApp: App {
 
     // MARK: Stored Properties
 
-    let container: ModelContainer
+    /// Routes Home Screen quick actions (long-press the app icon) into AppRouter.
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
+    /// Shared two-store container (also used by App Intents that read collection data).
+    let container = AppModelContainer.shared
+
+    /// Shared navigation coordinator — also reachable by App Intents and Spotlight handlers.
+    @State private var router = AppRouter.shared
 
     // MARK: Initializer
 
     init() {
+        // Make the Erben Gothic "Cardhold" wordmark available app-wide.
+        BrandFont.register()
+
         // Generous shared URL cache so card art and API JSON persist on disk between launches —
         // backs ImageCache and cuts repeat network work (a major source of UI lag).
         URLCache.shared = URLCache(memoryCapacity: 64 * 1024 * 1024,   // 64 MB RAM
                                    diskCapacity: 512 * 1024 * 1024)     // 512 MB disk
 
-        do {
-            // Synced store: only lightweight records travel to iCloud once sync is enabled.
-            // No @Attribute(.unique) here — CloudKit-backed stores reject unique constraints.
-            let syncedSchema = Schema([
-                Collection.self,
-                Binder.self,
-                Deck.self,
-                CardEntry.self,
-                CollectionStats.self,
-                Settings.self
-            ])
-
-            // Local-only store: full card data + set reference data (SetInfo uses .unique),
-            // re-fetched from Scryfall per device. Never synced.
-            let cacheSchema = Schema([CardCache.self, SetInfo.self])
-
-            // iCloud sync follows the user's preference (stored in UserDefaults so it's readable
-            // here, before the SwiftData Settings record exists). Default on; applies at launch.
-            // Verify on a real device — the simulator is unreliable for CloudKit.
-            let syncEnabled = UserDefaults.standard.object(forKey: "iCloudSyncEnabled") as? Bool ?? true
-            let syncedConfig = ModelConfiguration(
-                "Synced",
-                schema: syncedSchema,
-                cloudKitDatabase: syncEnabled ? .automatic : .none
-            )
-            let cacheConfig = ModelConfiguration("Cache", schema: cacheSchema, cloudKitDatabase: .none)
-
-            container = try ModelContainer(
-                for: AppSchema.fullSchema,
-                migrationPlan: AppMigrationPlan.self,
-                configurations: syncedConfig, cacheConfig
-            )
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
+        // Start observing CloudKit sync events from launch so Settings can show real status.
+        _ = CloudSyncMonitor.shared
     }
 
     // MARK: View
 
     var body: some Scene {
         WindowGroup {
-            MTG_TabView()
+            // Hold a brief splash while universal assets (symbol map + everyday pips) warm, so the
+            // first screen draws instantly instead of rendering pips one by one. Capped internally.
+            LaunchGate {
+                MTG_TabView()
+                    .environment(router)
+                    // Spotlight result tapped → route to the indexed binder/deck.
+                    .onContinueUserActivity(CSSearchableItemActionType) { activity in
+                        Spotlight.handle(activity: activity, router: router)
+                    }
+            }
         }
         .modelContainer(container)
     }

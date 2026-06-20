@@ -58,6 +58,8 @@ struct GridPriceWidget: View {
             .padding(5)
             .foregroundColor(.white)
             .holoPill(level: shine, colors: holoColors, tint: tint)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(finish == "Base" ? "Regular" : finish) price \(currency.format(price))")
     }
 }
 

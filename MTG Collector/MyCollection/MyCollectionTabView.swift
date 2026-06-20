@@ -26,14 +26,23 @@ struct MyCollectionTabView: View {
     // MARK: State Properties
 
     @Environment(\.modelContext) var modelContext
+    @Environment(AppRouter.self) private var router
+    @Environment(ProAccessManager.self) private var pro
     @Query var binders: [Binder]
     @Query var decks: [Deck]
 
     @State private var filters = FilterState()
     @State private var filteredEntries: [CardEntry] = []
+    /// Transient "prices updated" banner shown after an on-open refresh of the general collection.
+    @State private var priceBanner: String?
     @State private var isFiltering = false
     @State private var showFilters = false
     @State private var showSettings = false
+    @State private var showStats = false
+    @State private var showPaywall = false
+    @State private var showImport = false
+    @State private var routedBinder: Binder?
+    @State private var routedDeck: Deck?
 
     let cardColumns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 15)]
 
@@ -54,10 +63,10 @@ struct MyCollectionTabView: View {
 
                     HStack(spacing: 15) {
                         NavigationLink(destination: AllBindersView()) {
-                            collectionButton(image: "MtgBinder", label: "Binders")
+                            collectionButton(systemImage: "folder.fill", label: "Binders")
                         }
                         NavigationLink(destination: AllDecksView()) {
-                            collectionButton(image: "MtgDeck", label: "Decks")
+                            collectionButton(systemImage: "rectangle.stack.fill", label: "Decks")
                         }
                     }
                     .padding(.horizontal, 10)
@@ -69,13 +78,30 @@ struct MyCollectionTabView: View {
                 .padding(.top, 10)
             }
             .navigationTitle("My Hold")
+            .navigationDestination(item: $routedBinder) { binder in
+                BinderView(binder: binder)
+            }
+            .navigationDestination(item: $routedDeck) { deck in
+                DeckView(deck: deck)
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     filterButton
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Settings", systemImage: "gearshape") {
-                        showSettings = true
+                    Button("Import", systemImage: "square.and.arrow.down") {
+                        pro.isPro ? (showImport = true) : (showPaywall = true)
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button("Stats", systemImage: "chart.bar") {
+                            pro.isPro ? (showStats = true) : (showPaywall = true)
+                        }
+                        Button("Settings", systemImage: "gearshape") { showSettings = true }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .accessibilityLabel("More")
                     }
                 }
             }
@@ -84,30 +110,67 @@ struct MyCollectionTabView: View {
                     applyFilter()
                 }, filters: $filters)
             }
+            .sheet(isPresented: $showStats) {
+                WholeCollectionStatsSheet(binders: binders, decks: decks)
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+            }
             .sheet(isPresented: $showSettings) {
                 if let general = generalBinder {
                     MyCollectionSettingsSheet(collection: general)
                 }
             }
+            .sheet(isPresented: $showImport) {
+                if let general = generalBinder {
+                    ImportCardsSheet(target: .binder(general))
+                }
+            }
+            .priceRefreshBanner($priceBanner)
             .task {
                 ensureGeneralCollection()
                 refreshStats()
+                indexForSpotlight()
                 if let general = generalBinder {
-                    await CardStore.prime(general.activeCards.map(\.scryfallCardID), context: modelContext)
+                    let ids = general.activeCards.map(\.scryfallCardID)
+                    await CardStore.prime(ids, context: modelContext)
+                    // Refresh stale prices for the general collection, then update totals + notify.
+                    let refreshed = await PriceRefresher.refreshCollection(ids: ids, context: modelContext)
+                    if refreshed > 0 {
+                        refreshStats()
+                        priceBanner = "Prices updated · \(refreshed) card\(refreshed == 1 ? "" : "s")"
+                    }
                 }
             }
+            .onAppear { consumeRouterRequests() }
+            .onChange(of: router.pendingBinderID) { _, _ in consumeRouterRequests() }
+            .onChange(of: router.pendingDeckID) { _, _ in consumeRouterRequests() }
+        }
+    }
+
+    // MARK: Deep linking
+
+    /// Push a binder or deck the router asked us to open (from Spotlight or a Siri shortcut),
+    /// resolving the id against the live query. Each request is cleared once handled.
+    private func consumeRouterRequests() {
+        if let id = router.pendingBinderID {
+            router.pendingBinderID = nil
+            routedBinder = binders.first { $0.id == id && !$0.isDeleted }
+        }
+        if let id = router.pendingDeckID {
+            router.pendingDeckID = nil
+            routedDeck = decks.first { $0.id == id && !$0.isDeleted }
         }
     }
 
     // MARK: Subviews
 
-    private func collectionButton(image: String, label: String) -> some View {
+    private func collectionButton(systemImage: String, label: String) -> some View {
         VStack(spacing: 8) {
-            Image(image)
+            Image(systemName: systemImage)
                 .resizable()
-                .renderingMode(.template)
                 .scaledToFit()
-                .frame(width: 60, height: 60)
+                .frame(width: 50, height: 50)
                 .foregroundColor(.primary)
             Text(label)
                 .font(.title3)
@@ -184,6 +247,7 @@ struct MyCollectionTabView: View {
                 }
             } label: {
                 Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                    .accessibilityLabel("Filter")
             }
         } else {
             Button("Filter", systemImage: "line.3.horizontal.decrease.circle") {
@@ -213,16 +277,24 @@ struct MyCollectionTabView: View {
 
     // MARK: Helpers
 
-    /// Create the permanent "My Hold" catch-all binder on first launch if it's missing,
-    /// and normalise the name of any binder created under the old "General Collection" label.
+    /// Ensure the permanent "My Hold" catch-all exists (safety net — it's normally created at app
+    /// launch in MTG_TabView). See `GeneralCollection.ensure`.
     private func ensureGeneralCollection() {
-        if let general = binders.first(where: { $0.isGeneral }) {
-            if general.name == "General Collection" {
-                general.name = "My Hold"
-            }
-        } else {
-            let general = Binder(name: "My Hold", isGeneral: true)
-            modelContext.insert(general)
+        GeneralCollection.ensure(context: modelContext)
+    }
+
+    /// Make sure every current binder/deck is in the Spotlight index (covers items created
+    /// before indexing existed). CoreSpotlight dedupes by identifier, so re-indexing is cheap.
+    private func indexForSpotlight() {
+        for binder in binders where !binder.isDeleted && !binder.isGeneral {
+            Spotlight.index(kind: .binder, id: binder.id, name: binder.name,
+                            image: binder.coverUIImage,
+                            description: "Binder in your collection.")
+        }
+        for deck in decks where !deck.isDeleted {
+            Spotlight.index(kind: .deck, id: deck.id, name: deck.name,
+                            image: deck.coverUIImage,
+                            description: "Deck in your collection.")
         }
     }
 

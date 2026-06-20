@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "note": "Beginner-facing explainers for deck formats, keyed by lowercased rule type. Shown when the legality badge is tapped. FormatGlossary.swift appends a Legal / Not-Legal sentence, so these describe only the format itself. Definitions are original paraphrases. Unknown formats fall back to a generic line in code.",
+  "formats": {
+    "standard": {
+      "label": "Standard",
+      "definition": "Magic's core rotating format. Only sets from roughly the last two to three years are legal, so the card pool stays fresh. Decks are a minimum of 60 cards with up to four copies of any card other than basic lands."
+    },
+    "pioneer": {
+      "label": "Pioneer",
+      "definition": "A non-rotating format using cards from Return to Ravnica (2012) onward. Minimum 60 cards, up to four copies of each card."
+    },
+    "modern": {
+      "label": "Modern",
+      "definition": "A large non-rotating format with cards from Eighth Edition and Mirrodin (2003) onward. Minimum 60 cards, up to four copies of each card."
+    },
+    "legacy": {
+      "label": "Legacy",
+      "definition": "A format that uses nearly every card ever printed, governed by a banned list. Minimum 60 cards, up to four copies of each card."
+    },
+    "vintage": {
+      "label": "Vintage",
+      "definition": "Magic's most powerful format — almost every card is legal. A short banned list and a 'restricted' list (cards limited to a single copy) keep it in check. Minimum 60 cards."
+    },
+    "pauper": {
+      "label": "Pauper",
+      "definition": "A format where only cards printed at common rarity are legal. Minimum 60 cards, up to four copies of each card."
+    },
+    "commander": {
+      "label": "Commander",
+      "definition": "A singleton, usually-multiplayer format. You pick a legendary creature as your commander, then build a 100-card deck where every other card is a single copy and matches your commander's colour identity."
+    },
+    "brawl": {
+      "label": "Brawl",
+      "definition": "A singleton format like Commander but limited to Standard-legal cards. A 60-card deck led by a legendary creature or planeswalker, built to that leader's colour identity."
+    },
+    "oathbreaker": {
+      "label": "Oathbreaker",
+      "definition": "A singleton format led by a planeswalker plus a chosen 'signature spell'. 60-card decks are built to the planeswalker's colour identity."
+    },
+    "tiny leaders": {
+      "label": "Tiny Leaders",
+      "definition": "A singleton format led by a legendary creature, with 50-card decks limited to cards of mana value 3 or less."
+    },
+    "pauper commander": {
+      "label": "Pauper Commander",
+      "definition": "Commander restricted to commons, with an uncommon legendary creature as the commander. A 100-card singleton deck built to the commander's colour identity."
+    },
+    "historic": {
+      "label": "Historic",
+      "definition": "A non-rotating MTG Arena format spanning cards from across Arena's history, including some digital-only cards."
+    },
+    "alchemy": {
+      "label": "Alchemy",
+      "definition": "A rotating MTG Arena format that adds digital-only and rebalanced (A-) cards on top of the Standard card pool."
+    }
+  }
+}

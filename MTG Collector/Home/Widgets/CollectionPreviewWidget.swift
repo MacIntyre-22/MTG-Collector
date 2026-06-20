@@ -32,7 +32,7 @@ struct CollectionPreviewWidget: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("My Hold", systemImage: "rectangle.stack.fill")
+            Text("My Hold")
                 .font(.title2)
                 .bold()
                 .padding(.horizontal, 5)
