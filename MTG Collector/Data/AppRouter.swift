@@ -52,6 +52,10 @@ final class AppRouter {
     /// A deck id to push on the Collection tab. MyCollectionTabView resolves and clears it.
     var pendingDeckID: String?
 
+    /// A Scryfall card id to present as a card-info sheet (from a Spotlight card result). Resolved
+    /// and cleared by MTG_TabView, which floats the sheet over whatever tab is showing.
+    var pendingCardID: String?
+
     private init() {}
 
     // MARK: Intents
@@ -83,5 +87,11 @@ final class AppRouter {
     /// Switch to the Collection tab to surface the whole-collection summary.
     func showCollection() {
         selectedTab = .collection
+    }
+
+    /// Present a card's detail sheet (from a Spotlight card result). Doesn't change tabs — the
+    /// sheet floats over the current one.
+    func openCard(id: String) {
+        pendingCardID = id
     }
 }

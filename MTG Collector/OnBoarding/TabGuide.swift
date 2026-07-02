@@ -68,12 +68,12 @@ extension TabGuide {
         features: [
             Feature(icon: "sparkles", title: "A new discovery every day",
                     detail: "Hand-picked cards refreshed daily: the popular, the pricey, the budget gems, stunning full-art and the newest releases."),
-            Feature(icon: "arrow.trianglehead.2.clockwise", title: "Re-roll any row",
-                    detail: "Not feeling a pick? Tap shuffle for a fresh set in an instant."),
             Feature(icon: "rectangle.stack", title: "Dive deeper",
                     detail: "Tap View All to explore every card in a theme."),
             Feature(icon: "hand.tap", title: "Tap any card",
                     detail: "Open it for crisp art, live prices and official rulings."),
+            Feature(icon: "arrow.up.left.and.arrow.down.right", title: "Hold for full screen",
+                    detail: "Press and hold any card to fill the screen with its art."),
         ]
     )
 

@@ -5,9 +5,10 @@
 //  Created by Ben MacIntyre on 2026-06-18.
 //  Purpose:
 //      The finish treatment for a card image: instead of washing the whole card in colour, a
-//      foil/etched card gets an iridescent *border* with a sweeping sheen — the same finish language
-//      as the price pills (foil = rainbow, etched = silver/chrome from GridPriceWidget). Nonfoil
-//      renders nothing. Applied via the `cardFinish(_:)` modifier.
+//      foil/etched card gets an iridescent *border* (foil = rainbow, etched = silver/chrome — the
+//      same finish language as the price pills). It's a static gradient ring, no animation, so a
+//      grid full of foil cards doesn't run perpetual GPU work. Nonfoil renders nothing. Applied via
+//      the `cardFinish(_:)` modifier.
 //  External Types:
 //      CardFinish
 //
@@ -44,8 +45,6 @@ struct CardFinishBorder: View {
     var cornerRadius: CGFloat = 8
     var lineWidth: CGFloat = 3
 
-    @State private var shimmer = -1.0
-
     /// Same palettes as the finish price pills (foil = rainbow, etched = silver/chrome), wrapped so
     /// the gradient meets cleanly at the corners.
     private var colors: [Color] {
@@ -57,39 +56,16 @@ struct CardFinishBorder: View {
     }
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-        ZStack {
-            // Iridescent gradient ring — tilted to match the price pill's gradient direction, and
-            // kept translucent (like the pills) so it reads as a subtle sheen rather than popping.
-            shape
-                .strokeBorder(
-                    LinearGradient(colors: colors,
-                                   startPoint: UnitPoint(x: 0, y: 0.1),
-                                   endPoint: UnitPoint(x: 1, y: 0.9)),
-                    lineWidth: lineWidth
-                )
-                .opacity(0.55)
-
-            // Sweeping white sheen, masked to the ring so only the border catches the light. The
-            // band is taller than the card so it covers the top and bottom edges through the whole
-            // sweep, and the mask uses `strokeBorder` (inset) to match the visible ring exactly, so
-            // the sheen can't spill outside the card.
-            GeometryReader { geo in
-                Rectangle()
-                    .fill(LinearGradient(colors: [.clear, .white.opacity(0.4), .clear],
-                                         startPoint: .leading, endPoint: .trailing))
-                    .frame(width: geo.size.width * 0.4, height: geo.size.height * 2.4)
-                    .rotationEffect(.degrees(22))
-                    .position(x: geo.size.width / 2, y: geo.size.height / 2)
-                    .offset(x: shimmer * geo.size.width * 1.2)
-            }
-            .mask(shape.strokeBorder(lineWidth: lineWidth))
-        }
-        .allowsHitTesting(false)
-        .onAppear {
-            withAnimation(.easeInOut(duration: 2.6).repeatForever(autoreverses: false).delay(0.3)) {
-                shimmer = 1.0
-            }
-        }
+        // Static iridescent ring, tilted to match the finish pills' gradient direction, kept
+        // translucent so it reads as a subtle sheen rather than popping.
+        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            .strokeBorder(
+                LinearGradient(colors: colors,
+                               startPoint: UnitPoint(x: 0, y: 0.1),
+                               endPoint: UnitPoint(x: 1, y: 0.9)),
+                lineWidth: lineWidth
+            )
+            .opacity(0.55)
+            .allowsHitTesting(false)
     }
 }

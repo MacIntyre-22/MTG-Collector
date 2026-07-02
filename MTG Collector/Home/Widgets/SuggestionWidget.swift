@@ -121,7 +121,7 @@ struct SuggestionWidget: View {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.gray.opacity(0.2))
                         .frame(width: 180)
-                        .aspectRatio(0.714, contentMode: .fit)
+                        .aspectRatio(0.718, contentMode: .fit)
                 }
             }
             .padding(.vertical, 4)

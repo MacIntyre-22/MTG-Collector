@@ -17,6 +17,7 @@
 
 import SwiftUI
 import UIKit
+import ImageIO
 
 // MARK: Cache
 
@@ -29,21 +30,32 @@ final class ImageCache {
     private let memory = NSCache<NSURL, UIImage>()
 
     private init() {
-        memory.countLimit = 400
+        memory.countLimit = 200
+        // Cap decoded-image memory. NSCache evicts by cost past this, so a long browsing session
+        // can't pile up hundreds of MB of bitmaps and build the memory pressure that slowly heats
+        // the device. Re-decoding an evicted image is cheap (downsampled ImageIO thumbnail).
+        memory.totalCostLimit = 96 * 1024 * 1024   // ~96 MB
     }
 
     func image(for url: URL) -> UIImage? {
         memory.object(forKey: url as NSURL)
     }
 
-    /// Returns a cached image immediately or downloads it. Downloads hit URLCache first, so a
-    /// previously fetched image loads from disk rather than the network.
-    func load(_ url: URL) async -> UIImage? {
+    /// Approximate decoded byte size, used as the NSCache eviction cost.
+    private static func cost(of image: UIImage) -> Int {
+        guard let cg = image.cgImage else { return Int(image.size.width * image.size.height * 4) }
+        return cg.bytesPerRow * cg.height
+    }
+
+    /// Returns a cached image immediately or downloads it, decoded down to `maxPixelSize` (longest
+    /// edge, in pixels). Downloads hit URLCache first, so a previously fetched image loads from disk
+    /// rather than the network. Downsampling keeps memory low and moves the decode off the draw path.
+    func load(_ url: URL, maxPixelSize: CGFloat = 600) async -> UIImage? {
         if let hit = image(for: url) { return hit }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            guard let image = UIImage(data: data) else { return nil }
-            memory.setObject(image, forKey: url as NSURL)
+            guard let image = Self.downsample(data, maxPixelSize: maxPixelSize) ?? UIImage(data: data) else { return nil }
+            memory.setObject(image, forKey: url as NSURL, cost: Self.cost(of: image))
             return image
         } catch {
             return nil
@@ -51,10 +63,25 @@ final class ImageCache {
     }
 
     /// Warm the cache for images that are about to scroll into view, off the main path.
-    func prefetch(_ urls: [URL]) {
+    func prefetch(_ urls: [URL], maxPixelSize: CGFloat = 600) {
         for url in urls where image(for: url) == nil {
-            Task.detached(priority: .utility) { _ = await ImageCache.shared.load(url) }
+            Task.detached(priority: .utility) { _ = await ImageCache.shared.load(url, maxPixelSize: maxPixelSize) }
         }
+    }
+
+    /// Decode `data` straight to a thumbnail at `maxPixelSize` via ImageIO — never materialises the
+    /// full-resolution bitmap, so a 1 MB PNG doesn't cost megabytes of RAM to show in a small cell.
+    private static func downsample(_ data: Data, maxPixelSize: CGFloat) -> UIImage? {
+        let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions) else { return nil }
+        let options = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceThumbnailMaxPixelSize: max(1, maxPixelSize)
+        ] as CFDictionary
+        guard let cg = CGImageSourceCreateThumbnailAtIndex(source, 0, options) else { return nil }
+        return UIImage(cgImage: cg)
     }
 }
 
@@ -65,6 +92,9 @@ final class ImageCache {
 struct CachedAsyncImage<Content: View, Placeholder: View>: View {
 
     let url: URL?
+    /// Longest-edge cap (px) for the decoded image. Default suits grid cells; the full-screen
+    /// viewer passes a larger value for a crisp zoom.
+    var maxPixelSize: CGFloat = 600
     @ViewBuilder let content: (Image) -> Content
     @ViewBuilder let placeholder: () -> Placeholder
 
@@ -86,7 +116,7 @@ struct CachedAsyncImage<Content: View, Placeholder: View>: View {
                 uiImage = hit
                 return
             }
-            uiImage = await ImageCache.shared.load(url)
+            uiImage = await ImageCache.shared.load(url, maxPixelSize: maxPixelSize)
         }
     }
 }

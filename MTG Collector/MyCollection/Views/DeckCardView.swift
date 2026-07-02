@@ -22,21 +22,27 @@ struct DeckCardView: View {
 
     var deck: Deck
     var entry: CardEntry
+    /// Card supplied by the parent board (from its shared lookup). Nil until it's cached.
+    var card: Card?
     var deleteEntry: () -> Void
 
     // MARK: State Properties
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.appTint) private var tint
-    @State private var card: Card?
+    /// Fallback resolution for a card the parent didn't provide (just-added / uncached).
+    @State private var fallback: Card?
     @State private var selectedCard: Card?
 
     // MARK: Computed Properties
 
+    /// The card to render: parent-provided, else the per-cell fallback.
+    private var shownCard: Card? { card ?? fallback }
+
     /// Legal status for this card in the deck's format (needs resolved card data).
     var legality: LegalityStatus {
-        guard let card else { return .unknown }
-        return LegalityStatus.of(card, ruleType: deck.ruleType)
+        guard let shownCard else { return .unknown }
+        return LegalityStatus.of(shownCard, ruleType: deck.ruleType)
     }
 
     /// The owned finish (metadata for export/sharing). Deck value always uses base price, so this
@@ -53,11 +59,11 @@ struct DeckCardView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             Button {
-                if let card { selectedCard = card }
+                if let shownCard { selectedCard = shownCard }
             } label: {
                 CardEntryView(
                     entry: entry,
-                    card: card,
+                    card: shownCard,
                     showPreviews: deck.showPreviews,
                     showControls: deck.showControls,
                     legalityIcon: legality.isProblem ? legality.icon : nil,
@@ -115,9 +121,11 @@ struct DeckCardView: View {
                 .padding(.top, 30)
             }
         }
-        .task {
-            if card == nil {
-                card = await CardStore.resolve(entry.scryfallCardID, context: modelContext)
+        // Only resolve when the parent board hasn't supplied this card — most cells render from the
+        // provided `card`, so scrolling a board never triggers a per-cell SwiftData fetch.
+        .task(id: entry.scryfallCardID) {
+            if card == nil, fallback == nil {
+                fallback = await CardStore.resolve(entry.scryfallCardID, context: modelContext)
             }
         }
         .cardInfoSheet(card: $selectedCard)

@@ -62,6 +62,8 @@ struct DeckBoardView: View {
     var filters: FilterState = FilterState()
     var isFiltering: Bool = false
     var filterToken: Int = 0
+    /// In-collection name search from DeckView, applied on top of the legality filter.
+    var searchText: String = ""
     let cardColumns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 15)]
 
     // MARK: State Properties
@@ -90,7 +92,9 @@ struct DeckBoardView: View {
     }
 
     private var filteredEntries: [CardEntry] {
-        baseEntries.filter { filters.legality.matches(status($0)) }
+        let legal = baseEntries.filter { filters.legality.matches(status($0)) }
+        guard !searchText.isEmpty else { return legal }
+        return legal.filter { lookup[$0.scryfallCardID]?.name.localizedCaseInsensitiveContains(searchText) ?? false }
     }
 
     private var totalCount: Int {
@@ -121,7 +125,7 @@ struct DeckBoardView: View {
             } else {
                 LazyVGrid(columns: cardColumns) {
                     ForEach(filteredEntries) { entry in
-                        DeckCardView(deck: deck, entry: entry, deleteEntry: {
+                        DeckCardView(deck: deck, entry: entry, card: lookup[entry.scryfallCardID], deleteEntry: {
                             board.remove(entry, from: deck)
                             StatsUpdater.update(deck, context: modelContext)
                         })
@@ -200,6 +204,8 @@ struct DeckBoardView: View {
     /// (one /cards/collection request instead of one /cards/{id} per miss), then reads it back.
     private func resolveLookup() async {
         let ids = activeEntries.map(\.scryfallCardID)
+        // Show cached cards instantly, then prime misses from the network and re-read.
+        lookup = CardStore.lookup(for: ids, context: modelContext)
         await CardStore.prime(ids, context: modelContext)
         lookup = CardStore.lookup(for: ids, context: modelContext)
     }

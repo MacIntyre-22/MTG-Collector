@@ -26,8 +26,10 @@ enum PriceRefresher {
     /// Re-fetch a card once its cached data is older than this (24h — Scryfall prices update ~daily).
     static let interval: TimeInterval = 24 * 60 * 60
 
-    /// UserDefaults key for the dev "force refresh on every open" toggle.
+#if DEBUG
+    /// UserDefaults key for the dev "force refresh on every open" toggle (DEBUG builds only).
     static let devForceKey = "devForcePriceRefresh"
+#endif
 
     /// Refresh the cached cards among `ids` whose data is stale (or all of them, if `force`). Returns
     /// the number refreshed; a no-op (returns 0) when nothing is stale, so it's cheap to call on open.
@@ -58,7 +60,13 @@ enum PriceRefresher {
     /// Refresh on entering a collection — honours the dev "force refresh" toggle.
     @discardableResult
     static func refreshCollection(ids: [String], context: ModelContext) async -> Int {
-        await refresh(ids: ids, context: context, force: UserDefaults.standard.bool(forKey: devForceKey))
+        // The "force refresh on open" toggle is a DEBUG-only dev aid; Release never forces.
+#if DEBUG
+        let force = UserDefaults.standard.bool(forKey: devForceKey)
+#else
+        let force = false
+#endif
+        return await refresh(ids: ids, context: context, force: force)
     }
 
     /// Dev test: force-refresh every cached card and return the count.

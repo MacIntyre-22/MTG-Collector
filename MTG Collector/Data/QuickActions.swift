@@ -23,14 +23,44 @@ enum QuickAction: String {
     case search     = "net.benmacintyre.cardhold.search"
     case scan       = "net.benmacintyre.cardhold.scan"
     case collection = "net.benmacintyre.cardhold.collection"
+    /// A dynamic "open this binder/deck" item — its id + kind ride in the shortcut's userInfo.
+    case open       = "net.benmacintyre.cardhold.open"
 
-    /// Route this action through the shared router.
+    /// Route this action through the shared router. `.open` is handled separately (it needs the
+    /// item's payload), so it's a no-op here.
     @MainActor
     func run() {
         switch self {
         case .search:     AppRouter.shared.openSearch()
         case .scan:       AppRouter.shared.scanCard()
         case .collection: AppRouter.shared.showCollection()
+        case .open:       break
+        }
+    }
+
+    /// Refresh the dynamic Home Screen actions with the user's pinned (else most-recent) collections,
+    /// so long-pressing the icon can jump straight into one. iOS lists the static Info.plist items
+    /// first, so these fill the remaining slot(s) — effectively a contextual "Open ‹name›".
+    @MainActor
+    static func refresh(binders: [Binder], decks: [Deck]) {
+        struct Item { let id: String; let name: String; let isDeck: Bool; let pinned: Bool; let editedAt: Date }
+        let items = binders.filter { !$0.isDeleted && !$0.isGeneral }
+                .map { Item(id: $0.id, name: $0.name, isDeck: false, pinned: $0.pinned, editedAt: $0.editedAt) }
+            + decks.filter { !$0.isDeleted }
+                .map { Item(id: $0.id, name: $0.name, isDeck: true, pinned: $0.pinned, editedAt: $0.editedAt) }
+
+        let top = items
+            .sorted { $0.pinned != $1.pinned ? $0.pinned : $0.editedAt > $1.editedAt }
+            .prefix(2)
+
+        UIApplication.shared.shortcutItems = top.map { item in
+            UIApplicationShortcutItem(
+                type: QuickAction.open.rawValue,
+                localizedTitle: item.name,
+                localizedSubtitle: item.isDeck ? "Deck" : "Binder",
+                icon: UIApplicationShortcutIcon(systemImageName: item.isDeck ? "rectangle.stack" : "folder"),
+                userInfo: ["id": item.id as NSString, "kind": (item.isDeck ? "deck" : "binder") as NSString]
+            )
         }
     }
 }
@@ -69,6 +99,16 @@ final class QuickActionSceneDelegate: NSObject, UIWindowSceneDelegate {
 
     @discardableResult
     private func apply(_ item: UIApplicationShortcutItem) -> Bool {
+        // Dynamic "open a collection" items carry their id + kind in userInfo.
+        if item.type == QuickAction.open.rawValue {
+            guard let id = item.userInfo?["id"] as? String,
+                  let kind = item.userInfo?["kind"] as? String else { return false }
+            Task { @MainActor in
+                if kind == "deck" { AppRouter.shared.openDeck(id: id) }
+                else { AppRouter.shared.openBinder(id: id) }
+            }
+            return true
+        }
         guard let action = QuickAction(rawValue: item.type) else { return false }
         Task { @MainActor in action.run() }
         return true

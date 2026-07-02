@@ -85,20 +85,22 @@ struct CardInfoView: View {
                 /// Blurred full-art background of the current face. Sized from the screen so it fills
                 /// and clips to the bounds (incl. safe area) without inflating the layout.
                 GeometryReader { geo in
-                    AsyncImage(url: URL(string: bestURL(currentImageURIs))) { phase in
-                        if let image = phase.image {
-                            image
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: geo.size.width, height: geo.size.height)
-                                .clipped()
-                                .blur(radius: 35, opaque: true)
-                                // Adaptive scrim (same as binder/deck screens) so default text
-                                // colour reads in both light and dark mode.
-                                .overlay(Color(.systemBackground).opacity(0.55))
-                        } else {
-                            Color(.systemBackground)
-                        }
+                    // Reuse the already-loaded `normal` art through the durable cache (the grid and
+                    // the foreground card use the same size, so this is usually a cache hit).
+                    // Previously this was a raw AsyncImage fetching the full-size png every open —
+                    // slow and often blank. The heavy blur hides any detail difference.
+                    CachedAsyncImage(url: blurURL(currentImageURIs)) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: geo.size.width, height: geo.size.height)
+                            .clipped()
+                            .blur(radius: 35, opaque: true)
+                            // Adaptive scrim (same as binder/deck screens) so default text
+                            // colour reads in both light and dark mode.
+                            .overlay(Color(.systemBackground).opacity(0.55))
+                    } placeholder: {
+                        Color(.systemBackground)
                     }
                     .id(isFlipped)
                     .transition(.opacity)
@@ -311,5 +313,12 @@ struct CardInfoView: View {
         if !uris.normal.isEmpty { return uris.normal }
         if !uris.small.isEmpty { return uris.small }
         return ""
+    }
+
+    /// URL for the blurred background — prefers `normal` (the size the grid and the foreground card
+    /// already loaded, so it's a cache hit). The heavy blur hides any detail difference.
+    private func blurURL(_ uris: ImageURIs) -> URL? {
+        let candidate = [uris.normal, uris.small, uris.large, uris.png].first { !$0.isEmpty } ?? ""
+        return URL(string: candidate)
     }
 }

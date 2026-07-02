@@ -126,7 +126,7 @@ struct CardEntryView: View {
     private var cardPlaceholder: some View {
         RoundedRectangle(cornerRadius: 8)
             .fill(Color.gray.opacity(0.3))
-            .aspectRatio(0.714, contentMode: .fit)
+            .aspectRatio(0.718, contentMode: .fit)
             .frame(maxWidth: 220)
             .overlay(ProgressView())
             .padding(10)

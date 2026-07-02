@@ -97,6 +97,75 @@ struct CollectionValueIntent: AppIntent {
     }
 }
 
+// MARK: Open Collection by name
+
+/// A binder or deck, exposed to App Intents so the user can pick one by name (Shortcuts/Siri).
+struct CollectionEntity: AppEntity, Identifiable {
+    static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Collection")
+    static var defaultQuery = CollectionEntityQuery()
+
+    var id: String
+    var name: String
+    /// Decks route differently from binders, so carry the kind on the entity.
+    var isDeck: Bool
+
+    var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: "\(name)", subtitle: isDeck ? "Deck" : "Binder")
+    }
+}
+
+/// Supplies the user's binders + decks to the picker, reading the shared store directly.
+struct CollectionEntityQuery: EntityQuery {
+
+    @MainActor
+    func entities(for identifiers: [String]) async throws -> [CollectionEntity] {
+        all().filter { identifiers.contains($0.id) }
+    }
+
+    @MainActor
+    func suggestedEntities() async throws -> [CollectionEntity] {
+        all()
+    }
+
+    @MainActor
+    private func all() -> [CollectionEntity] {
+        let context = ModelContext(AppModelContainer.shared)
+        let binders = (try? context.fetch(FetchDescriptor<Binder>())) ?? []
+        let decks = (try? context.fetch(FetchDescriptor<Deck>())) ?? []
+        let binderEntities = binders
+            .filter { !$0.isDeleted && !$0.isGeneral }
+            .map { CollectionEntity(id: $0.id, name: $0.name, isDeck: false) }
+        let deckEntities = decks
+            .filter { !$0.isDeleted }
+            .map { CollectionEntity(id: $0.id, name: $0.name, isDeck: true) }
+        return (binderEntities + deckEntities).sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+    }
+}
+
+/// "Open ‹name›" — jumps straight to a chosen binder or deck.
+struct OpenCollectionByNameIntent: AppIntent {
+    static var title: LocalizedStringResource = "Open Collection"
+    static var description = IntentDescription("Open a specific binder or deck in Cardhold.")
+    static var openAppWhenRun = true
+
+    @Parameter(title: "Collection")
+    var collection: CollectionEntity
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Open \(\.$collection)")
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        if collection.isDeck {
+            AppRouter.shared.openDeck(id: collection.id)
+        } else {
+            AppRouter.shared.openBinder(id: collection.id)
+        }
+        return .result()
+    }
+}
+
 // MARK: Shortcuts Provider
 
 /// Surfaces the intents to Siri / Spotlight with spoken phrases. `\(.applicationName)` lets the
@@ -129,6 +198,15 @@ struct CardholdShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "My Hold",
             systemImageName: "rectangle.stack.fill"
+        )
+        AppShortcut(
+            intent: OpenCollectionByNameIntent(),
+            phrases: [
+                "Open \(\.$collection) in \(.applicationName)",
+                "Open my \(\.$collection) in \(.applicationName)"
+            ],
+            shortTitle: "Open Collection",
+            systemImageName: "folder"
         )
         AppShortcut(
             intent: CollectionValueIntent(),

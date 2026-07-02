@@ -4,8 +4,9 @@
 //
 //  Created by Ben MacIntyre on 2025-10-09.
 //  Purpose:
-//      The view used to display cards in the binder view. Resolves the entry's card data via
-//      CardStore, then hands it to CardEntryView and the CardInfoView destination.
+//      The view used to display cards in the binder view. The card data is supplied by the parent
+//      from its shared lookup (so cells don't each hit SwiftData while scrolling); a per-cell
+//      fallback resolves anything the parent hasn't provided yet (a just-added or uncached card).
 //  External Types:
 //      CardEntry, Card, CardStore, CardInfoView, CardEntryView
 
@@ -21,6 +22,8 @@ struct BinderCardView: View {
     // MARK: Stored Properties
 
     var entry: CardEntry
+    /// Card supplied by the parent (from its shared lookup). Nil until the parent has it cached.
+    var card: Card?
     var deleteEntry: () -> Void
     var showPreviews: Bool
     var showControls: Bool
@@ -29,10 +32,14 @@ struct BinderCardView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.appTint) private var tint
-    @State private var card: Card?
+    /// Fallback resolution for a card the parent didn't provide (just-added / uncached).
+    @State private var fallback: Card?
     @State private var selectedCard: Card?
 
     // MARK: Computed
+
+    /// The card to render: parent-provided, else the per-cell fallback.
+    private var shownCard: Card? { card ?? fallback }
 
     /// Setting the finish changes which price counts toward the binder's value, so recompute stats.
     private var finishBinding: Binding<CardFinish> {
@@ -53,11 +60,11 @@ struct BinderCardView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             Button {
-                if let card { selectedCard = card }
+                if let shownCard { selectedCard = shownCard }
             } label: {
                 CardEntryView(
                     entry: entry,
-                    card: card,
+                    card: shownCard,
                     showPreviews: showPreviews,
                     showControls: showControls,
                     deleteEntry: { deleteEntry() }
@@ -95,9 +102,11 @@ struct BinderCardView: View {
                 .padding(.top, 30)
             }
         }
-        .task {
-            if card == nil {
-                card = await CardStore.resolve(entry.scryfallCardID, context: modelContext)
+        // Only resolve when the parent hasn't supplied this card (rare) — most cells render straight
+        // from the provided `card`, so scrolling never triggers a SwiftData fetch.
+        .task(id: entry.scryfallCardID) {
+            if card == nil, fallback == nil {
+                fallback = await CardStore.resolve(entry.scryfallCardID, context: modelContext)
             }
         }
         .cardInfoSheet(card: $selectedCard)

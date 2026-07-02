@@ -44,6 +44,8 @@ struct DeckView: View {
     @State private var stats: CollectionStats?
     /// Transient "prices updated" banner shown after an on-open refresh.
     @State private var priceBanner: String?
+    /// In-collection search by card name, applied to whichever board is showing.
+    @State private var searchText = ""
 
     // MARK: Initializer
 
@@ -79,13 +81,14 @@ struct DeckView: View {
                 }
 
                 switch selectedBoard {
-                case 0: DeckBoardView(deck: deck, board: .main, selectedBoard: $selectedBoard, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
-                case 1: DeckBoardView(deck: deck, board: .side, selectedBoard: $selectedBoard, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
-                case 2: DeckBoardView(deck: deck, board: .maybe, selectedBoard: $selectedBoard, filters: filters, isFiltering: isFiltering, filterToken: filterToken)
+                case 0: DeckBoardView(deck: deck, board: .main, selectedBoard: $selectedBoard, filters: filters, isFiltering: isFiltering, filterToken: filterToken, searchText: searchText)
+                case 1: DeckBoardView(deck: deck, board: .side, selectedBoard: $selectedBoard, filters: filters, isFiltering: isFiltering, filterToken: filterToken, searchText: searchText)
+                case 2: DeckBoardView(deck: deck, board: .maybe, selectedBoard: $selectedBoard, filters: filters, isFiltering: isFiltering, filterToken: filterToken, searchText: searchText)
                 default: EmptyView()
                 }
             }
         }
+        .searchable(text: $searchText, prompt: "Search cards")
         .priceRefreshBanner($priceBanner)
         .task {
             StatsUpdater.update(deck, context: modelContext)

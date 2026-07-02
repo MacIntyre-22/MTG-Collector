@@ -43,6 +43,8 @@ struct MTG_TabView: View {
     @State private var deckImport: ImportText?
     @State private var binderImport: ImportText?
     @State private var holdImport: ImportText?
+    /// A card resolved from a tapped Spotlight card result, presented as a floating info sheet.
+    @State private var routedCard: Card?
     /// The per-tab feature intro currently being shown (once per tab, after onboarding).
     @State private var activeGuide: TabGuide?
     
@@ -222,6 +224,13 @@ struct MTG_TabView: View {
             }
         }
         .sheet(isPresented: $showImportPaywall) { PaywallView() }
+        // A tapped Spotlight card result → resolve the id and float its info sheet over any tab.
+        .cardInfoSheet(card: $routedCard)
+        .task(id: router.pendingCardID) {
+            guard let id = router.pendingCardID else { return }
+            router.pendingCardID = nil
+            routedCard = await CardStore.resolve(id, context: modelContext)
+        }
     }
 
     // MARK: Tab feature intros
@@ -256,6 +265,9 @@ struct MTG_TabView: View {
         for deck in decks where !deck.isDeleted {
             StatsUpdater.update(deck, context: modelContext)
         }
+
+        // Keep the dynamic Home Screen quick actions (pinned/recent collections) current.
+        QuickAction.refresh(binders: binders, decks: decks)
     }
 
     // MARK: Shared-link import

@@ -93,7 +93,7 @@ struct CardGridView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                 .padding(8)
             }
-            .aspectRatio(0.714, contentMode: .fit)
+            .aspectRatio(0.718, contentMode: .fit)
             .cornerRadius(8)
             .cardFinish(finish, cornerRadius: 8)
             .padding([.horizontal, .top], 10)

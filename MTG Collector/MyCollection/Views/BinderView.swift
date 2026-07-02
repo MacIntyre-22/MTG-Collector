@@ -42,6 +42,9 @@ struct BinderView: View {
     @State private var stats: CollectionStats?
     /// Transient "prices updated" banner shown after an on-open refresh.
     @State private var priceBanner: String?
+    /// In-collection search by card name, plus the resolved cards it matches against.
+    @State private var searchText = ""
+    @State private var cardLookup: [String: Card] = [:]
 
     // MARK: Initializer
 
@@ -72,6 +75,7 @@ struct BinderView: View {
                     ForEach(displayedEntries) { entry in
                         BinderCardView(
                             entry: entry,
+                            card: cardLookup[entry.scryfallCardID],
                             deleteEntry: {
                                 binder.cards.removeAll(where: { $0.id == entry.id })
                                 StatsUpdater.update(binder, context: modelContext)
@@ -85,10 +89,14 @@ struct BinderView: View {
                 }
             }
         }
+        .searchable(text: $searchText, prompt: "Search cards")
         .priceRefreshBanner($priceBanner)
         .task {
             let ids = binder.cards.map(\.scryfallCardID)
+            // Show cached cards instantly, then prime misses from the network and re-read.
+            cardLookup = CardStore.lookup(for: ids, context: modelContext)
             await CardStore.prime(ids, context: modelContext)
+            cardLookup = CardStore.lookup(for: ids, context: modelContext)
             StatsUpdater.update(binder, context: modelContext)
             stats = StatsStore.stats(for: binder, context: modelContext)
             // Refresh any cards whose prices are stale, then update totals + notify.
@@ -161,10 +169,16 @@ struct BinderView: View {
     }
 
     private var displayedEntries: [CardEntry] {
-        if isFiltering {
-            return filteredEntries.filter { !$0.isDeleted }
-        }
-        return binder.cards.filter { !$0.isDeleted }.sorted { $0.dateAdded > $1.dateAdded }
+        let base = isFiltering
+            ? filteredEntries.filter { !$0.isDeleted }
+            : binder.cards.filter { !$0.isDeleted }.sorted { $0.dateAdded > $1.dateAdded }
+        return nameMatches(base)
+    }
+
+    /// Narrow to entries whose resolved card name contains the search text (no-op when empty).
+    private func nameMatches(_ entries: [CardEntry]) -> [CardEntry] {
+        guard !searchText.isEmpty else { return entries }
+        return entries.filter { cardLookup[$0.scryfallCardID]?.name.localizedCaseInsensitiveContains(searchText) ?? false }
     }
 
     /// Whether the binder holds any (non-deleted) cards at all — distinguishes "empty binder" from

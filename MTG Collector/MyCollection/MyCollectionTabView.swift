@@ -28,6 +28,7 @@ struct MyCollectionTabView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(AppRouter.self) private var router
     @Environment(ProAccessManager.self) private var pro
+    @Environment(\.appCurrency) private var currency
     @Query var binders: [Binder]
     @Query var decks: [Deck]
 
@@ -43,6 +44,9 @@ struct MyCollectionTabView: View {
     @State private var showImport = false
     @State private var routedBinder: Binder?
     @State private var routedDeck: Deck?
+    /// In-collection search by card name, plus the resolved cards it matches against.
+    @State private var searchText = ""
+    @State private var cardLookup: [String: Card] = [:]
 
     let cardColumns = [GridItem(.adaptive(minimum: 170, maximum: 170), spacing: 15)]
 
@@ -78,6 +82,7 @@ struct MyCollectionTabView: View {
                 .padding(.top, 10)
             }
             .navigationTitle("My Hold")
+            .searchable(text: $searchText, prompt: "Search your cards")
             .navigationDestination(item: $routedBinder) { binder in
                 BinderView(binder: binder)
             }
@@ -131,9 +136,13 @@ struct MyCollectionTabView: View {
                 ensureGeneralCollection()
                 refreshStats()
                 indexForSpotlight()
+                QuickAction.refresh(binders: binders, decks: decks)
                 if let general = generalBinder {
                     let ids = general.activeCards.map(\.scryfallCardID)
+                    // Show cached cards instantly, then prime misses from the network and re-read.
+                    cardLookup = CardStore.lookup(for: ids, context: modelContext)
                     await CardStore.prime(ids, context: modelContext)
+                    cardLookup = CardStore.lookup(for: ids, context: modelContext)
                     // Refresh stale prices for the general collection, then update totals + notify.
                     let refreshed = await PriceRefresher.refreshCollection(ids: ids, context: modelContext)
                     if refreshed > 0 {
@@ -218,6 +227,7 @@ struct MyCollectionTabView: View {
                     ForEach(entries) { entry in
                         BinderCardView(
                             entry: entry,
+                            card: cardLookup[entry.scryfallCardID],
                             deleteEntry: {
                                 general.cards.removeAll(where: { $0.id == entry.id })
                                 StatsUpdater.update(general, context: modelContext)
@@ -256,12 +266,14 @@ struct MyCollectionTabView: View {
         }
     }
 
-    /// Entries to display: filtered (engine output) when a filter is active, else newest first.
+    /// Entries to display: filtered (engine output) when a filter is active, else newest first,
+    /// then narrowed by the search text (matched against resolved card names).
     private func displayedEntries(_ general: Binder) -> [CardEntry] {
-        if isFiltering {
-            return filteredEntries.filter { !$0.isDeleted }
-        }
-        return general.activeCards.sorted(by: { $0.dateAdded > $1.dateAdded })
+        let base = isFiltering
+            ? filteredEntries.filter { !$0.isDeleted }
+            : general.activeCards.sorted(by: { $0.dateAdded > $1.dateAdded })
+        guard !searchText.isEmpty else { return base }
+        return base.filter { cardLookup[$0.scryfallCardID]?.name.localizedCaseInsensitiveContains(searchText) ?? false }
     }
 
     /// Run the collection filter engine over the catch-all's cards.
@@ -283,19 +295,10 @@ struct MyCollectionTabView: View {
         GeneralCollection.ensure(context: modelContext)
     }
 
-    /// Make sure every current binder/deck is in the Spotlight index (covers items created
-    /// before indexing existed). CoreSpotlight dedupes by identifier, so re-indexing is cheap.
+    /// Re-index every binder/deck (rich description + square cover) and favourite card into
+    /// Spotlight. CoreSpotlight dedupes by identifier, so re-indexing is cheap.
     private func indexForSpotlight() {
-        for binder in binders where !binder.isDeleted && !binder.isGeneral {
-            Spotlight.index(kind: .binder, id: binder.id, name: binder.name,
-                            image: binder.coverUIImage,
-                            description: "Binder in your collection.")
-        }
-        for deck in decks where !deck.isDeleted {
-            Spotlight.index(kind: .deck, id: deck.id, name: deck.name,
-                            image: deck.coverUIImage,
-                            description: "Deck in your collection.")
-        }
+        SpotlightIndexer.reindex(binders: binders, decks: decks, context: modelContext, currency: currency)
     }
 
     /// Keep stored stats current so the whole-collection summary is accurate.
