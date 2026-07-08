@@ -27,27 +27,28 @@ struct SuggestionView: View {
     // MARK: View
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    Text(description)
-                        .foregroundColor(.gray)
-                        .italic()
-                        .lineLimit(1)
-                }
-                
-                LazyVGrid(columns: columns) {
-                    ForEach(collection) { card in
-                        let tempModel = SFAPI.JSONtoModel(json: card)
-                        SearchCardView(card: tempModel)
-                    }
-                }
-
-                refreshFooter
+        // Pushed inside the Home feed's NavigationStack, so it must NOT wrap its own — a nested
+        // NavigationStack crashes on iPad (this was the App Review crash on Budget -> View All).
+        ScrollView {
+            VStack(alignment: .leading) {
+                Text(description)
+                    .foregroundColor(.gray)
+                    .italic()
+                    .lineLimit(1)
             }
-            .navigationTitle(title)
-            .toolbarTitleDisplayMode(.large)
+
+            LazyVGrid(columns: columns) {
+                // Stable offset ids — a card id can repeat across pages/printings.
+                ForEach(Array(collection.enumerated()), id: \.offset) { _, card in
+                    let tempModel = SFAPI.JSONtoModel(json: card)
+                    SearchCardView(card: tempModel)
+                }
+            }
+
+            refreshFooter
         }
+        .navigationTitle(title)
+        .toolbarTitleDisplayMode(.large)
     }
 
     // MARK: Subviews

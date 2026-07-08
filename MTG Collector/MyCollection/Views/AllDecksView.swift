@@ -47,75 +47,75 @@ struct AllDecksView: View {
     // MARK: View
     
     var body: some View {
-        NavigationStack {
-            Group {
-                if sortedDecks.isEmpty {
-                    VStack(spacing: 16) {
-                        Image(systemName: "rectangle.stack")
-                            .font(.system(size: 60))
-                            .foregroundStyle(.secondary)
-                        Text("No Decks")
-                            .font(.title2.bold())
-                        Text("Build a deck to track its cards, mana curve and format legality.")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 40)
-                        PrimaryGlassButton(title: "New Deck", systemImage: "plus") {
-                            if canCreate { newDeck.toggle() } else { showPaywall = true }
-                        }
-                        .padding(.horizontal, 32)
-                        .padding(.top, 8)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding()
-                } else {
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(sortedDecks) { deck in
-                                NavigationLink(destination: DeckView(deck: deck)) {
-                                    DeckGridWidget(deck: deck)
-                                        .contextMenu {
-                                            // Mirrors the deck screen's toolbar (minus filter).
-                                            CollectionShareMenu(target: .deck(deck), compact: false)
-                                            Button("Stats", systemImage: "chart.bar") {
-                                                if pro.isPro { statsDeck = deck } else { showPaywall = true }
-                                            }
-                                            Button("Notes", systemImage: "note.text") { notesDeck = deck }
-                                            Button("Settings", systemImage: "gearshape") { editDeck = deck }
-                                        }
-                                }
-                            }
-                        }
-                        .padding()
-                    }
-                    .padding(.horizontal, 10)
-                }
-            }
-            .navigationTitle("My Decks")
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("New", systemImage: "plus"){
+        // Pushed inside the My Hold NavigationStack, so it must NOT wrap its own (nested
+        // NavigationStacks crash on iPad). Card/deck pushes use the parent stack.
+        Group {
+            if sortedDecks.isEmpty {
+                VStack(spacing: 16) {
+                    Image(systemName: "rectangle.stack")
+                        .font(.system(size: 60))
+                        .foregroundStyle(.secondary)
+                    Text("No Decks")
+                        .font(.title2.bold())
+                    Text("Build a deck to track its cards, mana curve and format legality.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                    PrimaryGlassButton(title: "New Deck", systemImage: "plus") {
                         if canCreate { newDeck.toggle() } else { showPaywall = true }
                     }
+                    .padding(.horizontal, 32)
+                    .padding(.top, 8)
                 }
-            })
-            .sheet(isPresented: $newDeck) {
-                NewDeckSheet()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding()
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 20) {
+                        ForEach(sortedDecks) { deck in
+                            NavigationLink(destination: DeckView(deck: deck)) {
+                                DeckGridWidget(deck: deck)
+                                    .contextMenu {
+                                        // Mirrors the deck screen's toolbar (minus filter).
+                                        CollectionShareMenu(target: .deck(deck), compact: false)
+                                        Button("Stats", systemImage: "chart.bar") {
+                                            if pro.isPro { statsDeck = deck } else { showPaywall = true }
+                                        }
+                                        Button("Notes", systemImage: "note.text") { notesDeck = deck }
+                                        Button("Settings", systemImage: "gearshape") { editDeck = deck }
+                                    }
+                            }
+                        }
+                    }
+                    .padding()
+                }
+                .padding(.horizontal, 10)
             }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView()
+        }
+        .navigationTitle("My Decks")
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("New", systemImage: "plus"){
+                    if canCreate { newDeck.toggle() } else { showPaywall = true }
+                }
             }
-            .sheet(item: $statsDeck) { deck in
-                DeckStatsSheet(deck: deck)
-            }
-            .sheet(item: $notesDeck) { deck in
-                DeckNotesSheet(deck: deck)
-                    .presentationDetents([.medium, .large])
-            }
-            .sheet(item: $editDeck) { deck in
-                EditDeckSheet(deck: deck, onDelete: { deleteDeck(deck) })
-            }
+        })
+        .sheet(isPresented: $newDeck) {
+            NewDeckSheet()
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
+        .sheet(item: $statsDeck) { deck in
+            DeckStatsSheet(deck: deck)
+        }
+        .sheet(item: $notesDeck) { deck in
+            DeckNotesSheet(deck: deck)
+                .presentationDetents([.medium, .large])
+        }
+        .sheet(item: $editDeck) { deck in
+            EditDeckSheet(deck: deck, onDelete: { deleteDeck(deck) })
         }
     }
 

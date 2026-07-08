@@ -49,75 +49,75 @@ struct AllBindersView: View {
     // MARK: View
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if sortedBinders.isEmpty {
-                    VStack(spacing: 16) {
-                        Image(systemName: "folder")
-                            .font(.system(size: 60))
-                            .foregroundStyle(.secondary)
-                        Text("No Binders")
-                            .font(.title2.bold())
-                        Text("Create a binder to organize cards by set, colour or theme.")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 40)
-                        PrimaryGlassButton(title: "New Binder", systemImage: "plus") {
-                            if canCreate { newBinder.toggle() } else { showPaywall = true }
-                        }
-                        .padding(.horizontal, 32)
-                        .padding(.top, 8)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding()
-                } else {
-                    ScrollView(showsIndicators: false) {
-                        VStack(spacing: 15) {
-                            ForEach(sortedBinders) { binder in
-                                NavigationLink(destination: BinderView(binder: binder)) {
-                                    BinderLinkWidget(binder: binder)
-                                        .contextMenu {
-                                            // Mirrors the binder screen's toolbar (minus filter).
-                                            CollectionShareMenu(target: .binder(binder), compact: false)
-                                            Button("Stats", systemImage: "chart.bar") {
-                                                if pro.isPro { statsBinder = binder } else { showPaywall = true }
-                                            }
-                                            Button("Notes", systemImage: "note.text") { notesBinder = binder }
-                                            Button("Settings", systemImage: "gearshape") { editBinder = binder }
-                                        }
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.top, 10)
-                    }
-                }
-            }
-            .navigationTitle("My Binders")
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("New", systemImage: "plus") {
+        // Pushed inside the My Hold NavigationStack, so it must NOT wrap its own (nested
+        // NavigationStacks crash on iPad). Binder pushes use the parent stack.
+        Group {
+            if sortedBinders.isEmpty {
+                VStack(spacing: 16) {
+                    Image(systemName: "folder")
+                        .font(.system(size: 60))
+                        .foregroundStyle(.secondary)
+                    Text("No Binders")
+                        .font(.title2.bold())
+                    Text("Create a binder to organize cards by set, colour or theme.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                    PrimaryGlassButton(title: "New Binder", systemImage: "plus") {
                         if canCreate { newBinder.toggle() } else { showPaywall = true }
                     }
+                    .padding(.horizontal, 32)
+                    .padding(.top, 8)
                 }
-            })
-            .sheet(isPresented: $newBinder) {
-                NewBinderSheet()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding()
+            } else {
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 15) {
+                        ForEach(sortedBinders) { binder in
+                            NavigationLink(destination: BinderView(binder: binder)) {
+                                BinderLinkWidget(binder: binder)
+                                    .contextMenu {
+                                        // Mirrors the binder screen's toolbar (minus filter).
+                                        CollectionShareMenu(target: .binder(binder), compact: false)
+                                        Button("Stats", systemImage: "chart.bar") {
+                                            if pro.isPro { statsBinder = binder } else { showPaywall = true }
+                                        }
+                                        Button("Notes", systemImage: "note.text") { notesBinder = binder }
+                                        Button("Settings", systemImage: "gearshape") { editBinder = binder }
+                                    }
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.top, 10)
+                }
             }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView()
+        }
+        .navigationTitle("My Binders")
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("New", systemImage: "plus") {
+                    if canCreate { newBinder.toggle() } else { showPaywall = true }
+                }
             }
-            .sheet(item: $statsBinder) { binder in
-                BinderStatsSheet(binder: binder)
-            }
-            .sheet(item: $notesBinder) { binder in
-                BinderNotesSheet(binder: binder)
-                    .presentationDetents([.medium, .large])
-            }
-            .sheet(item: $editBinder) { binder in
-                EditBinderSheet(binder: binder, onDelete: { deleteBinder(binder) })
-            }
+        })
+        .sheet(isPresented: $newBinder) {
+            NewBinderSheet()
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
+        .sheet(item: $statsBinder) { binder in
+            BinderStatsSheet(binder: binder)
+        }
+        .sheet(item: $notesBinder) { binder in
+            BinderNotesSheet(binder: binder)
+                .presentationDetents([.medium, .large])
+        }
+        .sheet(item: $editBinder) { binder in
+            EditBinderSheet(binder: binder, onDelete: { deleteBinder(binder) })
         }
     }
 
